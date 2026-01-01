@@ -1,0 +1,14 @@
+{
+  "name": "Propzy",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "web",
+  "workspaceFolder": "/app",
+  "overrideCommand": false,
+  "shutdownAction": "stopCompose",
+  "remoteUser": "root",
+  "forwardPorts": [8000, 5432, 6379],
+  "postStartCommand": "bash /app/.devcontainer/start-all.sh",
+  "postCreateCommand": "echo 'Devcontainer configurado'"
+}

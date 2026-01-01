@@ -1,0 +1,163 @@
+# =============================================================================
+# DOCKER COMPOSE - DESENVOLVIMENTO LOCAL (DEVCONTAINER)
+# =============================================================================
+# Este arquivo é usado pelo devcontainer
+# Inclui TODOS os serviços necessários para desenvolvimento
+# Portas expostas para facilitar debug local
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # Web - Aplicação Django
+  web:
+    container_name: propzy_dev_web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /app/infra/scripts/entrypoint.sh gunicorn config.wsgi:application --bind 0.0.0.0:8000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"  # Exposto para acesso local
+    environment:
+      - DB_HOST=db
+      - DB_NAME=propzy_dev
+      - DB_USER=propzy_user
+      - DB_PASSWORD=dev_password_change_in_prod
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+      - CREATE_SUPERUSER=false
+      - SECRET_KEY=dev-secret-key-change-in-production
+    depends_on:
+      - db
+      - redis
+      - celery_worker
+      - celery_beat
+    restart: unless-stopped
+    networks:
+      - propzy_internal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Celery Worker - Processa tarefas assíncronas
+  celery_worker:
+    container_name: propzy_dev_celery_worker
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /app/infra/development/start_celery_worker.sh
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=db
+      - DB_NAME=propzy_dev
+      - DB_USER=propzy_user
+      - DB_PASSWORD=dev_password_change_in_prod
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+      - SECRET_KEY=dev-secret-key-change-in-production
+    depends_on:
+      - redis
+      - db
+    restart: unless-stopped
+    networks:
+      - propzy_internal
+
+  # Celery Beat - Agendador de tarefas periódicas
+  celery_beat:
+    container_name: propzy_dev_celery_beat
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /app/infra/development/start_celery_beat.sh
+    volumes:
+      - .:/app
+      - celerybeat_data:/tmp
+    environment:
+      - DB_HOST=db
+      - DB_NAME=propzy_dev
+      - DB_USER=propzy_user
+      - DB_PASSWORD=dev_password_change_in_prod
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+      - SECRET_KEY=dev-secret-key-change-in-production
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - propzy_internal
+
+  # Redis - Broker e backend de resultados do Celery
+  redis:
+    container_name: propzy_dev_redis
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"  # Exposto apenas para debug local
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - propzy_internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  # PostgreSQL - Banco de dados
+  db:
+    container_name: propzy_dev_db
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=propzy_dev
+      - POSTGRES_USER=propzy_user
+      - POSTGRES_PASSWORD=dev_password_change_in_prod
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"  # Exposto apenas para debug local
+    restart: unless-stopped
+    networks:
+      - propzy_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U propzy_user -d propzy_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    shm_size: 128mb
+
+volumes:
+  redis_data:
+    driver: local
+  postgres_data:
+    driver: local
+  celerybeat_data:
+    driver: local
+
+networks:
+  propzy_internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

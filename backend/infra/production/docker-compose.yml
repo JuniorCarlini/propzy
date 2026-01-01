@@ -1,0 +1,221 @@
+# =============================================================================
+# DOCKER COMPOSE - PRODUÇÃO/SERVIDOR
+# =============================================================================
+# Configuração segura para produção
+# SEM portas expostas de DB e Redis (apenas rede interna)
+# Use variáveis de ambiente (.env) para secrets
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # Web - Aplicação Django
+  web:
+    container_name: propzy_prod_web
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    command: /app/infra/scripts/entrypoint.sh gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 4 --threads 2 --timeout 60 --access-logfile - --error-logfile -
+    volumes:
+      - staticfiles:/app/staticfiles:ro
+      - media:/app/media
+    ports:
+      - "8000:8000"  # Exposto apenas para Nginx/proxy reverso
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-*}
+      - VPS_IP=${VPS_IP}
+      - PROXY_DOMAIN=${PROXY_DOMAIN}
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+    networks:
+      - propzy_internal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Celery Worker - Processa tarefas assíncronas
+  celery_worker:
+    container_name: propzy_prod_celery_worker
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    command: /app/infra/production/start_celery_worker.sh
+    volumes:
+      - staticfiles:/app/staticfiles:ro
+      - media:/app/media
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - SECRET_KEY=${SECRET_KEY}
+      - VPS_IP=${VPS_IP}
+      - PROXY_DOMAIN=${PROXY_DOMAIN}
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    restart: always
+    networks:
+      - propzy_internal
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A config.celery inspect ping -d celery@$$HOSTNAME"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # Celery Beat - Agendador de tarefas periódicas
+  celery_beat:
+    container_name: propzy_prod_celery_beat
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    command: /app/infra/production/start_celery_beat.sh
+    volumes:
+      - staticfiles:/app/staticfiles:ro
+      - media:/app/media
+      - celerybeat_data:/tmp
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - SECRET_KEY=${SECRET_KEY}
+      - VPS_IP=${VPS_IP}
+      - PROXY_DOMAIN=${PROXY_DOMAIN}
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    restart: always
+    networks:
+      - propzy_internal
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  # Redis - Broker e backend de resultados do Celery
+  # ⚠️ SEM PORTA EXPOSTA (somente rede interna)
+  redis:
+    container_name: propzy_prod_redis
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru --requirepass ${REDIS_PASSWORD:-changeme}
+    volumes:
+      - redis_data:/data
+    restart: always
+    networks:
+      - propzy_internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # PostgreSQL - Banco de dados
+  # ⚠️ SEM PORTA EXPOSTA (somente rede interna)
+  db:
+    container_name: propzy_prod_db
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - propzy_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    shm_size: 256mb
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+volumes:
+  redis_data:
+    driver: local
+  postgres_data:
+    driver: local
+  celerybeat_data:
+    driver: local
+  staticfiles:
+    driver: local
+  media:
+    driver: local
+
+networks:
+  propzy_internal:
+    driver: bridge
+    internal: false  # False para permitir acesso externo via web
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16

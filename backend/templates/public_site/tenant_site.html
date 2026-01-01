@@ -1,0 +1,18 @@
+{% extends "base/public_base.html" %}
+{% load i18n %}
+
+{% block title %}{{ tenant.name }}{% endblock %}
+
+{% block main_content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="display-4">{{ tenant.name }}</h1>
+            <p class="lead">{% trans "Bem-vindo ao nosso site" %}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

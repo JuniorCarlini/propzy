@@ -1,0 +1,57 @@
+{% extends "base/dashboard_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Dashboard" %} - {{ tenant.name }}{% endblock %}
+
+{% block main_content %}
+<div class="container-fluid">
+    <h1 class="mb-4">{% trans "Dashboard" %}</h1>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{% trans "Tenant" %}</h5>
+                    <p class="card-text">{{ tenant.name }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{% trans "Plano" %}</h5>
+                    <p class="card-text">{{ tenant.get_plan_display }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{% trans "Status" %}</h5>
+                    <p class="card-text">
+                        {% if tenant.is_active %}
+                            <span class="badge bg-success">{% trans "Ativo" %}</span>
+                        {% else %}
+                            <span class="badge bg-danger">{% trans "Inativo" %}</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{% trans "Usuário" %}</h5>
+                    <p class="card-text">{{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,28 @@
+# Django
+Django==5.0.1
+djangorestframework==3.14.0
+
+# Database
+psycopg2-binary==2.9.9
+
+# Server
+gunicorn==21.2.0
+
+# Celery
+celery==5.3.4
+redis==5.0.1
+
+# DNS Resolution (para verificação de domínios)
+dnspython==2.4.2
+
+# Utils
+python-decouple==3.8
+
+# Internationalization
+django-modeltranslation==0.18.12
+
+# Security
+django-cors-headers==4.3.1
+
+
+

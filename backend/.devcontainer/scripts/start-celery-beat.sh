@@ -1,0 +1,49 @@
+#!/bin/bash
+set -e
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "⏰ INICIANDO CELERY BEAT"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+cd /app
+
+# Aguardar banco de dados
+echo "⏳ Aguardando PostgreSQL..."
+until python -c "import psycopg2; psycopg2.connect(host='db', dbname='propzy_dev', user='postgres', password='postgres_dev')" 2>/dev/null; do
+  echo "   PostgreSQL ainda não está pronto..."
+  sleep 2
+done
+echo "✅ PostgreSQL conectado!"
+
+# Aguardar Redis
+echo "⏳ Aguardando Redis..."
+until python -c "import redis; r = redis.Redis(host='redis', port=6379, password='redis_dev_password'); r.ping()" 2>/dev/null; do
+  echo "   Redis ainda não está pronto..."
+  sleep 2
+done
+echo "✅ Redis conectado!"
+
+# Aguardar Django estar pronto
+echo "⏳ Aguardando Django..."
+until python -c "import urllib.request; urllib.request.urlopen('http://web:8000/api/health/', timeout=5)" 2>/dev/null; do
+  echo "   Django ainda não está pronto..."
+  sleep 2
+done
+echo "✅ Django conectado!"
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✅ CELERY BEAT PRONTO!"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "⏰ Agendador de tarefas iniciado"
+echo "📅 Tarefas periódicas serão executadas conforme configurado"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# Iniciar Celery Beat
+exec celery -A config beat --loglevel=info
+
+
+
+
+

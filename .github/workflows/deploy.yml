@@ -1,0 +1,81 @@
+name: 🚀 Deploy Automático para VPS
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'backend/**'
+      - 'infra/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy para VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+      
+      - name: 🔐 Configurar SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+      
+      - name: 🚀 Deploy na VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              -o UserKnownHostsFile=/dev/null \
+              root@${{ secrets.VPS_IP }} << 'ENDSSH'
+            set -e
+            
+            echo "🚀 Deploy Automático - $(date)"
+            echo "===================================="
+            
+            cd /root/apps/propzy
+            
+            # Backup automático
+            echo "📦 Criando backup..."
+            BACKUP_FILE="backup-$(date +%Y%m%d-%H%M%S).tar.gz"
+            tar -czf "$BACKUP_FILE" backend/ infra/ 2>/dev/null || true
+            echo "✅ Backup: $BACKUP_FILE"
+            
+            # Atualizar código
+            echo "📥 Atualizando código..."
+            git fetch origin
+            CURRENT_BRANCH=$(git branch --show-current || echo "main")
+            git reset --hard "origin/${CURRENT_BRANCH:-main}"
+            echo "✅ Código atualizado"
+            
+            # Deploy
+            cd infra
+            echo "🔄 Reiniciando serviços..."
+            docker compose restart web celery celery-beat
+            sleep 15
+            
+            echo "🔄 Recarregando Nginx..."
+            docker compose exec nginx nginx -s reload || docker compose restart nginx
+            
+            # Health check
+            echo "🏥 Verificando saúde..."
+            sleep 5
+            if curl -f http://localhost/api/health/ > /dev/null 2>&1; then
+              echo "✅ Health check OK"
+            else
+              echo "⚠️ Health check falhou"
+              exit 1
+            fi
+            
+            echo "✅ Deploy concluído!"
+          ENDSSH
+      
+      - name: ✅ Deploy Concluído
+        if: success()
+        run: echo "✅ Deploy executado com sucesso!"
+
+
+

@@ -1,0 +1,83 @@
+{% extends "base/dashboard_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Adicionar Domínio" %}{% endblock %}
+
+{% block main_content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>{% trans "Adicionar Domínio" %}</h1>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'domains:list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> {% trans "Voltar" %}
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">{% trans "Informações do Domínio" %}</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="domain" class="form-label">{% trans "Domínio" %} *</label>
+                            <input type="text" class="form-control" id="domain" name="domain" 
+                                   placeholder="exemplo.com.br" required>
+                            <small class="form-text text-muted">
+                                {% trans "Digite apenas o domínio, sem http:// ou https://" %}
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="type" class="form-label">{% trans "Tipo" %}</label>
+                            <select class="form-select" id="type" name="type">
+                                <option value="custom">{% trans "Domínio Personalizado" %}</option>
+                                <option value="subdomain">{% trans "Subdomínio" %}</option>
+                            </select>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>{% trans "Importante" %}:</strong>
+                            {% trans "Após cadastrar, você receberá instruções para configurar o DNS do seu domínio." %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> {% trans "Cadastrar Domínio" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">{% trans "Tipos de Domínio" %}</h5>
+                </div>
+                <div class="card-body">
+                    <h6>{% trans "Domínio Personalizado" %}</h6>
+                    <p class="small">
+                        {% trans "Use seu próprio domínio (ex: imobiliaria.com.br). Você precisará configurar o DNS no seu provedor." %}
+                    </p>
+
+                    <h6 class="mt-3">{% trans "Subdomínio" %}</h6>
+                    <p class="small">
+                        {% trans "Use um subdomínio do Propzy (ex: suaempresa.propzy.com.br). Configuração automática." %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,128 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/media
+/staticfiles
+/static
+celerybeat-schedule
+celerybeat.pid
+
+# Logs (manter estrutura mas ignorar conteúdo)
+infra/logs/*
+!infra/logs/.gitkeep
+backend/logs/
+*.log
+
+# Environment
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Segurança - NUNCA commitar
+.vps-info.txt
+*.pem
+*.key
+*.crt
+*.tar.gz
+backup-*.tar.gz
+/secrets/
+*.secret
+
+# Docker
+*.pid
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+
+# Arquivos temporários de debug/troubleshooting
+*-DEBUG.txt
+*-ERRO.txt
+*-CORRIGIR.txt
+*-VERIFICAR.txt
+*-COMANDOS.txt
+*-ATUALIZAR.txt
+*-TESTAR.txt
+*-SOLUCAO.txt
+*-VOLTAR.txt
+*-MARCAR.txt
+*-CRIAR-*.sh
+*-CONFIGURAR-*.sh
+*-ENVIAR-*.sh
+*-REINICIAR-*.sh
+*-DEPLOY-MINHA-*.sh
+*-CONECTAR-*.sh
+*-PREPARAR-*.sh
+*-INSTALAR-*.sh
+*-SCRIPT-*.sh
+
+# Documentação temporária/debug
+*-DEBUG.md
+*-ERRO.md
+*-CORRIGIR.md
+*-VERIFICAR.md
+*-TESTAR.md
+*-SOLUCAO.md
+*-EXPLICACAO-*.md
+*-PASSO-A-PASSO-*.md
+*-RESUMO-*.md
+*-CHECKLIST-*.md
+*-CADASTRO-*.md
+*-GUIA-*.md
+*-IMPLEMENTAR-*.md
+*-INSTALAR-*.md
+*-QUICK-*.md
+*-QUICKSTART.md
+*-README-START.md
+*-IMPLEMENTATION_SUMMARY.md
+
+# Manter apenas documentação essencial
+!README.md
+!ARCHITECTURE.md
+!DEPLOY.md
