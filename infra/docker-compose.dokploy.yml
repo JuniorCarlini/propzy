@@ -24,16 +24,26 @@ services:
     build:
       context: ../backend
       dockerfile: Dockerfile
-    entrypoint: ["bash", "/app/infra/scripts/entrypoint.sh"]
     command: >
-      sh -c "gunicorn config.wsgi:application 
+      bash -c "
+      echo '🚀 Iniciando entrypoint...' &&
+      echo '⏳ Aguardando PostgreSQL...' &&
+      while ! pg_isready -h db -U postgres; do sleep 1; done &&
+      echo '✅ PostgreSQL está pronto!' &&
+      echo '📦 Executando migrações...' &&
+      python manage.py migrate --noinput &&
+      echo '📁 Coletando arquivos estáticos...' &&
+      python manage.py collectstatic --noinput &&
+      echo '✅ Iniciando Gunicorn...' &&
+      gunicorn config.wsgi:application 
       --bind 0.0.0.0:8000 
       --workers 4
       --max-requests 1000 
       --max-requests-jitter 50
       --timeout 120
       --access-logfile -
-      --error-logfile -"
+      --error-logfile -
+      "
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
