@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15-alpine
     environment:
       POSTGRES_DB: propzy
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: propzy123teste
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -46,55 +44,37 @@ services:
       DB_HOST: db
       DB_NAME: propzy
       DB_USER: postgres
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: propzy123teste
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
       REDIS_URL: redis://redis:6379/1
       CREATE_SUPERUSER: "false"
-      SECRET_KEY: ${SECRET_KEY}
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
-      VPS_IP: ${VPS_IP}
-      PROXY_DOMAIN: ${PROXY_DOMAIN}
+      SECRET_KEY: teste-secret-key-apenas-para-desenvolvimento-nao-use-em-producao-12345678
+      ALLOWED_HOSTS: "*"
+      VPS_IP: 167.88.54.162
+      PROXY_DOMAIN: proxy.propzy.com.br
     depends_on:
       - db
       - redis
-    # =============================================================================
-    # LABELS TRAEFIK - A MÁGICA ACONTECE AQUI! 🎉
-    # =============================================================================
-    # Traefik detecta qualquer domínio e gera SSL automaticamente
-    # Sem API, sem código adicional, 100% automático!
-    # =============================================================================
     labels:
       # ═══════════════════════════════════════════════════════════════
-      # 1. HABILITAR TRAEFIK
+      # TRAEFIK - SSL AUTOMÁTICO PARA QUALQUER DOMÍNIO
       # ═══════════════════════════════════════════════════════════════
       - "traefik.enable=true"
       
-      # ═══════════════════════════════════════════════════════════════
-      # 2. ROTEAMENTO HTTPS - ACEITA QUALQUER DOMÍNIO
-      # ═══════════════════════════════════════════════════════════════
-      # HostRegexp aceita QUALQUER domínio (propzy.com.br, cliente1.com, etc)
+      # HTTPS - Aceita qualquer domínio
       - "traefik.http.routers.propzy-secure.rule=HostRegexp(`{domain:.+}`)"
       - "traefik.http.routers.propzy-secure.entrypoints=websecure"
-      
-      # SSL AUTOMÁTICO via Let's Encrypt - A MÁGICA! ✨
-      # Traefik gera certificado automaticamente para cada domínio novo
       - "traefik.http.routers.propzy-secure.tls.certresolver=letsencrypt"
       
-      # ═══════════════════════════════════════════════════════════════
-      # 3. REDIRECIONAMENTO HTTP → HTTPS
-      # ═══════════════════════════════════════════════════════════════
+      # HTTP → HTTPS redirect
       - "traefik.http.routers.propzy-http.rule=HostRegexp(`{domain:.+}`)"
       - "traefik.http.routers.propzy-http.entrypoints=web"
       - "traefik.http.routers.propzy-http.middlewares=redirect-to-https"
-      
-      # Middleware de redirecionamento
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
       
-      # ═══════════════════════════════════════════════════════════════
-      # 4. HEADERS DE SEGURANÇA
-      # ═══════════════════════════════════════════════════════════════
+      # Security Headers
       - "traefik.http.middlewares.security-headers.headers.stsSeconds=31536000"
       - "traefik.http.middlewares.security-headers.headers.stsIncludeSubdomains=true"
       - "traefik.http.middlewares.security-headers.headers.stsPreload=true"
@@ -103,28 +83,20 @@ services:
       - "traefik.http.middlewares.security-headers.headers.frameDeny=true"
       - "traefik.http.middlewares.security-headers.headers.referrerPolicy=strict-origin-when-cross-origin"
       
-      # ═══════════════════════════════════════════════════════════════
-      # 5. RATE LIMITING (proteção DDoS)
-      # ═══════════════════════════════════════════════════════════════
+      # Rate Limiting
       - "traefik.http.middlewares.rate-limit.ratelimit.average=100"
       - "traefik.http.middlewares.rate-limit.ratelimit.burst=50"
       
-      # ═══════════════════════════════════════════════════════════════
-      # 6. APLICAR MIDDLEWARES
-      # ═══════════════════════════════════════════════════════════════
+      # Aplicar middlewares
       - "traefik.http.routers.propzy-secure.middlewares=security-headers,rate-limit"
       
-      # ═══════════════════════════════════════════════════════════════
-      # 7. BACKEND SERVICE (Django)
-      # ═══════════════════════════════════════════════════════════════
+      # Backend Django
       - "traefik.http.services.propzy.loadbalancer.server.port=8000"
       - "traefik.http.services.propzy.loadbalancer.server.scheme=http"
       - "traefik.http.services.propzy.loadbalancer.passhostheader=true"
       
     networks:
       - propzy_network
-      # IMPORTANTE: Conectar à rede do Traefik (EasyPanel cria essa rede)
-      # O nome pode variar, verifique com: docker network ls
       - traefik_network
     restart: unless-stopped
 
@@ -146,12 +118,12 @@ services:
       DB_HOST: db
       DB_NAME: propzy
       DB_USER: postgres
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: propzy123teste
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
-      VPS_IP: ${VPS_IP}
-      PROXY_DOMAIN: ${PROXY_DOMAIN}
-      SECRET_KEY: ${SECRET_KEY}
+      VPS_IP: 167.88.54.162
+      PROXY_DOMAIN: proxy.propzy.com.br
+      SECRET_KEY: teste-secret-key-apenas-para-desenvolvimento-nao-use-em-producao-12345678
     depends_on:
       - db
       - redis
@@ -173,12 +145,12 @@ services:
       DB_HOST: db
       DB_NAME: propzy
       DB_USER: postgres
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: propzy123teste
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
-      VPS_IP: ${VPS_IP}
-      PROXY_DOMAIN: ${PROXY_DOMAIN}
-      SECRET_KEY: ${SECRET_KEY}
+      VPS_IP: 167.88.54.162
+      PROXY_DOMAIN: proxy.propzy.com.br
+      SECRET_KEY: teste-secret-key-apenas-para-desenvolvimento-nao-use-em-producao-12345678
     depends_on:
       - db
       - redis
@@ -200,4 +172,3 @@ networks:
   traefik_network:
     external: true
     name: easypanel
-
