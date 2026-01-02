@@ -36,3 +36,4 @@ echo "✅ Entrypoint concluído!"
 
 # Executar comando passado como argumento
 exec "$@"
+
