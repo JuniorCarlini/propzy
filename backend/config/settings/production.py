@@ -62,7 +62,8 @@ SECURE_SSL_REDIRECT = True  # Origin CA instalado - SSL end-to-end
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Static files
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+# Usando StaticFilesStorage simples para evitar problemas com manifest em Docker
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Database connection pooling otimizado
 DATABASES['default']['CONN_MAX_AGE'] = 600
