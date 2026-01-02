@@ -25,10 +25,13 @@ services:
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "--auth", "${REDIS_PASSWORD:-changeme_redis_password}", "ping"]
+      test: ["CMD-SHELL", "timeout 1 redis-cli -a \"$$REDIS_PASSWORD\" ping || exit 1"]
       interval: 10s
-      timeout: 5s
+      timeout: 3s
       retries: 5
+      start_period: 10s
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme_redis_password}
     networks:
       - propzy_network
     restart: unless-stopped
