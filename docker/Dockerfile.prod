@@ -1,0 +1,64 @@
+FROM python:3.13-slim
+
+# Defina variáveis de ambiente
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    UV_SYSTEM_PYTHON=1 \
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    DJANGO_SETTINGS_MODULE=config.settings
+
+# Instale dependências do sistema para produção
+RUN apt-get update && apt-get install -y \
+    nginx \
+    build-essential \
+    libpq-dev \
+    postgresql-client \
+    supervisor \
+    cron \
+    curl \
+    gettext \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configure o diretório de trabalho
+WORKDIR /app
+
+# Instale o UV e configure o PATH
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    mv /root/.local/bin/uv* /usr/local/bin/
+
+# Copie os arquivos de dependência
+COPY pyproject.toml uv.lock ./
+
+# Instale as dependências com UV (somente requisitos base)
+RUN uv sync --frozen
+
+# Ative o virtual environment permanentemente
+ENV VIRTUAL_ENV="/opt/venv"
+ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
+
+# Copie o código do projeto
+COPY . .
+
+# Criar diretórios necessários para logs
+RUN mkdir -p /var/log/supervisor /var/log/celery /var/log/gunicorn /app/staticfiles /app/media
+
+# Copie a configuração do Supervisor
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copie a configuração do Nginx
+COPY docker/nginx_app.conf /etc/nginx/nginx.conf
+
+# Dê permissão ao script de início
+COPY docker/start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# Ajustar permissões
+RUN chown -R www-data:www-data /app && \
+    chown -R www-data:www-data /var/log/celery && \
+    chown -R www-data:www-data /var/log/gunicorn
+
+# Exponha a porta 80 para o Nginx
+EXPOSE 80
+
+# Comando para iniciar usando o supervisor via start.sh
+CMD ["/app/start.sh", "supervisord"]

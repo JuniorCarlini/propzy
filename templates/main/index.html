@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% load i18n static %} {% block title %}{% trans
+"Painel" %} · propzy{% endblock %} {% block content %}
+<div class="main-content-empty fade-in">
+  <img
+    src="{% static 'img/logo_ecopore.avif' %}"
+    alt="propzy"
+    class="logo-display"
+  />
+  <div class="card shadow-sm border-0" style="max-width: 560px">
+    <div class="card-body p-4">
+      <h1 class="h4 mb-3">{% trans "Bem-vindo(a) ao propzy" %}</h1>
+      <p class="text-body-secondary mb-0">
+        {% blocktrans %} Utilize o menu lateral para navegar pelas
+        funcionalidades do sistema. {% endblocktrans %}
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

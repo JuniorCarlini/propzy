@@ -1,0 +1,1575 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-03 15:51-0400\n"
+"PO-Revision-Date: 2025-10-26 22:00+0000\n"
+"Last-Translator: propzy Team <contato@propzy.local>\n"
+"Language-Team: Portuguese (Brazil) <propzy@example.com>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: accounts/admin.py:23
+msgid "Informações pessoais"
+msgstr "Informações pessoais"
+
+#: accounts/admin.py:27 accounts/forms.py:234
+#: templates/accounts/group_list.html:28
+msgid "Permissões"
+msgstr "Permissões"
+
+#: accounts/admin.py:30
+msgid "Datas importantes"
+msgstr "Datas importantes"
+
+#: accounts/forms.py:71 accounts/forms.py:86 accounts/forms.py:144
+#: accounts/forms.py:205 templates/accounts/user_list.html:43
+#: templates/departments/department_add_user.html:41
+#: templates/departments/department_users.html:57
+msgid "E-mail"
+msgstr "E-mail"
+
+#: accounts/forms.py:72 accounts/forms.py:151
+msgid "Senha"
+msgstr "Senha"
+
+#: accounts/forms.py:75
+msgid "Lembrar acesso"
+msgstr "Lembrar acesso"
+
+#: accounts/forms.py:98
+msgid "Nova senha"
+msgstr "Nova senha"
+
+#: accounts/forms.py:99
+msgid "Confirme a nova senha"
+msgstr "Confirme a nova senha"
+
+#: accounts/forms.py:108 accounts/forms.py:178
+#: templates/accounts/user_list.html:46
+msgid "Grupos"
+msgstr "Grupos"
+
+#: accounts/forms.py:145 accounts/forms.py:206 accounts/models.py:56
+msgid "Nome completo"
+msgstr "Nome completo"
+
+#: accounts/forms.py:146 accounts/forms.py:207 accounts/models.py:61
+#: templates/accounts/user_list.html:44
+msgid "Telefone"
+msgstr "Telefone"
+
+#: accounts/forms.py:147 accounts/forms.py:208 accounts/models.py:58
+msgid "Endereço"
+msgstr "Endereço"
+
+#: accounts/forms.py:148 accounts/forms.py:209 accounts/models.py:59
+msgid "Cidade"
+msgstr "Cidade"
+
+#: accounts/forms.py:149 accounts/forms.py:210 accounts/models.py:60
+msgid "Estado"
+msgstr "Estado"
+
+#: accounts/forms.py:150 accounts/forms.py:211 departments/models.py:31
+#: templates/accounts/user_list.html:47
+#: templates/departments/department_add_user.html:43
+#: templates/departments/department_list.html:64
+#: templates/departments/department_users.html:58
+#: templates/finance/chart_of_accounts_confirm_delete.html:47
+#: templates/finance/chart_of_accounts_list.html:66
+msgid "Ativo"
+msgstr "Ativo"
+
+#: accounts/forms.py:152
+msgid "Confirme a senha"
+msgstr "Confirme a senha"
+
+#: accounts/forms.py:235
+msgid "Selecione apenas as ações disponíveis para os usuários do sistema."
+msgstr "Selecione apenas as ações disponíveis para os usuários do sistema."
+
+#: accounts/forms.py:250
+msgid "Nome do grupo"
+msgstr "Nome do grupo"
+
+#: accounts/forms.py:267
+msgid "Permissões disponíveis"
+msgstr "Permissões disponíveis"
+
+#: accounts/models.py:68 departments/models.py:41
+#: templates/accounts/user_list.html:45
+msgid "Setor"
+msgstr ""
+
+#: accounts/models.py:69
+msgid "Setor ao qual o usuário pertence"
+msgstr ""
+
+#: accounts/models.py:80 templates/departments/assign_user_department.html:24
+msgid "Usuário"
+msgstr "Usuário"
+
+#: accounts/models.py:81 templates/accounts/user_list.html:4
+#: templates/accounts/user_list.html:9 templates/base.html:80
+#: templates/departments/assign_user_department.html:10
+#: templates/departments/department_list.html:43
+msgid "Usuários"
+msgstr "Usuários"
+
+#: accounts/permissions.py:13
+msgid "Gestão de usuários"
+msgstr "Gestão de usuários"
+
+#: accounts/permissions.py:14
+msgid "Controle de acesso"
+msgstr "Controle de acesso"
+
+#: accounts/permissions.py:15
+msgid "Aplicativo principal"
+msgstr "Aplicativo principal"
+
+#: accounts/permissions.py:19
+#, python-format
+msgid "Adicionar %(object)s"
+msgstr "Adicionar %(object)s"
+
+#: accounts/permissions.py:20
+#, python-format
+msgid "Editar %(object)s"
+msgstr "Editar %(object)s"
+
+#: accounts/permissions.py:21
+#, python-format
+msgid "Excluir %(object)s"
+msgstr "Excluir %(object)s"
+
+#: accounts/permissions.py:22
+#, python-format
+msgid "Visualizar %(object)s"
+msgstr "Visualizar %(object)s"
+
+#: accounts/permissions.py:57
+#, python-format
+msgid "%(action)s %(object)s"
+msgstr "%(action)s %(object)s"
+
+#: accounts/views.py:46
+msgid "Usuário criado com sucesso."
+msgstr "Usuário criado com sucesso."
+
+#: accounts/views.py:51 templates/accounts/user_list.html:14
+msgid "Criar usuário"
+msgstr "Criar usuário"
+
+#: accounts/views.py:63
+msgid "Usuário atualizado com sucesso."
+msgstr "Usuário atualizado com sucesso."
+
+#: accounts/views.py:73
+msgid "Editar usuário"
+msgstr "Editar usuário"
+
+#: accounts/views.py:84
+msgid "Você não pode remover a si mesmo."
+msgstr "Você não pode remover a si mesmo."
+
+#: accounts/views.py:88
+msgid "Usuário removido com sucesso."
+msgstr "Usuário removido com sucesso."
+
+#: accounts/views.py:115
+msgid "Grupo criado com sucesso."
+msgstr "Grupo criado com sucesso."
+
+#: accounts/views.py:120 templates/accounts/group_list.html:14
+msgid "Criar grupo"
+msgstr "Criar grupo"
+
+#: accounts/views.py:132
+msgid "Grupo atualizado com sucesso."
+msgstr "Grupo atualizado com sucesso."
+
+#: accounts/views.py:142
+msgid "Editar grupo"
+msgstr "Editar grupo"
+
+#: accounts/views.py:154
+msgid "Grupo removido com sucesso."
+msgstr "Grupo removido com sucesso."
+
+#: config/settings.py:273
+msgid "Português"
+msgstr "Português"
+
+#: config/settings.py:274
+msgid "English"
+msgstr "Inglês"
+
+#: departments/admin.py:21 templates/departments/department_list.html:44
+#: templates/finance/chart_of_accounts_confirm_delete.html:44
+#: templates/finance/chart_of_accounts_list.html:44
+#: templates/finance/dashboard.html:109
+msgid "Status"
+msgstr ""
+
+#: departments/admin.py:22
+msgid "Datas"
+msgstr ""
+
+#: departments/apps.py:14 departments/models.py:42 templates/base.html:85
+#: templates/base.html:88 templates/departments/department_list.html:4
+#: templates/departments/department_list.html:9
+#: templates/departments/department_users.html:10
+msgid "Setores"
+msgstr ""
+
+#: departments/forms.py:18
+#, fuzzy
+#| msgid "Nome do grupo"
+msgid "Nome do setor"
+msgstr "Nome do grupo"
+
+#: departments/forms.py:21 departments/models.py:28
+msgid "Descrição detalhada do setor"
+msgstr ""
+
+#: departments/models.py:22 finance/models.py:12
+#: templates/accounts/user_list.html:42
+#: templates/departments/department_add_user.html:40
+#: templates/departments/department_list.html:41
+#: templates/departments/department_users.html:56
+#: templates/finance/bank_account_list.html:42
+#: templates/finance/category_list.html:44
+#: templates/finance/cost_center_list.html:43
+msgid "Nome"
+msgstr "Nome"
+
+#: departments/models.py:25
+msgid "Nome do setor/departamento"
+msgstr ""
+
+#: departments/models.py:28 finance/models.py:82
+#: templates/departments/department_list.html:42
+#: templates/finance/chart_of_accounts_confirm_delete.html:32
+#: templates/finance/chart_of_accounts_list.html:42
+#: templates/finance/dashboard.html:105
+#: templates/finance/transaction_list.html:43
+msgid "Descrição"
+msgstr ""
+
+#: departments/models.py:31
+msgid "Define se o setor está ativo"
+msgstr ""
+
+#: departments/models.py:33
+msgid "Criado em"
+msgstr ""
+
+#: departments/models.py:34
+#, fuzzy
+#| msgid "Atualizar senha"
+msgid "Atualizado em"
+msgstr "Atualizar senha"
+
+#: departments/models.py:56
+#, fuzzy
+#| msgid "Gestão de usuários"
+msgid "Quantidade de usuários"
+msgstr "Gestão de usuários"
+
+#: departments/views.py:55
+#, fuzzy, python-format
+#| msgid "Grupo criado com sucesso."
+msgid "Setor '%(name)s' criado com sucesso!"
+msgstr "Grupo criado com sucesso."
+
+#: departments/views.py:77
+#, fuzzy, python-format
+#| msgid "Grupo atualizado com sucesso."
+msgid "Setor '%(name)s' atualizado com sucesso!"
+msgstr "Grupo atualizado com sucesso."
+
+#: departments/views.py:99
+#, python-format
+msgid "Setor '%(name)s' excluído com sucesso!"
+msgstr ""
+
+#: departments/views.py:148 departments/views.py:180
+#, python-format
+msgid "Usuário '%(user)s' vinculado ao setor '%(department)s'!"
+msgstr ""
+
+#: departments/views.py:156
+#, python-format
+msgid "Setor removido do usuário '%(user)s'!"
+msgstr ""
+
+#: finance/apps.py:14 templates/base.html:103 templates/base.html:105
+msgid "Financeiro"
+msgstr "Financeiro"
+
+#: finance/forms.py:18
+msgid "Ex: ADM, TEC, MKT"
+msgstr ""
+
+#: finance/forms.py:19
+msgid "Ex: Administrativo"
+msgstr ""
+
+#: finance/forms.py:30
+msgid "Ex: Doações, Aluguel"
+msgstr ""
+
+#: finance/forms.py:33
+msgid "Opcional - Ex: 3.1.1.01"
+msgstr ""
+
+#: finance/forms.py:45
+msgid "Ex: Banco do Brasil CC"
+msgstr ""
+
+#: finance/forms.py:46
+msgid "Ex: Banco do Brasil"
+msgstr ""
+
+#: finance/forms.py:47
+msgid "Ex: 1234-5"
+msgstr ""
+
+#: finance/forms.py:48
+msgid "Ex: 12345-6"
+msgstr ""
+
+#: finance/forms.py:61
+msgid "Ex: Pagamento de aluguel"
+msgstr ""
+
+#: finance/models.py:13
+#: templates/finance/chart_of_accounts_confirm_delete.html:29
+#: templates/finance/chart_of_accounts_list.html:41
+#: templates/finance/cost_center_list.html:42
+msgid "Código"
+msgstr ""
+
+#: finance/models.py:13
+msgid "Ex: ADM, MKT, TEC"
+msgstr ""
+
+#: finance/models.py:16
+#, fuzzy
+#| msgid "Controle de acesso"
+msgid "Centro de Custo"
+msgstr "Controle de acesso"
+
+#: finance/models.py:17
+#, fuzzy
+#| msgid "Controle de acesso"
+msgid "Centros de Custo"
+msgstr "Controle de acesso"
+
+#: finance/models.py:30 templates/finance/category_list.html:76
+#, fuzzy
+#| msgid "Entrar"
+msgid "Entrada"
+msgstr "Entrar"
+
+#: finance/models.py:31 templates/finance/category_list.html:80
+msgid "Saída"
+msgstr ""
+
+#: finance/models.py:34
+#, fuzzy
+#| msgid "Nome do grupo"
+msgid "Nome da Categoria"
+msgstr "Nome do grupo"
+
+#: finance/models.py:35 finance/models.py:85
+#: templates/finance/category_list.html:52
+#: templates/finance/chart_of_accounts_confirm_delete.html:35
+#: templates/finance/chart_of_accounts_list.html:43
+msgid "Tipo"
+msgstr ""
+
+#: finance/models.py:39 templates/finance/category_list.html:60
+msgid "Código Contábil"
+msgstr ""
+
+#: finance/models.py:39
+msgid "Código para exportação contábil (Opcional)"
+msgstr ""
+
+#: finance/models.py:43
+#, fuzzy
+#| msgid "Financeiro"
+msgid "Categoria Financeira"
+msgstr "Financeiro"
+
+#: finance/models.py:44 templates/finance/category_list.html:4
+#: templates/finance/category_list.html:9
+msgid "Categorias Financeiras"
+msgstr ""
+
+#: finance/models.py:55
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Nome da Conta"
+msgstr "Nova senha"
+
+#: finance/models.py:56
+msgid "Instituição Financeira"
+msgstr ""
+
+#: finance/models.py:57 templates/finance/bank_account_list.html:44
+msgid "Agência"
+msgstr ""
+
+#: finance/models.py:58
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Número da Conta"
+msgstr "Nova senha"
+
+#: finance/models.py:61 templates/finance/bank_account_list.html:46
+#: templates/finance/dashboard.html:61
+msgid "Saldo Atual"
+msgstr ""
+
+#: finance/models.py:64 finance/models.py:93
+msgid "Conta Bancária"
+msgstr ""
+
+#: finance/models.py:65 templates/base.html:116
+#: templates/finance/bank_account_list.html:4
+#: templates/finance/bank_account_list.html:9
+#: templates/finance/dashboard.html:48 templates/finance/dashboard.html:165
+msgid "Contas Bancárias"
+msgstr ""
+
+#: finance/models.py:78
+msgid "Receita/Entrada"
+msgstr ""
+
+#: finance/models.py:79
+msgid "Despesa/Saída"
+msgstr ""
+
+#: finance/models.py:83
+msgid "Data de Vencimento/Pagamento"
+msgstr ""
+
+#: finance/models.py:84 templates/finance/dashboard.html:108
+#: templates/finance/transaction_list.html:46
+msgid "Valor"
+msgstr ""
+
+#: finance/models.py:90 templates/finance/dashboard.html:106
+#: templates/finance/transaction_list.html:44
+msgid "Categoria"
+msgstr ""
+
+#: finance/models.py:102
+#, fuzzy
+#| msgid "Controle de acesso"
+msgid "Centro de Custo / Depto"
+msgstr "Controle de acesso"
+
+#: finance/models.py:105
+msgid "Efetuado?"
+msgstr ""
+
+#: finance/models.py:105
+msgid "Se marcado, já impactou o saldo."
+msgstr ""
+
+#: finance/models.py:110
+msgid "Movimentação Financeira"
+msgstr ""
+
+#: finance/models.py:111 templates/finance/transaction_list.html:4
+#: templates/finance/transaction_list.html:9
+msgid "Movimentações Financeiras"
+msgstr ""
+
+#: finance/views.py:95
+#, fuzzy
+#| msgid "Grupo criado com sucesso."
+msgid "Centro de custos criado com sucesso!"
+msgstr "Grupo criado com sucesso."
+
+#: finance/views.py:114
+#, fuzzy
+#| msgid "Grupo atualizado com sucesso."
+msgid "Centro de custos atualizado com sucesso!"
+msgstr "Grupo atualizado com sucesso."
+
+#: finance/views.py:131
+#, fuzzy
+#| msgid "Grupo criado com sucesso."
+msgid "Centro de custos excluído com sucesso!"
+msgstr "Grupo criado com sucesso."
+
+#: finance/views.py:199
+#, fuzzy
+#| msgid "Grupo criado com sucesso."
+msgid "Categoria criada com sucesso!"
+msgstr "Grupo criado com sucesso."
+
+#: finance/views.py:218
+#, fuzzy
+#| msgid "Grupo atualizado com sucesso."
+msgid "Categoria atualizada com sucesso!"
+msgstr "Grupo atualizado com sucesso."
+
+#: finance/views.py:235
+#, fuzzy
+#| msgid "Senha alterada com sucesso"
+msgid "Categoria excluída com sucesso!"
+msgstr "Senha alterada com sucesso"
+
+#: finance/views.py:274
+#, fuzzy
+#| msgid "Usuário criado com sucesso."
+msgid "Conta bancária criada com sucesso!"
+msgstr "Usuário criado com sucesso."
+
+#: finance/views.py:293
+#, fuzzy
+#| msgid "Usuário atualizado com sucesso."
+msgid "Conta bancária atualizada com sucesso!"
+msgstr "Usuário atualizado com sucesso."
+
+#: finance/views.py:310
+#, fuzzy
+#| msgid "Senha alterada com sucesso"
+msgid "Conta bancária excluída com sucesso!"
+msgstr "Senha alterada com sucesso"
+
+#: finance/views.py:351
+#, fuzzy
+#| msgid "Senha alterada com sucesso"
+msgid "Movimentação criada com sucesso!"
+msgstr "Senha alterada com sucesso"
+
+#: finance/views.py:370
+#, fuzzy
+#| msgid "Grupo atualizado com sucesso."
+msgid "Movimentação atualizada com sucesso!"
+msgstr "Grupo atualizado com sucesso."
+
+#: finance/views.py:387
+#, fuzzy
+#| msgid "Senha alterada com sucesso"
+msgid "Movimentação excluída com sucesso!"
+msgstr "Senha alterada com sucesso"
+
+#: templates/account/login.html:4 templates/account/login.html:9
+#: templates/account/login.html:32 templates/base.html:65
+msgid "Entrar"
+msgstr "Entrar"
+
+#: templates/account/password_reset.html:4
+#: templates/account/password_reset.html:9
+msgid "Recuperar senha"
+msgstr "Recuperar senha"
+
+#: templates/account/password_reset.html:11
+msgid ""
+"Informe seu e-mail cadastrado para receber o link de redefinição de senha."
+msgstr ""
+"Informe seu e-mail cadastrado para receber o link de redefinição de senha."
+
+#: templates/account/password_reset.html:19
+msgid "Enviar instruções"
+msgstr "Enviar instruções"
+
+#: templates/account/password_reset_done.html:4
+msgid "E-mail enviado"
+msgstr "E-mail enviado"
+
+#: templates/account/password_reset_done.html:9
+msgid "Verifique seu e-mail"
+msgstr "Verifique seu e-mail"
+
+#: templates/account/password_reset_done.html:11
+msgid ""
+"Enviamos um link para redefinir sua senha. Caso não encontre a mensagem, "
+"verifique a caixa de spam."
+msgstr ""
+"Enviamos um link para redefinir sua senha. Caso não encontre a mensagem, "
+"verifique a caixa de spam."
+
+#: templates/account/password_reset_done.html:13
+msgid "Voltar ao login"
+msgstr "Voltar ao login"
+
+#: templates/account/password_reset_from_key.html:4
+#: templates/account/password_reset_from_key.html:9
+msgid "Definir nova senha"
+msgstr "Definir nova senha"
+
+#: templates/account/password_reset_from_key.html:12
+msgid "O link de redefinição é inválido ou já foi utilizado."
+msgstr "O link de redefinição é inválido ou já foi utilizado."
+
+#: templates/account/password_reset_from_key.html:15
+msgid "Solicitar novo link"
+msgstr "Solicitar novo link"
+
+#: templates/account/password_reset_from_key.html:27
+msgid "Atualizar senha"
+msgstr "Atualizar senha"
+
+#: templates/account/password_reset_from_key_done.html:4
+msgid "Senha atualizada"
+msgstr "Senha atualizada"
+
+#: templates/account/password_reset_from_key_done.html:9
+msgid "Senha alterada com sucesso"
+msgstr "Senha alterada com sucesso"
+
+#: templates/account/password_reset_from_key_done.html:11
+msgid "Você já pode acessar a plataforma com a nova senha."
+msgstr "Você já pode acessar a plataforma com a nova senha."
+
+#: templates/account/password_reset_from_key_done.html:13
+#: templates/account/signup_closed.html:13
+msgid "Ir para o login"
+msgstr "Ir para o login"
+
+#: templates/account/signup_closed.html:4
+msgid "Inscrições encerradas"
+msgstr "Inscrições encerradas"
+
+#: templates/account/signup_closed.html:9
+msgid "Criar conta não está disponível"
+msgstr "Criar conta não está disponível"
+
+#: templates/account/signup_closed.html:11
+msgid ""
+"O cadastro de novos usuários é controlado pela equipe da propzy. Entre em "
+"contato com o administrador se precisar de acesso."
+msgstr ""
+"O cadastro de novos usuários é controlado pela equipe da propzy. Entre em "
+"contato com o administrador se precisar de acesso."
+
+#: templates/accounts/group_confirm_delete.html:4
+#: templates/accounts/group_confirm_delete.html:9
+msgid "Excluir grupo"
+msgstr "Excluir grupo"
+
+#: templates/accounts/group_confirm_delete.html:10
+#, python-format
+msgid "Você tem certeza que deseja remover o grupo %(name)s?"
+msgstr "Você tem certeza que deseja remover o grupo %(name)s?"
+
+#: templates/accounts/group_confirm_delete.html:13
+#: templates/accounts/group_form.html:13
+#: templates/accounts/user_confirm_delete.html:13
+#: templates/accounts/user_form.html:13
+#: templates/departments/department_add_user.html:13
+#: templates/departments/department_confirm_delete.html:13
+#: templates/departments/department_form.html:31
+#: templates/finance/bank_account_confirm_delete.html:13
+#: templates/finance/bank_account_form.html:25
+#: templates/finance/category_confirm_delete.html:13
+#: templates/finance/category_form.html:25
+#: templates/finance/chart_of_accounts_form.html:31
+#: templates/finance/cost_center_confirm_delete.html:13
+#: templates/finance/cost_center_form.html:25
+#: templates/finance/transaction_confirm_delete.html:13
+#: templates/finance/transaction_form.html:25
+msgid "Voltar"
+msgstr "Voltar"
+
+#: templates/accounts/group_confirm_delete.html:25
+#: templates/accounts/user_confirm_delete.html:25
+#: templates/departments/department_confirm_delete.html:35
+#: templates/finance/bank_account_confirm_delete.html:25
+#: templates/finance/category_confirm_delete.html:25
+#: templates/finance/cost_center_confirm_delete.html:25
+#: templates/finance/transaction_confirm_delete.html:25
+msgid "Esta ação não pode ser desfeita."
+msgstr "Esta ação não pode ser desfeita."
+
+#: templates/accounts/group_confirm_delete.html:27
+#: templates/accounts/group_form.html:34
+#: templates/accounts/user_confirm_delete.html:27
+#: templates/accounts/user_form.html:34
+#: templates/departments/assign_user_department.html:55
+#: templates/departments/department_confirm_delete.html:37
+#: templates/departments/department_form.html:52
+#: templates/finance/bank_account_confirm_delete.html:27
+#: templates/finance/bank_account_form.html:46
+#: templates/finance/category_confirm_delete.html:27
+#: templates/finance/category_form.html:46
+#: templates/finance/chart_of_accounts_confirm_delete.html:58
+#: templates/finance/chart_of_accounts_form.html:52
+#: templates/finance/cost_center_confirm_delete.html:27
+#: templates/finance/cost_center_form.html:46
+#: templates/finance/transaction_confirm_delete.html:27
+#: templates/finance/transaction_form.html:46
+msgid "Cancelar"
+msgstr "Cancelar"
+
+#: templates/accounts/group_confirm_delete.html:28
+#: templates/accounts/user_confirm_delete.html:28
+#: templates/departments/department_confirm_delete.html:38
+#: templates/finance/bank_account_confirm_delete.html:28
+#: templates/finance/category_confirm_delete.html:28
+#: templates/finance/chart_of_accounts_confirm_delete.html:4
+#: templates/finance/chart_of_accounts_confirm_delete.html:11
+#: templates/finance/chart_of_accounts_confirm_delete.html:14
+#: templates/finance/cost_center_confirm_delete.html:28
+#: templates/finance/transaction_confirm_delete.html:28
+msgid "Confirmar exclusão"
+msgstr "Confirmar exclusão"
+
+#: templates/accounts/group_form.html:10
+msgid "Defina o nome do grupo e selecione as permissões disponíveis."
+msgstr "Defina o nome do grupo e selecione as permissões disponíveis."
+
+#: templates/accounts/group_form.html:35 templates/accounts/user_form.html:35
+#: templates/departments/assign_user_department.html:58
+#: templates/departments/department_form.html:53
+#: templates/finance/bank_account_form.html:47
+#: templates/finance/category_form.html:47
+#: templates/finance/chart_of_accounts_form.html:53
+#: templates/finance/cost_center_form.html:47
+#: templates/finance/transaction_form.html:47
+msgid "Salvar"
+msgstr "Salvar"
+
+#: templates/accounts/group_list.html:4 templates/accounts/group_list.html:9
+#: templates/base.html:92
+msgid "Grupos e permissões"
+msgstr "Grupos e permissões"
+
+#: templates/accounts/group_list.html:10
+msgid "Organize as permissões de acesso por perfis."
+msgstr "Organize as permissões de acesso por perfis."
+
+#: templates/accounts/group_list.html:27
+msgid "Grupo"
+msgstr "Grupo"
+
+#: templates/accounts/group_list.html:29 templates/accounts/user_list.html:48
+#: templates/departments/department_add_user.html:44
+#: templates/departments/department_list.html:45
+#: templates/departments/department_users.html:59
+#: templates/finance/bank_account_list.html:47
+#: templates/finance/category_list.html:66
+#: templates/finance/chart_of_accounts_list.html:45
+#: templates/finance/cost_center_list.html:44
+#: templates/finance/transaction_list.html:48
+msgid "Ações"
+msgstr "Ações"
+
+#: templates/accounts/group_list.html:44
+msgid "Sem permissões"
+msgstr "Sem permissões"
+
+#: templates/accounts/group_list.html:50 templates/accounts/user_list.html:92
+#: templates/departments/department_list.html:77
+#: templates/departments/department_users.html:79
+#: templates/finance/bank_account_list.html:65
+#: templates/finance/category_list.html:90
+#: templates/finance/chart_of_accounts_list.html:74
+#: templates/finance/cost_center_list.html:55
+#: templates/finance/transaction_list.html:79
+#, fuzzy
+#| msgid "Editar grupo"
+msgid "Editar"
+msgstr "Editar grupo"
+
+#: templates/accounts/group_list.html:55 templates/accounts/user_list.html:97
+#: templates/departments/department_list.html:82
+#: templates/finance/bank_account_list.html:70
+#: templates/finance/category_list.html:95
+#: templates/finance/chart_of_accounts_confirm_delete.html:61
+#: templates/finance/chart_of_accounts_list.html:79
+#: templates/finance/cost_center_list.html:60
+#: templates/finance/transaction_list.html:84
+#, fuzzy
+#| msgid "Excluir grupo"
+msgid "Excluir"
+msgstr "Excluir grupo"
+
+#: templates/accounts/group_list.html:64
+msgid "Nenhum grupo cadastrado."
+msgstr "Nenhum grupo cadastrado."
+
+#: templates/accounts/group_list.html:75
+msgid "Voltar para usuários"
+msgstr "Voltar para usuários"
+
+#: templates/accounts/user_confirm_delete.html:4
+#: templates/accounts/user_confirm_delete.html:9
+msgid "Excluir usuário"
+msgstr "Excluir usuário"
+
+#: templates/accounts/user_confirm_delete.html:10
+#, python-format
+msgid "Você tem certeza que deseja remover %(email)s?"
+msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#: templates/accounts/user_form.html:10
+msgid "Preencha os dados do usuário e defina os grupos de acesso."
+msgstr "Preencha os dados do usuário e defina os grupos de acesso."
+
+#: templates/accounts/user_list.html:10
+msgid "Gerencie as contas internas, grupos e permissões."
+msgstr "Gerencie as contas internas, grupos e permissões."
+
+#: templates/accounts/user_list.html:21
+#: templates/departments/department_add_user.html:19
+#: templates/departments/department_users.html:36
+#, fuzzy
+#| msgid "Criar usuário"
+msgid "Buscar usuários..."
+msgstr "Criar usuário"
+
+#: templates/accounts/user_list.html:74
+msgid "Sem grupo"
+msgstr "Sem grupo"
+
+#: templates/accounts/user_list.html:79
+#: templates/departments/department_add_user.html:61
+#: templates/departments/department_users.html:71
+#: templates/finance/transaction_list.html:71
+msgid "Sim"
+msgstr ""
+
+#: templates/accounts/user_list.html:81
+#: templates/departments/department_add_user.html:63
+#: templates/departments/department_users.html:73
+msgid "Não"
+msgstr ""
+
+#: templates/accounts/user_list.html:87
+#: templates/departments/assign_user_department.html:11
+msgid "Vincular ao setor"
+msgstr ""
+
+#: templates/accounts/user_list.html:112
+#: templates/departments/department_add_user.html:84
+#: templates/departments/department_list.html:96
+#: templates/departments/department_users.html:96
+#: templates/finance/chart_of_accounts_list.html:93
+msgid "Navegação de páginas"
+msgstr ""
+
+#: templates/accounts/user_list.html:116
+#: templates/departments/department_add_user.html:88
+#: templates/departments/department_list.html:100
+#: templates/departments/department_users.html:100
+#: templates/finance/chart_of_accounts_list.html:97
+msgid "Primeira"
+msgstr ""
+
+#: templates/accounts/user_list.html:119
+#: templates/departments/department_add_user.html:91
+#: templates/departments/department_list.html:103
+#: templates/departments/department_users.html:103
+#: templates/finance/chart_of_accounts_list.html:102
+msgid "Anterior"
+msgstr ""
+
+#: templates/accounts/user_list.html:124
+#: templates/departments/department_add_user.html:96
+#: templates/departments/department_list.html:108
+#: templates/departments/department_users.html:108
+#: templates/finance/chart_of_accounts_list.html:110
+msgid "de"
+msgstr ""
+
+#: templates/accounts/user_list.html:129
+#: templates/departments/department_add_user.html:101
+#: templates/departments/department_list.html:113
+#: templates/departments/department_users.html:113
+#: templates/finance/chart_of_accounts_list.html:116
+msgid "Próxima"
+msgstr ""
+
+#: templates/accounts/user_list.html:132
+#: templates/departments/department_add_user.html:104
+#: templates/departments/department_list.html:116
+#: templates/departments/department_users.html:116
+#: templates/finance/chart_of_accounts_list.html:121
+msgid "Última"
+msgstr ""
+
+#: templates/accounts/user_list.html:142
+#, fuzzy
+#| msgid "Nenhum grupo cadastrado."
+msgid "Nenhum usuário encontrado"
+msgstr "Nenhum grupo cadastrado."
+
+#: templates/accounts/user_list.html:144
+#: templates/departments/department_add_user.html:116
+msgid "Tente ajustar os termos da busca"
+msgstr ""
+
+#: templates/accounts/user_list.html:146
+msgid "Ainda não há usuários cadastrados no sistema"
+msgstr ""
+
+#: templates/base.html:18
+msgid "Abrir menu"
+msgstr ""
+
+#: templates/base.html:57
+msgid "Bem-vindo"
+msgstr "Bem-vindo"
+
+#: templates/base.html:58
+msgid "Acesse sua conta"
+msgstr "Acesse sua conta"
+
+#: templates/base.html:73
+msgid "Início"
+msgstr "Início"
+
+#: templates/base.html:77
+msgid "Cadastros"
+msgstr ""
+
+#: templates/base.html:98 templates/base.html:99
+msgid "Projetos"
+msgstr "Projetos"
+
+#: templates/base.html:107
+msgid "Dashboard"
+msgstr ""
+
+#: templates/base.html:111 templates/finance/dashboard.html:156
+msgid "Categorias"
+msgstr ""
+
+#: templates/base.html:121 templates/finance/cost_center_list.html:4
+#: templates/finance/cost_center_list.html:9
+#: templates/finance/dashboard.html:174
+#, fuzzy
+#| msgid "Controle de acesso"
+msgid "Centros de Custos"
+msgstr "Controle de acesso"
+
+#: templates/base.html:126 templates/finance/dashboard.html:183
+msgid "Movimentações"
+msgstr ""
+
+#: templates/base.html:132 templates/base.html:133
+msgid "Relatórios"
+msgstr ""
+
+#: templates/base.html:146
+msgid "Idioma"
+msgstr "Idioma"
+
+#: templates/base.html:147
+msgid "Selecionar idioma"
+msgstr "Selecionar idioma"
+
+#: templates/base.html:157
+msgid "Sair"
+msgstr "Sair"
+
+#: templates/departments/assign_user_department.html:4
+#: templates/departments/assign_user_department.html:14
+#: templates/departments/department_add_user.html:9
+#, fuzzy
+#| msgid "Criar usuário"
+msgid "Vincular usuário ao setor"
+msgstr "Criar usuário"
+
+#: templates/departments/assign_user_department.html:30
+#: templates/departments/department_add_user.html:42
+msgid "Setor atual"
+msgstr ""
+
+#: templates/departments/assign_user_department.html:39
+#, fuzzy
+#| msgid "Selecionar idioma"
+msgid "Selecionar setor"
+msgstr "Selecionar idioma"
+
+#: templates/departments/assign_user_department.html:41
+msgid "Nenhum setor"
+msgstr ""
+
+#: templates/departments/assign_user_department.html:49
+msgid ""
+"Selecione o setor ao qual o usuário será vinculado, ou selecione 'Nenhum "
+"setor' para remover o vínculo"
+msgstr ""
+
+#: templates/departments/department_add_user.html:4
+#: templates/departments/department_users.html:22
+#, fuzzy
+#| msgid "Criar usuário"
+msgid "Vincular usuário"
+msgstr "Criar usuário"
+
+#: templates/departments/department_add_user.html:56
+#, fuzzy
+#| msgid "Selecionar idioma"
+msgid "Sem setor"
+msgstr "Selecionar idioma"
+
+#: templates/departments/department_add_user.html:71
+msgid "Vincular"
+msgstr ""
+
+#: templates/departments/department_add_user.html:114
+msgid "Nenhum usuário disponível"
+msgstr ""
+
+#: templates/departments/department_add_user.html:118
+msgid ""
+"Todos os usuários ativos já estão vinculados a este setor ou não há usuários "
+"cadastrados"
+msgstr ""
+
+#: templates/departments/department_confirm_delete.html:4
+#: templates/departments/department_confirm_delete.html:9
+#, fuzzy
+#| msgid "Excluir grupo"
+msgid "Excluir setor"
+msgstr "Excluir grupo"
+
+#: templates/departments/department_confirm_delete.html:10
+#: templates/finance/bank_account_confirm_delete.html:10
+#: templates/finance/category_confirm_delete.html:10
+#, fuzzy, python-format
+#| msgid "Você tem certeza que deseja remover %(email)s?"
+msgid "Você tem certeza que deseja remover %(name)s?"
+msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#: templates/departments/department_confirm_delete.html:28
+#, python-format
+msgid ""
+"\n"
+"                        Este setor possui %(counter)s usuário vinculado. O "
+"vínculo será removido.\n"
+"                        "
+msgid_plural ""
+"\n"
+"                        Este setor possui %(counter)s usuários vinculados. "
+"Os vínculos serão removidos.\n"
+"                        "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/departments/department_form.html:6
+#: templates/departments/department_form.html:17
+#: templates/departments/department_users.html:27
+#, fuzzy
+#| msgid "Editar usuário"
+msgid "Editar setor"
+msgstr "Editar usuário"
+
+#: templates/departments/department_form.html:8
+#: templates/departments/department_form.html:19
+#: templates/departments/department_list.html:14
+msgid "Novo setor"
+msgstr ""
+
+#: templates/departments/department_form.html:24
+msgid "Atualize as informações do setor/departamento."
+msgstr ""
+
+#: templates/departments/department_form.html:26
+msgid "Cadastre um novo setor/departamento da organização."
+msgstr ""
+
+#: templates/departments/department_list.html:10
+msgid "Gerencie os setores/departamentos da organização"
+msgstr ""
+
+#: templates/departments/department_list.html:21
+msgid "Buscar setores..."
+msgstr ""
+
+#: templates/departments/department_list.html:66
+#: templates/finance/chart_of_accounts_confirm_delete.html:49
+#: templates/finance/chart_of_accounts_list.html:68
+#, fuzzy
+#| msgid "Ativo"
+msgid "Inativo"
+msgstr "Ativo"
+
+#: templates/departments/department_list.html:72
+#, fuzzy
+#| msgid "Usuário"
+msgid "Ver usuários"
+msgstr "Usuário"
+
+#: templates/departments/department_list.html:126
+#, fuzzy
+#| msgid "Nenhum grupo cadastrado."
+msgid "Nenhum setor encontrado"
+msgstr "Nenhum grupo cadastrado."
+
+#: templates/departments/department_list.html:128
+msgid "Tente refinar sua busca"
+msgstr ""
+
+#: templates/departments/department_list.html:130
+msgid "Comece criando o primeiro setor"
+msgstr ""
+
+#: templates/departments/department_users.html:4
+#, fuzzy
+#| msgid "Usuários"
+msgid "Usuários do setor"
+msgstr "Usuários"
+
+#: templates/departments/department_users.html:17
+#, fuzzy
+#| msgid "Usuário criado com sucesso."
+msgid "Usuários vinculados a este setor"
+msgstr "Usuário criado com sucesso."
+
+#: templates/departments/department_users.html:82
+msgid "Alterar setor"
+msgstr ""
+
+#: templates/departments/department_users.html:126
+msgid "Nenhum usuário vinculado"
+msgstr ""
+
+#: templates/departments/department_users.html:127
+msgid "Este setor ainda não possui usuários vinculados"
+msgstr ""
+
+#: templates/finance/bank_account_confirm_delete.html:4
+#: templates/finance/bank_account_confirm_delete.html:9
+#, fuzzy
+#| msgid "Excluir usuário"
+msgid "Excluir conta bancária"
+msgstr "Excluir usuário"
+
+#: templates/finance/bank_account_form.html:6
+#: templates/finance/bank_account_form.html:17
+#, fuzzy
+#| msgid "Editar grupo"
+msgid "Editar conta bancária"
+msgstr "Editar grupo"
+
+#: templates/finance/bank_account_form.html:8
+#: templates/finance/bank_account_form.html:19
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Nova conta bancária"
+msgstr "Nova senha"
+
+#: templates/finance/bank_account_form.html:22
+msgid "Preencha as informações da conta bancária."
+msgstr ""
+
+#: templates/finance/bank_account_list.html:10
+#, fuzzy
+#| msgid "Nenhum grupo cadastrado."
+msgid "Gerencie as contas bancárias da organização."
+msgstr "Nenhum grupo cadastrado."
+
+#: templates/finance/bank_account_list.html:14
+#: templates/finance/chart_of_accounts_list.html:14
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Nova conta"
+msgstr "Nova senha"
+
+#: templates/finance/bank_account_list.html:21
+#, fuzzy
+#| msgid "Criar usuário"
+msgid "Buscar contas bancárias..."
+msgstr "Criar usuário"
+
+#: templates/finance/bank_account_list.html:43
+#: templates/finance/dashboard.html:60
+msgid "Banco"
+msgstr ""
+
+#: templates/finance/bank_account_list.html:45
+#: templates/finance/dashboard.html:59 templates/finance/dashboard.html:107
+#: templates/finance/transaction_list.html:45
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Conta"
+msgstr "Nova senha"
+
+#: templates/finance/bank_account_list.html:114
+#: templates/finance/dashboard.html:78
+#, fuzzy
+#| msgid "Nenhum grupo cadastrado."
+msgid "Nenhuma conta bancária cadastrada."
+msgstr "Nenhum grupo cadastrado."
+
+#: templates/finance/category_confirm_delete.html:4
+#: templates/finance/category_confirm_delete.html:9
+#, fuzzy
+#| msgid "Excluir grupo"
+msgid "Excluir categoria"
+msgstr "Excluir grupo"
+
+#: templates/finance/category_form.html:6
+#: templates/finance/category_form.html:17
+#, fuzzy
+#| msgid "Editar grupo"
+msgid "Editar categoria"
+msgstr "Editar grupo"
+
+#: templates/finance/category_form.html:8
+#: templates/finance/category_form.html:19
+#: templates/finance/category_list.html:14
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Nova categoria"
+msgstr "Nova senha"
+
+#: templates/finance/category_form.html:22
+msgid "Preencha as informações da categoria financeira."
+msgstr ""
+
+#: templates/finance/category_list.html:10
+#, fuzzy
+#| msgid "Gerencie as contas internas, grupos e permissões."
+msgid "Gerencie as categorias de entrada e saída financeira."
+msgstr "Gerencie as contas internas, grupos e permissões."
+
+#: templates/finance/category_list.html:21
+#, fuzzy
+#| msgid "Criar usuário"
+msgid "Buscar categorias..."
+msgstr "Criar usuário"
+
+#: templates/finance/category_list.html:139
+#, fuzzy
+#| msgid "Nenhum grupo cadastrado."
+msgid "Nenhuma categoria cadastrada."
+msgstr "Nenhum grupo cadastrado."
+
+#: templates/finance/chart_of_accounts_confirm_delete.html:10
+#: templates/finance/chart_of_accounts_list.html:4
+#: templates/finance/chart_of_accounts_list.html:9
+msgid "Plano de Contas"
+msgstr ""
+
+#: templates/finance/chart_of_accounts_confirm_delete.html:25
+#, fuzzy
+#| msgid "Você tem certeza que deseja remover %(email)s?"
+msgid "Tem certeza que deseja excluir esta conta?"
+msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#: templates/finance/chart_of_accounts_confirm_delete.html:38
+#: templates/finance/chart_of_accounts_list.html:59
+msgid "Receita"
+msgstr ""
+
+#: templates/finance/chart_of_accounts_confirm_delete.html:40
+#: templates/finance/chart_of_accounts_list.html:61
+msgid "Despesa"
+msgstr ""
+
+#: templates/finance/chart_of_accounts_form.html:6
+#: templates/finance/chart_of_accounts_form.html:17
+#, fuzzy
+#| msgid "Editar grupo"
+msgid "Editar Conta"
+msgstr "Editar grupo"
+
+#: templates/finance/chart_of_accounts_form.html:8
+#: templates/finance/chart_of_accounts_form.html:19
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Nova Conta"
+msgstr "Nova senha"
+
+#: templates/finance/chart_of_accounts_form.html:24
+msgid "Atualize as informações da conta contábil."
+msgstr ""
+
+#: templates/finance/chart_of_accounts_form.html:26
+#, fuzzy
+#| msgid "Gerencie as contas internas, grupos e permissões."
+msgid "Cadastre uma nova conta de receita ou despesa."
+msgstr "Gerencie as contas internas, grupos e permissões."
+
+#: templates/finance/chart_of_accounts_list.html:10
+#, fuzzy
+#| msgid "Gerencie as contas internas, grupos e permissões."
+msgid "Gerencie as contas de receitas e despesas"
+msgstr "Gerencie as contas internas, grupos e permissões."
+
+#: templates/finance/chart_of_accounts_list.html:21
+#, fuzzy
+#| msgid "Criar usuário"
+msgid "Buscar contas..."
+msgstr "Criar usuário"
+
+#: templates/finance/chart_of_accounts_list.html:110
+msgid "Página"
+msgstr ""
+
+#: templates/finance/chart_of_accounts_list.html:134
+msgid "Nenhuma conta encontrada com os critérios de busca."
+msgstr ""
+
+#: templates/finance/chart_of_accounts_list.html:136
+#, fuzzy
+#| msgid "Nenhum grupo cadastrado."
+msgid "Nenhuma conta cadastrada ainda."
+msgstr "Nenhum grupo cadastrado."
+
+#: templates/finance/cost_center_confirm_delete.html:4
+#: templates/finance/cost_center_confirm_delete.html:9
+#, fuzzy
+#| msgid "Controle de acesso"
+msgid "Excluir centro de custos"
+msgstr "Controle de acesso"
+
+#: templates/finance/cost_center_confirm_delete.html:10
+#, fuzzy, python-format
+#| msgid "Você tem certeza que deseja remover %(email)s?"
+msgid "Você tem certeza que deseja remover %(code)s?"
+msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#: templates/finance/cost_center_form.html:6
+#: templates/finance/cost_center_form.html:17
+#, fuzzy
+#| msgid "Controle de acesso"
+msgid "Editar centro de custos"
+msgstr "Controle de acesso"
+
+#: templates/finance/cost_center_form.html:8
+#: templates/finance/cost_center_form.html:19
+#, fuzzy
+#| msgid "Controle de acesso"
+msgid "Novo centro de custos"
+msgstr "Controle de acesso"
+
+#: templates/finance/cost_center_form.html:22
+#, fuzzy
+#| msgid "Nome do grupo"
+msgid "Preencha as informações do centro de custos."
+msgstr "Nome do grupo"
+
+#: templates/finance/cost_center_list.html:10
+msgid "Gerencie os centros de custos para controle orçamentário."
+msgstr ""
+
+#: templates/finance/cost_center_list.html:14
+#, fuzzy
+#| msgid "Controle de acesso"
+msgid "Novo centro"
+msgstr "Controle de acesso"
+
+#: templates/finance/cost_center_list.html:21
+#, fuzzy
+#| msgid "Controle de acesso"
+msgid "Buscar centros de custos..."
+msgstr "Controle de acesso"
+
+#: templates/finance/cost_center_list.html:104
+#, fuzzy
+#| msgid "Nenhum grupo cadastrado."
+msgid "Nenhum centro de custos cadastrado."
+msgstr "Nenhum grupo cadastrado."
+
+#: templates/finance/dashboard.html:4 templates/finance/dashboard.html:9
+#, fuzzy
+#| msgid "Financeiro"
+msgid "Dashboard Financeiro"
+msgstr "Financeiro"
+
+#: templates/finance/dashboard.html:11
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Nova Movimentação"
+msgstr "Nova senha"
+
+#: templates/finance/dashboard.html:20
+msgid "Entradas do Mês"
+msgstr ""
+
+#: templates/finance/dashboard.html:28
+msgid "Saídas do Mês"
+msgstr ""
+
+#: templates/finance/dashboard.html:36
+msgid "Saldo do Mês"
+msgstr ""
+
+#: templates/finance/dashboard.html:50 templates/finance/dashboard.html:95
+#: templates/finance/dashboard.html:184
+msgid "Ver todas"
+msgstr ""
+
+#: templates/finance/dashboard.html:80
+msgid "Cadastrar primeira conta"
+msgstr ""
+
+#: templates/finance/dashboard.html:93
+msgid "Últimas Movimentações"
+msgstr ""
+
+#: templates/finance/dashboard.html:104
+#: templates/finance/transaction_list.html:42
+msgid "Data"
+msgstr ""
+
+#: templates/finance/dashboard.html:129
+msgid "Efetuado"
+msgstr ""
+
+#: templates/finance/dashboard.html:131
+#: templates/finance/transaction_list.html:73
+msgid "Pendente"
+msgstr ""
+
+#: templates/finance/dashboard.html:140
+#: templates/finance/transaction_list.html:128
+#, fuzzy
+#| msgid "Nenhum grupo cadastrado."
+msgid "Nenhuma movimentação registrada."
+msgstr "Nenhum grupo cadastrado."
+
+#: templates/finance/dashboard.html:142
+msgid "Registrar primeira movimentação"
+msgstr ""
+
+#: templates/finance/dashboard.html:157 templates/finance/dashboard.html:166
+#: templates/finance/dashboard.html:175
+msgid "Gerenciar"
+msgstr ""
+
+#: templates/finance/transaction_confirm_delete.html:4
+#: templates/finance/transaction_confirm_delete.html:9
+#, fuzzy
+#| msgid "Excluir grupo"
+msgid "Excluir movimentação"
+msgstr "Excluir grupo"
+
+#: templates/finance/transaction_confirm_delete.html:10
+#, fuzzy, python-format
+#| msgid "Você tem certeza que deseja remover %(email)s?"
+msgid "Você tem certeza que deseja remover %(desc)s?"
+msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#: templates/finance/transaction_form.html:6
+#: templates/finance/transaction_form.html:17
+#, fuzzy
+#| msgid "Editar grupo"
+msgid "Editar movimentação"
+msgstr "Editar grupo"
+
+#: templates/finance/transaction_form.html:8
+#: templates/finance/transaction_form.html:19
+#: templates/finance/transaction_list.html:14
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Nova movimentação"
+msgstr "Nova senha"
+
+#: templates/finance/transaction_form.html:22
+msgid "Preencha as informações da movimentação financeira."
+msgstr ""
+
+#: templates/finance/transaction_list.html:10
+msgid "Gerencie as entradas e saídas financeiras da organização."
+msgstr ""
+
+#: templates/finance/transaction_list.html:21
+#, fuzzy
+#| msgid "Criar usuário"
+msgid "Buscar movimentações..."
+msgstr "Criar usuário"
+
+#: templates/finance/transaction_list.html:47
+msgid "Pago?"
+msgstr ""
+
+#: templates/main/index.html:4
+msgid "Painel"
+msgstr "Painel"
+
+#: templates/main/index.html:11
+msgid "Bem-vindo(a) ao propzy"
+msgstr "Bem-vindo(a) ao propzy"
+
+#: templates/main/index.html:13
+#, fuzzy
+#| msgid ""
+#| "\n"
+#| "                    Utilize o menu lateral para navegar pelas "
+#| "funcionalidades do sistema.\n"
+#| "                    "
+msgid ""
+"\n"
+"                Utilize o menu lateral para navegar pelas funcionalidades do "
+"sistema.\n"
+"                "
+msgstr ""
+"\n"
+"                    Utilize o menu lateral para navegar pelas "
+"funcionalidades do sistema.\n"
+"                    "
+
+#, fuzzy
+#~| msgid "Você tem certeza que deseja remover %(email)s?"
+#~ msgid "Você tem certeza que deseja excluir o setor"
+#~ msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#, fuzzy
+#~| msgid "Excluir grupo"
+#~ msgid "Sim, excluir"
+#~ msgstr "Excluir grupo"
+
+#, fuzzy
+#~| msgid "Confirmar exclusão"
+#~ msgid "Confirmar Exclusão"
+#~ msgstr "Confirmar exclusão"
+
+#, fuzzy
+#~| msgid "Você tem certeza que deseja remover %(email)s?"
+#~ msgid "Tem certeza que deseja excluir a conta bancária?"
+#~ msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#, fuzzy
+#~| msgid "Nome"
+#~ msgid "Nome:"
+#~ msgstr "Nome"
+
+#, fuzzy
+#~| msgid "Nova senha"
+#~ msgid "Conta:"
+#~ msgstr "Nova senha"
+
+#, fuzzy
+#~| msgid "Você tem certeza que deseja remover %(email)s?"
+#~ msgid "Tem certeza que deseja excluir a categoria?"
+#~ msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#, fuzzy
+#~| msgid "Você tem certeza que deseja remover %(email)s?"
+#~ msgid "Tem certeza que deseja excluir o centro de custos?"
+#~ msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#, fuzzy
+#~| msgid "Você tem certeza que deseja remover %(email)s?"
+#~ msgid "Tem certeza que deseja excluir a movimentação?"
+#~ msgstr "Você tem certeza que deseja remover %(email)s?"
+
+#, fuzzy
+#~| msgid "Controle de acesso"
+#~ msgid "Centro Custos"
+#~ msgstr "Controle de acesso"

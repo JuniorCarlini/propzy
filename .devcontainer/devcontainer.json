@@ -1,0 +1,95 @@
+{
+    "name": "propzy Development",
+    "dockerComposeFile": [
+        "../docker/docker-compose.yml"
+    ],
+    "service": "app",
+    "workspaceFolder": "/app",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "charliermarsh.ruff", // Usando a extensão do Ruff
+                "batisteo.vscode-django",
+                "ecmel.vscode-html-css",
+                "rangav.vscode-thunder-client",
+                "gruntfuggly.todo-tree",
+                "yy0931.vscode-sqlite3-editor",
+                "ms-azuretools.vscode-docker"
+            ],
+            "settings": {
+                "extensions.ignoreRecommendations": true,
+                "python.defaultInterpreterPath": "/opt/venv/bin/python",
+                "python.linting.enabled": false, // Desabilitado, usando Ruff
+                "python.linting.pylintEnabled": false,
+                "python.analysis.extraPaths": [
+                    "/app"
+                ],
+                // Configuração do Pylance para trabalhar com Ruff e Django
+                "python.analysis.typeCheckingMode": "basic",
+                "python.analysis.autoImportCompletions": true,
+                "python.analysis.diagnosticMode": "workspace",
+                "python.analysis.autoSearchPaths": true,
+                "python.analysis.diagnosticSeverityOverrides": {
+                    "reportGeneralTypeIssues": "none",
+                    "reportOptionalSubscript": "none",
+                    "reportOptionalMemberAccess": "none",
+                    "reportOptionalCall": "none",
+                    "reportOptionalIterable": "none",
+                    "reportOptionalContextManager": "none",
+                    "reportOptionalOperand": "none",
+                    "reportUnusedImport": "none", // Ruff cuida disso
+                    "reportUnusedVariable": "warning",
+                    "reportDuplicateImport": "none", // Ruff cuida disso
+                    "reportPrivateImportUsage": "none",
+                    "reportConstantRedefinition": "none",
+                    "reportMissingTypeStubs": "none"
+                },
+                "python.analysis.inlayHints.functionReturnTypes": false,
+                "python.analysis.inlayHints.variableTypes": false,
+                "python.terminal.activateEnvironment": true,
+                "editor.formatOnSave": true,
+                "editor.rulers": [
+                    88, // O Ruff/Black usa 88 por padrão
+                    100
+                ],
+                "files.trimTrailingWhitespace": true,
+                "files.insertFinalNewline": true,
+                "extensions.unwantedRecommendations": [
+                    "streetsidesoftware.code-spell-checker"
+                ],
+                // Configurações específicas para Python, usando o Ruff
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff",
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": "explicit",
+                        "source.fixAll": "explicit"
+                    },
+                    "editor.formatOnSave": true
+                }
+            }
+        }
+    },
+    "forwardPorts": [
+        8080,
+        5432,
+        6379
+    ],
+    "portsAttributes": {
+        "8080": {
+            "label": "Django App",
+            "onAutoForward": "notify"
+        },
+        "5432": {
+            "label": "PostgreSQL"
+        },
+        "6379": {
+            "label": "Redis"
+        }
+    },
+    "postCreateCommand": "echo '✅ Dev Container criado! Execute: python manage.py runserver 0.0.0.0:8080'",
+    "postStartCommand": "python manage.py runserver 0.0.0.0:8080",
+    "postStopCommand": "docker compose -f docker/docker-compose.yml down --remove-orphans",
+    "shutdownAction": "stopCompose",
+    "remoteUser": "root"
+}

@@ -1,0 +1,92 @@
+---
+alwaysApply: true
+description: "Custom instructions for Web Application development with Python and Django"
+applyTo: "**"
+---
+
+# Web Application Development Guidelines
+
+## Project Overview
+
+The project is a comprehensive **management system for NGOs** (Non-Governmental Organizations). It is designed to handle all aspects of an NGO's operations, from basic entity registration (members, partners, etc.) to the complete financial management of projects. This includes managing internal processes, such as requests for daily allowances, fuel, and other resources.
+
+## Programming Language: Python
+
+**Python Best Practices:**
+
+- Follow **PEP 8** style guidelines strictly.
+- Use **type hints** for all function parameters and return values.
+- Prefer **f-strings** for string formatting over older methods.
+- Use descriptive variable and function names.
+- Implement proper error handling with specific exception types.
+- **Dependency Management:** Use **UV** exclusively for all dependency management (installing, updating, removing packages) and virtual environment creation. This is non-negotiable.
+
+## Framework: Django
+
+**Django Best Practices:**
+
+- Use **Django 5.2** for this project.
+- Follow Django's standard project structure and conventions.
+- Use Django's built-in features (ORM, forms, authentication) whenever possible.
+- **Prioritize Function-Based Views (FBVs):** Default to using FBVs for simplicity and explicit clarity.
+- **Use Class-Based Views (CBVs) only when necessary:** Resort to CBVs only for specific reasons where they offer a significant advantage (e.g., leveraging complex built-in generic views or mixins) and an FBV would be impractical.
+- Use Django's template language for rendering HTML.
+- Implement proper URL routing and namespacing.
+- Use Django's built-in security features (CSRF protection, input validation).
+- Write unit tests for models, views, and forms.
+- Use Django's migration system for database schema changes.
+
+## Code Style: Clean Code
+
+**Clean Code Principles:**
+
+- Write self-documenting code with meaningful names.
+- Keep functions small and focused on a single responsibility (Single Responsibility Principle).
+- Avoid deep nesting and complex conditional statements.
+- Use consistent formatting and indentation.
+- Write code that tells a story and is easy to understand.
+- Refactor ruthlessly to eliminate code smells.
+
+## Project-Specific Guidelines
+
+### Core Stack & Architecture
+
+- **Background Tasks:** All asynchronous and background processing must be handled by **`celery`** using **Redis** as the broker.
+- **Template Structure:** All user-facing templates must be located in the **single root `templates/` directory**. Do _not_ place templates inside individual app directories.
+- **Decoupling:** Prioritize **decoupling** between apps. Prefer using **Django Signals** or other forms of dependency injection to minimize hard dependencies between applications.
+- **Django First:** While decoupling is important, the absolute priority is to **maintain the standard Django structure and leverage its built-in features** to their fullest extent.
+
+### Frontend (UI/UX)
+
+- **CSS Framework:** Use **Bootstrap** for all styling, layout, and components.
+- **Reactivity:** Use **HTMX** as the **primary method** for client-side reactivity and partial page updates. Use vanilla JavaScript only as a last resort when HTMX is not suitable for the task.
+- **Form Rendering:** Use **`django-crispy-forms`** with its Bootstrap templates to render all forms.
+
+### Internationalization (i18n)
+
+- **Multilingual:** The application must be fully multilingual from the start.
+- **Workflow:** After adding or changing _any_ user-visible text in templates or Python files:
+  1.  Wrap the text in the appropriate translation tags (e.g., `{% trans "..." %}` or `_("...")`).
+  2.  Run `django-admin makemessages` to update the `.po` translation files in the `locale/` directories.
+  3.  Run `django-admin compilemessages` to generate the `.mo` files for production.
+
+## AI Code Generation Preferences
+
+When generating code, please:
+
+- **Language and Naming:** All code identifiers (variables, function names, class names, etc.) must be in **English**.
+- **Comments:** All inline comments and docstrings must be written in **Brazilian Portuguese (português do Brasil)**.
+- Generate complete, working code examples with proper imports.
+- Include inline comments for complex logic and business rules.
+- Follow the established patterns and conventions in this project (especially the **Project-Specific Guidelines**).
+- Suggest improvements and alternative approaches when relevant.
+- Consider performance, security, and maintainability.
+- Include error handling and edge case considerations.
+- Generate appropriate unit tests when creating new functions.
+- Follow accessibility best practices for UI components (semantic HTML, ARIA attributes).
+
+## AI Interaction and Reporting Preferences
+
+- **No Summary Files:** Do not generate any summary files, log files, or markdown files (e.g., `summary.md`) detailing the actions taken or code generated unless explicitly requested.
+- **Terminal-Based Summary:** If a summary of actions is necessary, provide it directly in the terminal or chat interface.
+- **Explicit File Generation:** Only generate or modify files that are explicitly requested by the user.

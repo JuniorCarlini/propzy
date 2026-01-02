@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% load i18n crispy_forms_tags %} {% block title %}{{
+title }} · propzy{% endblock %} {% block header %}
+<div
+  class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
+>
+  <div>
+    <h1 class="h4 mb-1">{{ title }}</h1>
+    <p class="text-body-secondary mb-0">
+      {% trans "Preencha os dados do usuário e defina os grupos de acesso." %}
+    </p>
+  </div>
+  <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-2"></i> {% trans "Voltar" %}
+  </a>
+</div>
+{% endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-xl-7">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <form method="post" novalidate>
+          {% csrf_token %} {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+            <div>{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endif %} {{ form|crispy }}
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a
+              href="{% url 'accounts:user_list' %}"
+              class="btn btn-outline-secondary"
+              >{% trans "Cancelar" %}</a
+            >
+            <button type="submit" class="btn btn-primary">
+              {% trans "Salvar" %}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_scripts %} {{ block.super }}
+<script>
+  (() => {
+    const formatBrazilianPhone = (value) => {
+      const digits = value.replace(/\D/g, "").slice(0, 11);
+      if (!digits) {
+        return "";
+      }
+      if (digits.length <= 2) {
+        return `(${digits}`;
+      }
+      if (digits.length <= 6) {
+        return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+      }
+      if (digits.length <= 10) {
+        return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(
+          6
+        )}`;
+      }
+      return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+    };
+
+    const applyMask = (input) => {
+      if (input.dataset.phoneMaskInitialized === "true") {
+        return;
+      }
+      const updateValue = () => {
+        const formatted = formatBrazilianPhone(input.value);
+        input.value = formatted;
+      };
+      input.addEventListener("input", updateValue);
+      input.addEventListener("blur", updateValue);
+      updateValue();
+      input.dataset.phoneMaskInitialized = "true";
+    };
+
+    const initPhoneMasks = () => {
+      const inputs = document.querySelectorAll('[data-phone-mask="true"]');
+      inputs.forEach(applyMask);
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initPhoneMasks();
+      if (window.htmx && document.body) {
+        document.body.addEventListener("htmx:afterSwap", initPhoneMasks);
+      }
+    });
+  })();
+</script>
+{% endblock %}

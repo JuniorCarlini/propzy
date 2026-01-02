@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Usuários" %} · propzy{% endblock %}
+
+{% block header %}
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+    <div>
+        <h1 class="h4 mb-1">{% trans "Usuários" %}</h1>
+        <p class="text-body-secondary mb-0">{% trans "Gerencie as contas internas, grupos e permissões." %}</p>
+    </div>
+    {% if perms.accounts.add_user %}
+        <a href="{% url 'accounts:user_create' %}" class="btn btn-primary">
+            <i class="bi bi-person-plus me-2"></i> {% trans "Criar usuário" %}
+        </a>
+    {% endif %}
+</div>
+
+<form method="get" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="{% trans 'Buscar usuários...' %}" value="{{ search_query }}">
+        <button class="btn btn-outline-secondary" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+        {% if search_query %}
+        <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-x-lg"></i>
+        </a>
+        {% endif %}
+    </div>
+</form>
+{% endblock %}
+
+{% block content %}
+{% if page_obj %}
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">{% trans "Nome" %}</th>
+                        <th scope="col">{% trans "E-mail" %}</th>
+                        <th scope="col" class="d-none d-md-table-cell">{% trans "Telefone" %}</th>
+                        <th scope="col" class="d-none d-lg-table-cell">{% trans "Grupos" %}</th>
+                        <th scope="col" class="text-center d-none d-sm-table-cell">{% trans "Ativo" %}</th>
+                        <th scope="col" class="text-end">{% trans "Ações" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in page_obj %}
+                        <tr>
+                            <td>{{ user.get_full_name|default:"—" }}</td>
+                            <td>{{ user.email }}</td>
+                            <td class="d-none d-md-table-cell">
+                                {{ user.phone|default:"—" }}
+                            </td>
+                            <td class="d-none d-lg-table-cell">
+                                {% if user.groups.exists %}
+                                    <div class="d-flex flex-wrap gap-1">
+                                        {% for group in user.groups.all %}
+                                            <span class="badge text-bg-secondary">{{ group.name }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-body-secondary">{% trans "Sem grupo" %}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center d-none d-sm-table-cell">
+                                {% if user.is_active %}
+                                    <span class="badge text-bg-success">{% trans "Sim" %}</span>
+                                {% else %}
+                                    <span class="badge text-bg-secondary">{% trans "Não" %}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group" role="group">
+                                    {% if perms.accounts.change_user %}
+                                        <a href="{% url 'accounts:user_update' user.pk %}" class="btn btn-outline-secondary btn-sm" title="{% trans 'Editar' %}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.accounts.delete_user %}
+                                        <a href="{% url 'accounts:user_delete' user.pk %}" class="btn btn-outline-danger btn-sm" title="{% trans 'Excluir' %}">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav aria-label="{% trans 'Navegação de páginas' %}" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}">{% trans "Primeira" %}</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">{% trans "Anterior" %}</a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">{{ page_obj.number }} {% trans "de" %} {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">{% trans "Próxima" %}</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}">{% trans "Última" %}</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="text-center py-5">
+    <i class="bi bi-people display-1 text-muted"></i>
+    <p class="lead mt-3">{% trans "Nenhum usuário encontrado" %}</p>
+    {% if search_query %}
+    <p class="text-muted">{% trans "Tente ajustar os termos da busca" %}</p>
+    {% else %}
+    <p class="text-muted">{% trans "Ainda não há usuários cadastrados no sistema" %}</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
