@@ -21,10 +21,20 @@ INFRA_DIR="$PROJECT_DIR/infra"
 
 echo "🔐 Gerando certificado Let's Encrypt para $DOMAIN..."
 
+# Detectar comando Docker Compose
+if command -v docker-compose &> /dev/null; then
+    DOCKER_COMPOSE="docker-compose"
+elif docker compose version &> /dev/null; then
+    DOCKER_COMPOSE="docker compose"
+else
+    echo "❌ Docker Compose não encontrado!"
+    exit 1
+fi
+
 # Parar nginx temporariamente
 cd "$INFRA_DIR"
 echo "⏸️ Parando Nginx..."
-docker compose stop nginx
+$DOCKER_COMPOSE stop nginx || docker stop propzy_nginx || true
 
 # Gerar certificado
 echo "📝 Gerando certificado..."
@@ -42,7 +52,7 @@ fi
 
 # Reiniciar nginx
 echo "▶️ Reiniciando Nginx..."
-docker compose start nginx
+$DOCKER_COMPOSE start nginx || docker start propzy_nginx || true
 
 echo "✅ Certificado gerado com sucesso para $DOMAIN!"
 echo "   Certificados salvos em: /etc/letsencrypt/live/$DOMAIN/"
