@@ -3,7 +3,7 @@ FROM nginx:alpine
 # Instalar OpenSSL para gerar certificados temporários
 RUN apk add --no-cache openssl
 
-# Copiar script de entrypoint
+# Copiar script de entrypoint (executado antes do entrypoint padrão)
 COPY entrypoint.sh /docker-entrypoint.d/99-ssl-setup.sh
 RUN chmod +x /docker-entrypoint.d/99-ssl-setup.sh
 

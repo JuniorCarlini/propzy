@@ -153,7 +153,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/certbot:/var/www/certbot:ro
       - static_volume:/var/www/static:ro
       - media_volume:/var/www/media:ro

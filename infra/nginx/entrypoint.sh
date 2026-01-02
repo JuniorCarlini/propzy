@@ -29,6 +29,3 @@ nginx -t
 
 echo "✅ Nginx pronto para iniciar!"
 
-# Executar comando original
-exec "$@"
-
