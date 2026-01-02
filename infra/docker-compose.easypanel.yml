@@ -1,19 +1,12 @@
-# =============================================================================
-# DOCKER COMPOSE - EASYPANEL (VERSÃO SIMPLIFICADA E GARANTIDA)
-# =============================================================================
-# Esta versão usa APENAS labels Traefik
-# Sem API, sem complexidade desnecessária
-# Traefik faz TUDO automaticamente: roteamento + SSL
-# =============================================================================
+version: '3.8'
 
 services:
   db:
     image: postgres:15-alpine
-    container_name: propzy_db
     environment:
-      POSTGRES_DB: ${DB_NAME:-propzy}
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: propzy
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -22,8 +15,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: propzy_redis
-    command: redis-server --requirepass ${REDIS_PASSWORD:-changeme_redis_password}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
     networks:
@@ -34,12 +26,11 @@ services:
     build:
       context: ../backend
       dockerfile: Dockerfile
-    container_name: propzy_web
     entrypoint: ["bash", "/app/infra/scripts/entrypoint.sh"]
     command: >
       sh -c "gunicorn config.wsgi:application 
       --bind 0.0.0.0:8000 
-      --workers $$(( 2 * $$(nproc) + 1 )) 
+      --workers 4
       --max-requests 1000 
       --max-requests-jitter 50
       --timeout 120
@@ -49,21 +40,21 @@ services:
       - ../backend:/app
       - static_volume:/app/staticfiles
       - media_volume:/app/media
-      - ./logs:/app/logs
+      - logs:/app/logs
     environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.production
-      - DB_HOST=db
-      - DB_NAME=${DB_NAME:-propzy}
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
-      - CELERY_BROKER_URL=redis://:${REDIS_PASSWORD:-changeme_redis_password}@redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://:${REDIS_PASSWORD:-changeme_redis_password}@redis:6379/0
-      - REDIS_URL=redis://:${REDIS_PASSWORD:-changeme_redis_password}@redis:6379/1
-      - CREATE_SUPERUSER=${CREATE_SUPERUSER:-false}
-      - SECRET_KEY=${SECRET_KEY}
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
-      - VPS_IP=${VPS_IP}
-      - PROXY_DOMAIN=${PROXY_DOMAIN}
+      DJANGO_SETTINGS_MODULE: config.settings.production
+      DB_HOST: db
+      DB_NAME: propzy
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      CELERY_BROKER_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      CELERY_RESULT_BACKEND: redis://:${REDIS_PASSWORD}@redis:6379/0
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/1
+      CREATE_SUPERUSER: "false"
+      SECRET_KEY: ${SECRET_KEY}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      VPS_IP: ${VPS_IP}
+      PROXY_DOMAIN: ${PROXY_DOMAIN}
     depends_on:
       - db
       - redis
@@ -141,7 +132,6 @@ services:
     build:
       context: ../backend
       dockerfile: Dockerfile
-    container_name: propzy_celery
     command: >
       celery -A config worker 
       --loglevel=info 
@@ -150,17 +140,18 @@ services:
     volumes:
       - ../backend:/app
       - media_volume:/app/media
-      - ./logs:/app/logs
+      - logs:/app/logs
     environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.production
-      - DB_HOST=db
-      - DB_NAME=${DB_NAME:-propzy}
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
-      - CELERY_BROKER_URL=redis://:${REDIS_PASSWORD:-changeme_redis_password}@redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://:${REDIS_PASSWORD:-changeme_redis_password}@redis:6379/0
-      - VPS_IP=${VPS_IP}
-      - PROXY_DOMAIN=${PROXY_DOMAIN}
+      DJANGO_SETTINGS_MODULE: config.settings.production
+      DB_HOST: db
+      DB_NAME: propzy
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      CELERY_BROKER_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      CELERY_RESULT_BACKEND: redis://:${REDIS_PASSWORD}@redis:6379/0
+      VPS_IP: ${VPS_IP}
+      PROXY_DOMAIN: ${PROXY_DOMAIN}
+      SECRET_KEY: ${SECRET_KEY}
     depends_on:
       - db
       - redis
@@ -173,21 +164,21 @@ services:
     build:
       context: ../backend
       dockerfile: Dockerfile
-    container_name: propzy_celery_beat
     command: celery -A config beat --loglevel=info
     volumes:
       - ../backend:/app
-      - ./logs:/app/logs
+      - logs:/app/logs
     environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.production
-      - DB_HOST=db
-      - DB_NAME=${DB_NAME:-propzy}
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
-      - CELERY_BROKER_URL=redis://:${REDIS_PASSWORD:-changeme_redis_password}@redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://:${REDIS_PASSWORD:-changeme_redis_password}@redis:6379/0
-      - VPS_IP=${VPS_IP}
-      - PROXY_DOMAIN=${PROXY_DOMAIN}
+      DJANGO_SETTINGS_MODULE: config.settings.production
+      DB_HOST: db
+      DB_NAME: propzy
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      CELERY_BROKER_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      CELERY_RESULT_BACKEND: redis://:${REDIS_PASSWORD}@redis:6379/0
+      VPS_IP: ${VPS_IP}
+      PROXY_DOMAIN: ${PROXY_DOMAIN}
+      SECRET_KEY: ${SECRET_KEY}
     depends_on:
       - db
       - redis
@@ -201,17 +192,12 @@ volumes:
   redis_data:
   static_volume:
   media_volume:
+  logs:
 
 networks:
   propzy_network:
     driver: bridge
-  
-  # REDE DO TRAEFIK (criada pelo EasyPanel)
-  # Conecta seu serviço ao proxy reverso do EasyPanel
   traefik_network:
     external: true
-    # O nome real pode ser diferente, verifique após instalar EasyPanel:
-    # docker network ls | grep traefik
-    # Possíveis nomes: easypanel_traefik, traefik_public, traefik_proxy
-    name: ${TRAEFIK_NETWORK:-easypanel}
+    name: easypanel
 
