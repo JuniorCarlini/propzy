@@ -11,8 +11,6 @@ from pathlib import Path
 from decouple import Csv, config
 from django.utils.translation import gettext_lazy as _
 
-from config.dynamic_hosts import DynamicAllowedHosts
-
 # ============================================================================
 # CONFIGURAÇÕES BÁSICAS
 # ============================================================================
@@ -25,10 +23,12 @@ SECRET_KEY = config("SECRET_KEY", default="wv%0t#z=b&5@(1bpqh(i8ahgse9npgd&g#%hu
 # SECURITY WARNING: não execute com debug=True em produção!
 DEBUG = config("DEBUG", default=True, cast=bool)
 
-# Hosts permitidos para servir a aplicação (obrigatório em produção)
-# CUSTOMIZADO: Usa DynamicAllowedHosts para aceitar domínios personalizados cadastrados no banco
-_base_hosts = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
-ALLOWED_HOSTS = DynamicAllowedHosts(_base_hosts)
+# Hosts permitidos para servir a aplicação
+# CUSTOMIZADO: Multi-tenant com validação de domínios no middleware
+# Aceita todos os hosts (*) porque a validação de segurança é feita no TenantMiddleware
+# Isso permite que domínios personalizados funcionem automaticamente após cadastro no Admin
+# SEGURANÇA: Domínios não registrados retornam 404 via middleware (ver apps.landings.middleware)
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=Csv())
 
 # Origens confiáveis para proteção CSRF (necessário quando frontend está em domínio diferente)
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="http://localhost:3000", cast=Csv())
@@ -446,9 +446,9 @@ LOGGING = {
             "level": "WARNING" if not DEBUG else "INFO",
             "propagate": False,
         },
-        "config.dynamic_hosts": {
+        "apps.landings.middleware": {
             "handlers": ["console"],
-            "level": LOG_LEVEL,
+            "level": "WARNING",  # Loga apenas avisos de segurança (domínios não registrados)
             "propagate": False,
         },
     },
