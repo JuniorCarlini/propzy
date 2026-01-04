@@ -12,7 +12,7 @@ Isso evita ter que usar ALLOWED_HOSTS=['*'] que seria inseguro.
 class DynamicAllowedHosts(list):
     """
     ALLOWED_HOSTS dinâmico que consulta o banco de dados.
-    
+
     Permite que domínios personalizados de landing pages sejam automaticamente aceitos
     sem precisar adicionar manualmente ao ALLOWED_HOSTS.
     """
@@ -20,7 +20,7 @@ class DynamicAllowedHosts(list):
     def __init__(self, base_hosts):
         """
         Inicializa com os hosts base (domínio principal e subdomínios).
-        
+
         Args:
             base_hosts: Lista de hosts base (ex: ['localhost', '.propzy.com.br'])
         """
@@ -30,13 +30,15 @@ class DynamicAllowedHosts(list):
     def __contains__(self, host):
         """
         Verifica se um host é permitido.
-        
+
         Primeiro verifica nos hosts base, depois consulta o banco de dados
         para ver se é um domínio personalizado cadastrado.
         
+        USA CACHE para evitar queries repetidas no banco!
+
         Args:
             host: O hostname a ser verificado (ex: 'orzam.com.br')
-            
+
         Returns:
             bool: True se o host é permitido, False caso contrário
         """
@@ -48,17 +50,32 @@ class DynamicAllowedHosts(list):
         if ':' in host:
             host = host.split(':')[0]
 
-        # Consulta o banco de dados para domínios personalizados
+        # Verifica no cache primeiro (TTL de 5 minutos)
         try:
-            from apps.landings.models import LandingPage
+            from django.core.cache import cache
             
+            cache_key = f'allowed_host:{host}'
+            cached_result = cache.get(cache_key)
+            
+            if cached_result is not None:
+                return cached_result  # True ou False do cache
+            
+            # Se não está no cache, consulta o banco
+            from apps.landings.models import LandingPage
+
             # Verifica se existe uma landing page com este domínio personalizado
             # que está ativa e publicada
-            return LandingPage.objects.filter(
+            is_allowed = LandingPage.objects.filter(
                 custom_domain=host,
                 is_active=True,
                 is_published=True
             ).exists()
+            
+            # Salva no cache por 5 minutos (300 segundos)
+            cache.set(cache_key, is_allowed, 300)
+            
+            return is_allowed
+            
         except Exception:
             # Se houver qualquer erro (banco não inicializado, migration pendente, etc)
             # retorna False para não quebrar a aplicação
