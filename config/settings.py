@@ -241,6 +241,7 @@ LANGUAGE_CODE = config("LANGUAGE_CODE", default="pt-br")
 LANGUAGES = (
     ("pt-br", _("Português")),
     ("en", _("English")),
+    ("es", _("Español")),
 )
 
 # CUSTOMIZADO: Diretório onde ficam os catálogos de tradução (.po/.mo)

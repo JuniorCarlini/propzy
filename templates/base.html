@@ -1,159 +1,176 @@
 {% load i18n static %}
+
 {% get_current_language as current_language_code %}
+
 <!DOCTYPE html>
-<html lang="{{ current_language_code|default:'pt-br' }}">
+<html lang="{{ current_language_code|default:'pt-br' }}" data-theme="{% if request.user.is_authenticated %}{{ request.user.theme_preference|default:'light' }}{% else %}light{% endif %}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}propzy{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Propzy{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'icons/favicon_propzy.png' %}">
+
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
+
+    <!-- CSS Base do Sistema -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    <!-- CSS Componentes Reutilizáveis -->
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-light">
-    <!-- Header mobile com logo e menu -->
-    <header class="mobile-header d-lg-none">
-        <button class="btn btn-primary mobile-menu-btn" type="button" id="sidebarToggle" aria-label="{% trans 'Abrir menu' %}">
-            <i class="bi bi-list fs-4"></i>
+<body>
+    <!-- Header -->
+    <header class="top-header">
+        <div class="logo-section">
+            {% trans "Abrir menu" as aria_label_menu %}
+            <button class="menu-toggle" id="menuToggle" aria-label="{{ aria_label_menu }}">
+                <i class="fa-solid fa-bars"></i>
         </button>
-        <div class="mobile-logo">
-            <img src="{% static 'img/logo_ecopore.avif' %}" alt="propzy">
+            <a href="{% url 'main:index' %}" style="display: flex; align-items: center;">
+                <img src="{% static 'icons/dark_logo_propzy.png' %}" alt="{% trans 'propzy' %}" class="logo-image logo-image-light">
+                <img src="{% static 'icons/light_logo_propzy.png' %}" alt="{% trans 'propzy' %}" class="logo-image logo-image-dark">
+            </a>
+        </div>
+
+        <div class="header-actions">
+                {% if request.user.is_authenticated %}
+            <div class="user-info">
+                <div class="user-name-group">
+                    <div style="display: flex; align-items: baseline; gap: 0.25rem;">
+                        <span class="user-greeting">{% trans "Olá" %},</span>
+                        <span class="user-name">{{ request.user.get_short_name }}</span>
+            </div>
+                    {% if request.user.groups.all %}
+                        {% for group in request.user.groups.all %}
+                            <span class="user-group-badge">{{ group.name }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="user-group-badge">{% trans "Usuário" %}</span>
+                    {% endif %}
+                </div>
+                <div class="user-avatar" id="userAvatar" style="cursor: pointer;">
+                    {{ request.user.get_short_name|slice:":1"|upper }}
+            </div>
+
+                <!-- User Menu Dropdown -->
+                <div class="user-menu-dropdown" id="userMenuDropdown">
+                    <div class="user-menu-header">
+                        <div class="user-menu-name">{% if request.user.full_name %}{{ request.user.full_name }}{% else %}{{ request.user.email }}{% endif %}</div>
+                        <div class="user-menu-email">{{ request.user.email }}</div>
+                    </div>
+                    <div class="user-menu-items">
+                        <form method="post" action="{% url 'main:toggle_theme' %}" style="display: contents;">
+                            {% csrf_token %}
+                            <button type="submit" class="user-menu-item">
+                                <i class="fa-solid {% if request.user.theme_preference == 'dark' %}fa-sun{% else %}fa-moon{% endif %}"></i>
+                                <span>{% if request.user.theme_preference == 'dark' %}{% trans 'Modo claro' %}{% else %}{% trans 'Modo escuro' %}{% endif %}</span>
+                        </button>
+                        </form>
+                    </div>
+                    <div class="user-menu-footer">
+                        <form method="post" action="{% url 'account_logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="user-menu-logout">
+                                {% trans "Sair" %}
+                        </button>
+                        </form>
+                            </div>
+                        </div>
+                    </div>
+            {% else %}
+            <div class="user-avatar">
+                U
+            </div>
+            {% endif %}
         </div>
     </header>
 
-    <!-- Backdrop (overlay escuro) -->
-    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <div class="d-flex">
+    <!-- Container Principal -->
+    <div class="main-container">
         <!-- Sidebar -->
-        <aside class="sidebar d-flex flex-column flex-shrink-0 p-4 bg-white border-end" id="sidebar">
-            <div class="text-center mb-4">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-menu">
                 {% if request.user.is_authenticated %}
-                    {% url 'main:index' as brand_url %}
-                {% else %}
-                    {% url 'account_login' as brand_url %}
-                {% endif %}
-                <a href="{{ brand_url }}" class="d-inline-flex align-items-center justify-content-center">
-                    <img src="{% static 'img/logo_ecopore.avif' %}" class="img-fluid" alt="propzy" style="max-height: 56px;">
-                </a>
-            </div>
-            <div class="d-flex align-items-center mb-4">
-                <div class="flex-shrink-0 me-3">
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-semibold" style="width: 48px; height: 48px;">
-                        {% if request.user.is_authenticated %}
-                            {{ request.user.get_full_name|default:request.user.email|default:"U"|slice:":1"|upper }}
-                        {% else %}
-                            ?
-                        {% endif %}
-                    </span>
-                </div>
-                <div class="flex-grow-1">
-                    {% if request.user.is_authenticated %}
-                        <p class="mb-0 fw-semibold">{{ request.user.get_full_name|default:request.user.email|truncatewords:1 }}</p>
-                        <p class="text-body-secondary small mb-0">{{ request.user.email }}</p>
-                    {% else %}
-                        <p class="mb-0 fw-semibold">{% trans "Bem-vindo" %}</p>
-                        <p class="text-body-secondary small mb-0">{% trans "Acesse sua conta" %}</p>
+                    {% with current_url=request.resolver_match.url_name current_app=request.resolver_match.app_name %}
+                    <li class="menu-item">
+                        <a href="{% url 'main:index' %}" class="menu-link {% if current_url == 'index' and current_app == 'main' %}active{% endif %}">
+                            <i class="fa-solid fa-house"></i>
+                            <span>{% trans "Página Inicial" %}</span>
+                        </a>
+                    </li>
+                    {% if perms.accounts.view_user %}
+                    <li class="menu-item">
+                        <a href="{% url 'accounts:user_list' %}" class="menu-link {% if current_app == 'accounts' and current_url|slice:':5' == 'user_' %}active{% endif %}">
+                            <i class="fa-solid fa-users"></i>
+                            <span>{% trans "Usuários" %}</span>
+                        </a>
+                    </li>
                     {% endif %}
-                </div>
-            </div>
-
-            {% if not request.user.is_authenticated %}
-                <a class="btn btn-primary w-100 mb-4" href="{% url 'account_login' %}">
-                    <i class="bi bi-box-arrow-in-right me-2"></i> {% trans "Entrar" %}
-                </a>
-            {% endif %}
-
-            <nav class="nav nav-pills flex-column gap-2">
-                {% if request.user.is_authenticated and request.resolver_match %}
-                    {% with current_namespace=request.resolver_match.namespace current_url=request.resolver_match.url_name current_app=request.resolver_match.app_name %}
-                    <a class="nav-link{% if current_url == 'index' and current_app == 'main' %} active{% endif %}" href="{% url 'main:index' %}">
-                        <i class="bi bi-house-door me-2"></i><span class="fw-semibold">{% trans "Início" %}</span>
-                    </a>
-
-                    <!-- Cadastros -->
-                    <div class="pt-3">
-                        <button class="nav-link d-flex align-items-center justify-content-between w-100 text-start border-0 bg-transparent p-0 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#menuCadastros" aria-expanded="{% if current_namespace == 'accounts' %}true{% else %}false{% endif %}" aria-controls="menuCadastros">
-                            <span class="text-uppercase text-body-secondary small fw-semibold">{% trans "Cadastros" %}</span>
-                            <i class="bi bi-chevron-down text-body-secondary small"></i>
-                        </button>
-                        <div class="collapse{% if current_namespace == 'accounts' %} show{% endif %}" id="menuCadastros">
-                            <div class="nav flex-column gap-1">
-                                {% if perms.accounts.view_user %}
-                                    <a class="nav-link{% if current_namespace == 'accounts' and current_url|slice:':5' == 'user_' %} active{% endif %}" href="{% url 'accounts:user_list' %}">
-                                        <i class="bi bi-person-circle me-2"></i><span class="fw-semibold">{% trans "Usuários" %}</span>
-                                    </a>
-                                {% endif %}
-                                {% if perms.auth.view_group %}
-                                    <a class="nav-link{% if current_namespace == 'accounts' and current_url|slice:':6' == 'group_' %} active{% endif %}" href="{% url 'accounts:group_list' %}">
-                                        <i class="bi bi-shield-lock me-2"></i><span class="fw-semibold">{% trans "Grupos e permissões" %}</span>
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Projetos -->
-                    <div class="pt-3">
-                        <button class="nav-link d-flex align-items-center justify-content-between w-100 text-start border-0 bg-transparent p-0 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#menuProjetos" aria-expanded="false" aria-controls="menuProjetos">
-                            <span class="text-uppercase text-body-secondary small fw-semibold">{% trans "Projetos" %}</span>
-                            <i class="bi bi-chevron-down text-body-secondary small"></i>
-                        </button>
-                        <div class="collapse" id="menuProjetos">
-                            <div class="nav flex-column gap-1">
-                                <span class="nav-link disabled"><i class="bi bi-kanban me-2"></i>{% trans "Projetos" %}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Relatórios -->
-                    <div class="pt-3">
-                        <button class="nav-link d-flex align-items-center justify-content-between w-100 text-start border-0 bg-transparent p-0 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#menuRelatorios" aria-expanded="false" aria-controls="menuRelatorios">
-                            <span class="text-uppercase text-body-secondary small fw-semibold">{% trans "Relatórios" %}</span>
-                            <i class="bi bi-chevron-down text-body-secondary small"></i>
-                        </button>
-                        <div class="collapse" id="menuRelatorios">
-                            <div class="nav flex-column gap-1">
-                                <span class="nav-link disabled"><i class="bi bi-file-earmark-bar-graph me-2"></i>{% trans "Relatórios" %}</span>
-                            </div>
-                        </div>
-                    </div>
+                    {% if perms.auth.view_group %}
+                    <li class="menu-item">
+                        <a href="{% url 'accounts:group_list' %}" class="menu-link {% if current_app == 'accounts' and current_url|slice:':6' == 'group_' %}active{% endif %}">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <span>{% trans "Grupos/Permissões" %}</span>
+                        </a>
+                    </li>
+                    {% endif %}
                     {% endwith %}
                 {% endif %}
 
                 {% block sidebar_links %}{% endblock %}
-            </nav>
-            <div class="mt-auto pt-4 border-top">
+            </ul>
+
+            <!-- Seletor de Idiomas -->
+            <div class="sidebar-language-selector">
+                <div class="language-selector-wrapper">
                 {% get_available_languages as available_languages %}
                 {% get_language_info_list for available_languages as available_language_info %}
-                <form method="post" action="{% url 'set_language' %}" class="mb-3">
+                    <form method="post" action="{% url 'set_language' %}" id="language-form">
                     {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                    <label for="language-selector" class="form-label text-uppercase text-body-secondary small fw-semibold mb-2">{% trans "Idioma" %}</label>
-                    <select id="language-selector" name="language" class="form-select form-select-sm" aria-label="{% trans 'Selecionar idioma' %}" onchange="this.form.submit()">
-                        {% for language in available_language_info %}
-                            <option value="{{ language.code }}"{% if language.code == current_language_code %} selected{% endif %}>{{ language.name_local|capfirst }}</option>
-                        {% endfor %}
-                    </select>
-                </form>
-                {% if request.user.is_authenticated %}
-                    <form method="post" action="{% url 'account_logout' %}" class="mb-3">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-secondary w-100">
-                            <i class="bi bi-box-arrow-right me-2"></i> {% trans "Sair" %}
-                        </button>
+                    <input type="hidden" name="next" id="language-next" value="{{ request.get_full_path }}">
+                        <div class="language-selector">
+                            {% if current_language_code == 'pt-br' %}
+                                <span class="language-selector-icon fi fi-br" id="language-icon"></span>
+                            {% elif current_language_code == 'en' %}
+                                <span class="language-selector-icon fi fi-us" id="language-icon"></span>
+                            {% elif current_language_code == 'es' %}
+                                <span class="language-selector-icon fi fi-es" id="language-icon"></span>
+                            {% else %}
+                                <span class="language-selector-icon fi fi-{{ current_language_code }}" id="language-icon"></span>
+                            {% endif %}
+                            <select name="language" id="language-select" onchange="(function(){var form=document.getElementById('language-form');var next=document.getElementById('language-next');if(next){var path=window.location.pathname.replace(/^\/(pt-br|pt_BR|en|es)\//,'/');if(!path||path==='')path='/';if(!path.startsWith('/'))path='/'+path;next.value=path+window.location.search;}if(form)form.submit();})();">
+                                {% for language in available_language_info %}
+                                    <option value="{{ language.code }}" data-flag="{% if language.code == 'pt-br' %}br{% elif language.code == 'en' %}us{% elif language.code == 'es' %}es{% else %}{{ language.code }}{% endif %}"{% if language.code == current_language_code %} selected{% endif %}>
+                                        {% if language.code == 'pt-br' %}Português BR{% else %}{{ language.name_local|capfirst }}{% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <span class="language-selector-arrow">▼</span>
+                        </div>
                     </form>
-                {% endif %}
-                {% block sidebar_footer %}
-                    <p class="text-body-secondary small mb-0">&copy; {% now "Y" %} propzy</p>
-                {% endblock %}
+                </div>
             </div>
         </aside>
 
-        <!-- Conteúdo principal -->
-        <main class="flex-grow-1 position-relative main-content">
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
             {% if messages %}
                 <!-- Posiciona toasts no canto inferior direito -->
                 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
@@ -163,65 +180,25 @@
                                 <div class="toast-body">
                                     {{ message }}
                                 </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+                                {% trans "Fechar" as aria_label_close %}
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="{{ aria_label_close }}"></button>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
             {% endif %}
 
-            <div class="container-fluid py-4 px-3 px-lg-5">
                 {% block header %}{% endblock %}
 
                 {% block content %}{% endblock %}
-            </div>
         </main>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script>
-        // Toast notifications
-        document.addEventListener("DOMContentLoaded", () => {
-            const toastElList = [].slice.call(document.querySelectorAll('.toast'));
-            toastElList.forEach((toastEl) => {
-                const toast = new bootstrap.Toast(toastEl);
-                toast.show();
-            });
-        });
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-        // Sidebar mobile toggle
-        (function() {
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-
-            if (!sidebar || !sidebarToggle || !sidebarBackdrop) return;
-
-            // Abre sidebar
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.add('show');
-                sidebarBackdrop.classList.add('show');
-            });
-
-            // Fecha sidebar ao clicar no backdrop
-            sidebarBackdrop.addEventListener('click', () => {
-                sidebar.classList.remove('show');
-                sidebarBackdrop.classList.remove('show');
-            });
-
-            // Fecha sidebar ao clicar em qualquer link (mobile)
-            if (window.innerWidth < 992) {
-                const sidebarLinks = sidebar.querySelectorAll('a.nav-link:not(.disabled)');
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', () => {
-                        sidebar.classList.remove('show');
-                        sidebarBackdrop.classList.remove('show');
-                    });
-                });
-            }
-        })();
-    </script>
+    <!-- JavaScript Base do Sistema -->
+    <script src="{% static 'js/base.js' %}"></script>
     {% block extra_scripts %}{% endblock %}
 </body>
 </html>

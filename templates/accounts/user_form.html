@@ -1,93 +1,694 @@
-{% extends "base.html" %} {% load i18n crispy_forms_tags %} {% block title %}{{
-title }} · propzy{% endblock %} {% block header %}
-<div
-  class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4"
->
-  <div>
-    <h1 class="h4 mb-1">{{ title }}</h1>
-    <p class="text-body-secondary mb-0">
-      {% trans "Preencha os dados do usuário e defina os grupos de acesso." %}
-    </p>
-  </div>
-  <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">
-    <i class="bi bi-arrow-left me-2"></i> {% trans "Voltar" %}
-  </a>
-</div>
-{% endblock %} {% block content %}
-<div class="row justify-content-center">
-  <div class="col-lg-8 col-xl-7">
-    <div class="card shadow-sm border-0">
-      <div class="card-body p-4">
-        <form method="post" novalidate>
-          {% csrf_token %} {% if form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
-            {% for error in form.non_field_errors %}
-            <div>{{ error }}</div>
-            {% endfor %}
-          </div>
-          {% endif %} {{ form|crispy }}
-          <div class="d-flex justify-content-end gap-2 mt-4">
-            <a
-              href="{% url 'accounts:user_list' %}"
-              class="btn btn-outline-secondary"
-              >{% trans "Cancelar" %}</a
-            >
-            <button type="submit" class="btn btn-primary">
-              {% trans "Salvar" %}
-            </button>
-          </div>
-        </form>
-      </div>
+{% extends "base.html" %}
+
+{% load i18n crispy_forms_tags static %}
+
+{% block title %}{{ title }} | Propzy{% endblock %}
+
+{% block extra_head %}
+<style>
+    .users-form-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .users-form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .users-form-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
+        line-height: 0.9;
+    }
+
+    .users-form-header-content p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+        margin-top: 0;
+        line-height: 1;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .users-form-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--card-shadow);
+    }
+
+    .form-fields-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group:has(.toggle-switch),
+    .form-group:has(select:not([multiple])) {
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .form-group:has(.toggle-switch) {
+        justify-content: flex-start;
+    }
+
+    .form-group:has(.toggle-switch) label {
+        margin-bottom: 0;
+        align-items: center;
+    }
+
+    .form-group:has(select:not([multiple])) label {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group:has(.toggle-switch) .help-text {
+        margin-top: 0.5rem;
+    }
+
+    .form-group:has(select:not([multiple])) select {
+        margin-top: 0;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.2rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 109, 255, 0.1);
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: var(--text-secondary);
+    }
+
+    .form-group input:-webkit-autofill,
+    .form-group input:-webkit-autofill:hover,
+    .form-group input:-webkit-autofill:focus,
+    .form-group input:-webkit-autofill:active {
+        -webkit-text-fill-color: var(--text-primary);
+        -webkit-box-shadow: 0 0 0 30px var(--bg-primary) inset !important;
+        box-shadow: 0 0 0 30px var(--bg-primary) inset !important;
+        background-color: var(--bg-primary) !important;
+    }
+
+    .form-group .help-text {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.375rem;
+    }
+
+    .form-group .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0.375rem 0 0 0;
+    }
+
+    .form-group .errorlist li {
+        font-size: 0.75rem;
+        color: var(--color-danger);
+        margin-top: 0.25rem;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .btn-cancel {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-cancel:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-submit {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: white;
+        background: var(--primary-color);
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 109, 255, 0.2);
+    }
+
+    .btn-activate,
+    .btn-deactivate {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-activate {
+        background: var(--color-success);
+    }
+
+    .btn-activate:hover {
+        background: var(--color-success-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-deactivate {
+        background: var(--color-danger);
+    }
+
+    .btn-deactivate:hover {
+        background: var(--color-danger-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+
+    .alert {
+        padding: 1rem 1.25rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        border: 1px solid;
+    }
+
+    .alert-danger {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--color-danger);
+        color: var(--color-danger);
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 26px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--bg-tertiary);
+        transition: 0.3s;
+        border-radius: 26px;
+        border: 1px solid var(--border-color);
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+    }
+
+    .toggle-switch input:focus + .toggle-slider {
+        box-shadow: 0 0 0 3px rgba(0, 109, 255, 0.1);
+    }
+
+    .toggle-wrapper {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .toggle-label {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    .toggle-label-text {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .required-star {
+        color: var(--color-danger);
+    }
+
+    .toggle-help-text {
+        margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .users-form-header {
+            flex-direction: column;
+        }
+
+        .users-actions {
+            width: 100%;
+        }
+
+        .btn-back {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .users-form-card {
+            padding: 1.5rem;
+        }
+
+        .form-fields-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+        .form-actions .btn-deactivate,
+        .form-actions .btn-activate,
+        .form-actions .btn-cancel,
+        .form-actions .btn-submit {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="users-form-container fade-in">
+    <div class="users-form-header">
+        <div class="users-form-header-content">
+            <h1>{{ title }}</h1>
+            <p>{% trans "Preencha os dados do usuário e defina os grupos de acesso." %}</p>
+        </div>
+        <a href="{% url 'accounts:user_list' %}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            {% trans "Voltar" %}
+        </a>
     </div>
-  </div>
+
+    <div class="users-form-card">
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-fields-grid">
+                {% for field in form %}
+                    {% if field.name == 'password1' or field.name == 'password2' %}
+                        {# Campos de senha serão renderizados depois #}
+                    {% elif field.name == 'is_active' %}
+                        {# Campo is_active será tratado como hidden e controlado pelos botões de ativar/desativar #}
+                        {% if object %}
+                            <!-- Na edição, campo hidden com valor atual -->
+                            {% if field.value == None %}
+                                <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}" value="1">
+                            {% else %}
+                                <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{% if field.value %}1{% else %}0{% endif %}">
+                            {% endif %}
+                        {% else %}
+                            <!-- Na criação, apenas campo hidden com valor True (ativo) -->
+                            <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}" value="1">
+                        {% endif %}
+                        {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    {% elif field.name == 'groups' %}
+                    <div class="form-group full-width">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="required-star">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="required-star">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+
+                {# Campos de senha no final #}
+                {% if form.password1 %}
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">
+                        {{ form.password1.label }}
+                        {% if form.password1.field.required %}<span class="required-star">*</span>{% endif %}
+                    </label>
+                    {{ form.password1 }}
+                    {% if form.password1.help_text %}
+                    <div class="help-text">{{ form.password1.help_text }}</div>
+                    {% endif %}
+                    {% if form.password1.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password1.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                {% if form.password2 %}
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">
+                        {{ form.password2.label }}
+                        {% if form.password2.field.required %}<span class="required-star">*</span>{% endif %}
+                    </label>
+                    {{ form.password2 }}
+                    {% if form.password2.help_text %}
+                    <div class="help-text">{{ form.password2.help_text }}</div>
+                    {% endif %}
+                    {% if form.password2.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password2.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                {% if object %}
+                    {% if object.is_active %}
+                    <button type="button" id="btn-deactivate" class="btn-deactivate">
+                        <i class="fa-solid fa-ban"></i>
+                        {% trans "Desativar" %}
+                    </button>
+                    {% else %}
+                    <button type="button" id="btn-activate" class="btn-activate">
+                        <i class="fa-solid fa-check"></i>
+                        {% trans "Ativar" %}
+                    </button>
+                    {% endif %}
+                {% endif %}
+                <a href="{% url 'accounts:user_list' %}" class="btn-cancel">
+                    {% trans "Cancelar" %}
+                </a>
+                <button type="submit" class="btn-submit">
+                    {% trans "Salvar" %}
+                </button>
+        </div>
+        </form>
+    </div>
+
+    <!-- Modal de confirmação para ativar -->
+    {% if object %}
+        {% include "includes/modal_activate.html" with modal_title="Ativar Usuário" modal_message="Tem certeza que deseja ativar este usuário?" %}
+
+        <!-- Modal de confirmação para desativar -->
+        {% include "includes/modal_deactivate.html" with modal_title="Desativar Usuário" modal_message="Tem certeza que deseja desativar este usuário?" %}
+    {% endif %}
 </div>
-{% endblock %} {% block extra_scripts %} {{ block.super }}
-<script>
-  (() => {
-    const formatBrazilianPhone = (value) => {
-      const digits = value.replace(/\D/g, "").slice(0, 11);
-      if (!digits) {
-        return "";
-      }
-      if (digits.length <= 2) {
-        return `(${digits}`;
-      }
-      if (digits.length <= 6) {
-        return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-      }
-      if (digits.length <= 10) {
-        return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(
-          6
-        )}`;
-      }
-      return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-    };
+{% endblock %}
 
-    const applyMask = (input) => {
-      if (input.dataset.phoneMaskInitialized === "true") {
-        return;
-      }
-      const updateValue = () => {
-        const formatted = formatBrazilianPhone(input.value);
-        input.value = formatted;
-      };
-      input.addEventListener("input", updateValue);
-      input.addEventListener("blur", updateValue);
-      updateValue();
-      input.dataset.phoneMaskInitialized = "true";
-    };
+{% block extra_scripts %}
+    {{ block.super }}
+    <script>
+        (() => {
+            const formatBrazilianPhone = (value) => {
+                const digits = value.replace(/\D/g, "").slice(0, 11);
+                if (!digits) {
+                    return "";
+                }
+                if (digits.length <= 2) {
+                    return `(${digits}`;
+                }
+                if (digits.length <= 6) {
+                    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+                }
+                if (digits.length <= 10) {
+                    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+                }
+                return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+            };
 
-    const initPhoneMasks = () => {
-      const inputs = document.querySelectorAll('[data-phone-mask="true"]');
-      inputs.forEach(applyMask);
-    };
+            const applyMask = (input) => {
+                if (input.dataset.phoneMaskInitialized === "true") {
+                    return;
+                }
+                const updateValue = () => {
+                    const formatted = formatBrazilianPhone(input.value);
+                    input.value = formatted;
+                };
+                input.addEventListener("input", updateValue);
+                input.addEventListener("blur", updateValue);
+                updateValue();
+                input.dataset.phoneMaskInitialized = "true";
+            };
 
-    document.addEventListener("DOMContentLoaded", () => {
-      initPhoneMasks();
-      if (window.htmx && document.body) {
-        document.body.addEventListener("htmx:afterSwap", initPhoneMasks);
-      }
-    });
-  })();
-</script>
+            const initPhoneMasks = () => {
+                const inputs = document.querySelectorAll('[data-phone-mask="true"]');
+                inputs.forEach(applyMask);
+            };
+
+            document.addEventListener("DOMContentLoaded", () => {
+                initPhoneMasks();
+                if (window.htmx && document.body) {
+                    document.body.addEventListener("htmx:afterSwap", initPhoneMasks);
+                }
+            });
+        })();
+    </script>
+    {% if object %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            {% if object.is_active %}
+            // Modal de confirmação para desativar
+            const btnDeactivate = document.getElementById('btn-deactivate');
+            const deactivateModal = document.getElementById('deactivate-modal');
+            const btnDeactivateCancel = document.getElementById('btn-deactivate-modal-cancel');
+            const btnDeactivateConfirm = document.getElementById('btn-deactivate-modal-confirm');
+
+            if (btnDeactivate && deactivateModal && btnDeactivateCancel && btnDeactivateConfirm) {
+                btnDeactivate.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    deactivateModal.classList.add('active');
+                });
+
+                btnDeactivateCancel.addEventListener('click', () => {
+                    deactivateModal.classList.remove('active');
+                });
+
+                deactivateModal.addEventListener('click', (e) => {
+                    if (e.target === deactivateModal) {
+                        deactivateModal.classList.remove('active');
+                    }
+                });
+
+                btnDeactivateConfirm.addEventListener('click', () => {
+                    // Criar form e submeter para desativar
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{% url "accounts:user_update" object.pk %}';
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = csrfToken;
+                    form.appendChild(csrfInput);
+                    const isActiveInput = document.createElement('input');
+                    isActiveInput.type = 'hidden';
+                    isActiveInput.name = 'is_active';
+                    isActiveInput.value = '0';
+                    form.appendChild(isActiveInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+            {% else %}
+            // Modal de confirmação para ativar
+            const btnActivate = document.getElementById('btn-activate');
+            const activateModal = document.getElementById('activate-modal');
+            const btnActivateCancel = document.getElementById('btn-activate-modal-cancel');
+            const btnActivateConfirm = document.getElementById('btn-activate-modal-confirm');
+
+            if (btnActivate && activateModal && btnActivateCancel && btnActivateConfirm) {
+                btnActivate.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    activateModal.classList.add('active');
+                });
+
+                btnActivateCancel.addEventListener('click', () => {
+                    activateModal.classList.remove('active');
+                });
+
+                activateModal.addEventListener('click', (e) => {
+                    if (e.target === activateModal) {
+                        activateModal.classList.remove('active');
+                    }
+                });
+
+                btnActivateConfirm.addEventListener('click', () => {
+                    // Criar form e submeter para ativar
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{% url "accounts:user_update" object.pk %}';
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = csrfToken;
+                    form.appendChild(csrfInput);
+                    const isActiveInput = document.createElement('input');
+                    isActiveInput.type = 'hidden';
+                    isActiveInput.name = 'is_active';
+                    isActiveInput.value = '1';
+                    form.appendChild(isActiveInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+            {% endif %}
+        });
+    </script>
+    {% endif %}
 {% endblock %}

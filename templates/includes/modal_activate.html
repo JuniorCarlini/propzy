@@ -1,0 +1,25 @@
+{% load i18n %}
+
+{% if object and not object.is_active %}
+<div id="activate-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>{% trans modal_title|default:"Ativar Item" %}</h3>
+        </div>
+        <div class="modal-body text-center">
+            <p>{% trans modal_message|default:"Tem certeza que deseja ativar este item?" %}</p>
+            <p><strong>{% if object.name %}{{ object.name }}{% elif object.get_display_name %}{{ object.get_display_name }}{% elif object.common_name_pt %}{{ object.common_name_pt }}{% elif object.get_full_name %}{{ object.get_full_name }}{% elif object.email %}{{ object.email }}{% else %}{{ object }}{% endif %}</strong></p>
+        </div>
+        <div class="modal-actions">
+            <button type="button" id="btn-activate-modal-cancel" class="btn-modal-cancel">
+                {% trans "Cancelar" %}
+            </button>
+            <button type="button" id="btn-activate-modal-confirm" class="btn-modal-confirm btn-modal-confirm-activate">
+                <i class="fa-solid fa-check"></i>
+                {% trans "Ativar" %}
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+

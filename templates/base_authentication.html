@@ -1,0 +1,131 @@
+{% load i18n static %}
+
+{% get_current_language as current_language_code %}
+<!DOCTYPE html>
+<html lang="{{ current_language_code|default:'pt-br' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Propzy - {% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'icons/favicon_propzy.png' %}">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" />
+
+    <!-- CSS específico de autenticação (deve vir DEPOIS do Bootstrap para sobrescrever) -->
+    <link rel="stylesheet" href="{% static 'css/authentication.css' %}" type="text/css">
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="login-container">
+        <!-- Lado Esquerdo - Formulário -->
+        <div class="login-left">
+            <div class="login-form-wrapper">
+                <!-- Logo -->
+                <div class="logo-container">
+                    <img src="{% static 'icons/dark_logo_propzy.png' %}" alt="propzy" class="logo-image">
+                </div>
+
+                <!-- Mensagens -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags|default:'info' }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Conteúdo de Autenticação -->
+                {% block auth_content %}{% endblock %}
+
+                <!-- Divisor e Redes Sociais (opcional, pode ser sobrescrito) -->
+                {% block auth_footer %}
+                <div class="divider">
+                    <span class="divider-text">{% trans "Contato" %}</span>
+                </div>
+
+                <!-- Ícones de Redes Sociais -->
+                <div class="social-icons">
+                    <a href="#" class="social-icon" aria-label="Facebook" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="LinkedIn" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="YouTube" title="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Instagram" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+
+                <!-- Seletor de Idiomas -->
+                {% get_available_languages as available_languages %}
+                {% get_language_info_list for available_languages as available_language_info %}
+                <div class="language-selector-wrapper">
+                    <form method="post" action="{% url 'set_language' %}" id="language-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" id="language-next" value="{{ request.get_full_path }}">
+                        <div class="language-selector">
+                            {% if current_language_code == 'pt-br' %}
+                                <span class="language-selector-icon fi fi-br"></span>
+                            {% elif current_language_code == 'en' %}
+                                <span class="language-selector-icon fi fi-us"></span>
+                            {% elif current_language_code == 'es' %}
+                                <span class="language-selector-icon fi fi-es"></span>
+                            {% else %}
+                                <span class="language-selector-icon fi fi-{{ current_language_code }}"></span>
+                            {% endif %}
+                            <select name="language" id="language-select" onchange="(function(){var form=document.getElementById('language-form');var next=document.getElementById('language-next');if(next){var path=window.location.pathname.replace(/^\/(pt-br|pt_BR|en|es)\//,'/');if(!path||path==='')path='/';if(!path.startsWith('/'))path='/'+path;next.value=path+window.location.search;}if(form)form.submit();})();">
+                                {% for language in available_language_info %}
+                                    <option value="{{ language.code }}" data-flag="{% if language.code == 'pt-br' %}br{% elif language.code == 'en' %}us{% elif language.code == 'es' %}es{% else %}{{ language.code }}{% endif %}"{% if language.code == current_language_code %} selected{% endif %}>
+                                        {% if language.code == 'pt-br' %}Português BR{% else %}{{ language.name_local|capfirst }}{% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <span class="language-selector-arrow">▼</span>
+                        </div>
+                    </form>
+                </div>
+                {% endblock %}
+            </div>
+        </div>
+
+        <!-- Lado Direito - Banner -->
+        <div class="login-right">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+                <h1 class="banner-title">
+                    {% trans "Sistema de gestão para organizações não governamentais." %}
+                </h1>
+                <p class="banner-text">
+                    {% trans "Gerencie projetos, membros, parceiros e recursos financeiros de forma eficiente e organizada." %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- JavaScript específico de autenticação -->
+    <script src="{% static 'js/authentication.js' %}"></script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
+
+

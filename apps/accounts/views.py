@@ -18,7 +18,7 @@ def user_list(request):
     """Listagem de usuários cadastrados com busca e paginação."""
 
     search_query = request.GET.get("q", "").strip()
-    users = User.objects.prefetch_related("groups", "department").order_by("email")
+    users = User.objects.prefetch_related("groups").order_by("email")
 
     if search_query:
         query = Q(email__icontains=search_query)  # type: ignore[assignment]
@@ -74,6 +74,7 @@ def user_update(request, pk):
         {
             "form": form,
             "title": _("Editar usuário"),
+            "object": user,
         },
     )
 
@@ -98,15 +99,26 @@ def user_delete(request, pk):
 def group_list(request):
     """Listagem de grupos de permissões."""
 
+    search_query = request.GET.get("q", "").strip()
     groups = Group.objects.prefetch_related("permissions__content_type").order_by("name")
-    for group in groups:
+
+    # Aplicar filtro de busca
+    if search_query:
+        groups = groups.filter(Q(name__icontains=search_query))
+
+    # Paginação
+    paginator = Paginator(groups, 20)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    for group in page_obj:
         group_with_attrs = cast(Any, group)
         group_with_attrs.formatted_permissions = [
             format_permission_label(permission)
             for permission in group.permissions.all()
             if is_displayable_permission(permission)
         ]
-    return render(request, "accounts/group_list.html", {"groups": groups})
+    return render(request, "accounts/group_list.html", {"page_obj": page_obj, "search_query": search_query})
 
 
 @permission_required("auth.add_group", raise_exception=True)

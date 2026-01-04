@@ -130,6 +130,7 @@ class UserCreateForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        # Aplicar classes CSS do novo design
         for field_name in (
             "email",
             "full_name",
@@ -140,26 +141,44 @@ class UserCreateForm(UserCreationForm):
             "password1",
             "password2",
         ):
-            self.fields[field_name].widget.attrs.setdefault("class", "form-control")
+            if field_name in self.fields:
+                self.fields[field_name].widget.attrs.update(
+                    {
+                        "class": "form-control",
+                        "style": "width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.875rem;",
+                    }
+                )
+        if "groups" in self.fields:
+            self.fields["groups"].widget.attrs.update(
+                {
+                    "class": "form-select",
+                    "style": "width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.875rem;",
+                }
+            )
         for field_name in ("is_active",):
-            self.fields[field_name].widget.attrs.setdefault("class", "form-check-input")
+            if field_name in self.fields:
+                self.fields[field_name].widget.attrs.setdefault("class", "form-check-input")
         self.fields["email"].label = _("E-mail")
         self.fields["full_name"].label = _("Nome completo")
-        self.fields["phone"].label = _("Telefone")
+        if "phone" in self.fields:
+            self.fields["phone"].label = _("Telefone")
+            self.fields["phone"].widget.attrs.update(
+                {
+                    "placeholder": "(00) 00000-0000",
+                    "inputmode": "tel",
+                    "data-phone-mask": "true",
+                    "maxlength": "16",
+                }
+            )
         self.fields["address"].label = _("Endereço")
         self.fields["city"].label = _("Cidade")
         self.fields["state"].label = _("Estado")
-        self.fields["is_active"].label = _("Ativo")
-        self.fields["password1"].label = _("Senha")
-        self.fields["password2"].label = _("Confirme a senha")
-        self.fields["phone"].widget.attrs.update(
-            {
-                "placeholder": "(00) 00000-0000",
-                "inputmode": "tel",
-                "data-phone-mask": "true",
-                "maxlength": "16",
-            }
-        )
+        if "is_active" in self.fields:
+            self.fields["is_active"].label = _("Ativo")
+        if "password1" in self.fields:
+            self.fields["password1"].label = _("Senha")
+        if "password2" in self.fields:
+            self.fields["password2"].label = _("Confirme a senha")
 
     def save(self, commit: bool = True) -> AbstractBaseUser:
         user = super().save(commit=False)
@@ -200,25 +219,42 @@ class UserUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        # Aplicar classes CSS do novo design
         for field_name in ("email", "full_name", "phone", "address", "city", "state"):
-            self.fields[field_name].widget.attrs.setdefault("class", "form-control")
+            if field_name in self.fields:
+                self.fields[field_name].widget.attrs.update(
+                    {
+                        "class": "form-control",
+                        "style": "width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.875rem;",
+                    }
+                )
+        if "groups" in self.fields:
+            self.fields["groups"].widget.attrs.update(
+                {
+                    "class": "form-select",
+                    "style": "width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.875rem;",
+                }
+            )
         for field_name in ("is_active",):
-            self.fields[field_name].widget.attrs.setdefault("class", "form-check-input")
+            if field_name in self.fields:
+                self.fields[field_name].widget.attrs.setdefault("class", "form-check-input")
         self.fields["email"].label = _("E-mail")
         self.fields["full_name"].label = _("Nome completo")
-        self.fields["phone"].label = _("Telefone")
+        if "phone" in self.fields:
+            self.fields["phone"].label = _("Telefone")
+            self.fields["phone"].widget.attrs.update(
+                {
+                    "placeholder": "(00) 00000-0000",
+                    "inputmode": "tel",
+                    "data-phone-mask": "true",
+                    "maxlength": "16",
+                }
+            )
         self.fields["address"].label = _("Endereço")
         self.fields["city"].label = _("Cidade")
         self.fields["state"].label = _("Estado")
-        self.fields["is_active"].label = _("Ativo")
-        self.fields["phone"].widget.attrs.update(
-            {
-                "placeholder": "(00) 00000-0000",
-                "inputmode": "tel",
-                "data-phone-mask": "true",
-                "maxlength": "16",
-            }
-        )
+        if "is_active" in self.fields:
+            self.fields["is_active"].label = _("Ativo")
 
     def save(self, commit: bool = True) -> AbstractBaseUser:
         user = super().save(commit)
@@ -248,7 +284,13 @@ class GroupForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        self.fields["name"].widget.attrs.setdefault("class", "form-control")
+        # Aplicar classes CSS do novo design
+        self.fields["name"].widget.attrs.update(
+            {
+                "class": "form-control",
+                "style": "width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.875rem;",
+            }
+        )
         self.fields["name"].label = _("Nome do grupo")
         permissions_field = cast(forms.ModelMultipleChoiceField, self.fields["permissions"])
         filtered_permissions = (

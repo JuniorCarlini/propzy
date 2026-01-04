@@ -51,6 +51,12 @@ class User(AbstractUser):
     city = models.CharField(max_length=128, blank=True, verbose_name=_("Cidade"))
     state = models.CharField(max_length=64, blank=True, verbose_name=_("Estado"))
     phone = models.CharField(max_length=32, blank=True, verbose_name=_("Telefone"))
+    theme_preference = models.CharField(
+        max_length=10,
+        choices=[("light", _("Claro")), ("dark", _("Escuro"))],
+        default="light",
+        verbose_name=_("Preferência de tema"),
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: list[str] = []
@@ -72,8 +78,13 @@ class User(AbstractUser):
         return cleaned or str(self.email)
 
     def get_short_name(self) -> str:
+        """Retorna o primeiro nome se houver full_name, caso contrário retorna a parte antes do @ do email."""
         cleaned = str(self.full_name or "").strip()
         if cleaned:
             first_name, *_ = cleaned.split(maxsplit=1)
             return first_name
-        return str(self.email)
+        # Se não tiver nome completo, retorna a parte antes do @ do email
+        email_str = str(self.email)
+        if "@" in email_str:
+            return email_str.split("@")[0]
+        return email_str
