@@ -1,34 +1,47 @@
 # Regras do Projeto Propzy
 
-## Documentação Essencial
-- README.md - Visão geral
-- COMECE_AQUI.md - Ponto de entrada (LEIA PRIMEIRO!)
-- DEPLOY.md - Deploy em produção via Portainer (GUIA PRINCIPAL)
-- PORTAINER_QUICKSTART.md - Resumo rápido (5 passos)
-- PORTAINER_STACK.txt - Stack pronta para copiar no Portainer
-- QUICKSTART.md - Desenvolvimento local
-- LANDINGS_README.md - Documentação técnica completa
-- SECURITY_SUMMARY.md - Auditoria de segurança
-- ARQUIVOS_IMPORTANTES.md - Lista de todos arquivos importantes
+## 📚 Documentação (pasta docs/)
+- **docs/README.md** - Índice da documentação
+- **docs/COMECE_AQUI.md** - Ponto de entrada (LEIA PRIMEIRO!)
+- **docs/DEPLOY.md** - Guia completo de deploy em produção
+- **docs/PORTAINER_QUICKSTART.md** - Deploy rápido (5 passos)
+- **docs/PORTAINER_STACK.txt** - Stack pronta para copiar no Portainer
+- **docs/PORTAINER_GIT_DEPLOY.md** - Deploy automático via Git (auto-update)
+- **docs/INSTALACAO_COMPLETA.md** - Instalação do zero (VPS zerada)
+- **docs/QUICKSTART.md** - Desenvolvimento local
+- **docs/SECURITY_CHECKLIST.md** - Checklist de segurança
+- **docs/SECURITY_PENTESTING.md** - Relatório de penetration testing
+- **docs/SSL_AUTOMATICO.md** - SSL automático para domínios personalizados
+- **docs/LANDINGS_README.md** - Documentação técnica completa
+- **docs/ARQUIVOS_IMPORTANTES.md** - Lista de arquivos importantes
 
-## Deploy via Portainer
+## 🚀 Deploy via Portainer
 - Sistema otimizado para Portainer (interface web)
-- PORTAINER_STACK.txt - Cole este conteúdo no Portainer
-- Caminhos absolutos: /opt/propzy/
+- **docs/PORTAINER_STACK.txt** - Cole este conteúdo no Portainer
+- Caminhos absolutos: `/opt/propzy/`
+- Variável `ALLOWED_HOSTS=*` (validação de segurança no middleware)
 
-## Scripts Importantes
-- scripts/backup.sh - Backup automático
-- scripts/security_check.sh - Verificação de segurança
-- scripts/setup_autoscaling.sh - Auto-scaling (opcional)
+## 📜 Scripts Importantes
+- **scripts/backup.sh** - Backup automático
+- **scripts/security_check.sh** - Verificação de segurança
+- **scripts/setup_autoscaling.sh** - Auto-scaling (opcional)
+- **scripts/setup_ssl_auto.sh** - Setup SSL automático
 
-## Arquivos de Deploy
-- docker-compose.prod.yml - Compose de produção
-- PORTAINER_STACK.txt - Stack para Portainer (USE ESTE!)
-- .env.prod.example - Template de configuração
-- docker/nginx_proxy.conf - Configuração NGINX
+## 🐳 Arquivos de Deploy
+- **docker-compose.prod.yml** - Compose de produção
+- **docker/nginx_proxy.conf** - Configuração NGINX
+- **docker/Dockerfile.prod** - Dockerfile de produção
+- **docker/Dockerfile.nginx** - Dockerfile do NGINX
 
-## Não Modificar
-- apps/landings/ - App principal de landing pages
-- templates/landings/themes/ - Temas do sistema
-- monitoring/ - Configurações de monitoramento
+## 🔒 Segurança
+- Multi-tenant com `ALLOWED_HOSTS='*'` + validação no middleware
+- Proteção contra SQL injection, CRLF injection, Unicode attacks
+- Validação rigorosa de hostname (RFC 1123)
+- Logging de tentativas maliciosas
+
+## ⚠️ Não Modificar Sem Revisão
+- **apps/landings/middleware.py** - Validação de segurança crítica
+- **config/settings.py** - Configurações de segurança
+- **templates/landings/themes/** - Temas do sistema
+- **monitoring/** - Configurações de monitoramento
 

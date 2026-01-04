@@ -71,12 +71,25 @@ http://localhost:8000/admin/
 
 ## 📚 DOCUMENTAÇÃO
 
-| Documento | Descrição | Quando Usar |
-|-----------|-----------|-------------|
-| **DEPLOY.md** | Guia completo de deploy | Deploy em produção |
-| **QUICKSTART.md** | Guia rápido local | Desenvolvimento |
-| **LANDINGS_README.md** | Doc técnica completa | Entender arquitetura |
-| **SECURITY_SUMMARY.md** | Segurança | Auditoria |
+**📁 Toda a documentação está na pasta [`docs/`](docs/README.md)**
+
+### 🚀 Início Rápido:
+- **[docs/COMECE_AQUI.md](docs/COMECE_AQUI.md)** - Ponto de entrada (LEIA PRIMEIRO!)
+- **[docs/PORTAINER_QUICKSTART.md](docs/PORTAINER_QUICKSTART.md)** - Deploy rápido (5 passos)
+- **[docs/PORTAINER_STACK.txt](docs/PORTAINER_STACK.txt)** - Stack pronta para copiar
+
+### 📖 Guias Completos:
+- **[docs/DEPLOY.md](docs/DEPLOY.md)** - Deploy completo em produção
+- **[docs/INSTALACAO_COMPLETA.md](docs/INSTALACAO_COMPLETA.md)** - Instalação do zero
+- **[docs/QUICKSTART.md](docs/QUICKSTART.md)** - Desenvolvimento local
+- **[docs/LANDINGS_README.md](docs/LANDINGS_README.md)** - Documentação técnica
+
+### 🔒 Segurança:
+- **[docs/SECURITY_CHECKLIST.md](docs/SECURITY_CHECKLIST.md)** - Checklist de segurança
+- **[docs/SECURITY_PENTESTING.md](docs/SECURITY_PENTESTING.md)** - Relatório de pen testing
+- **[docs/SSL_AUTOMATICO.md](docs/SSL_AUTOMATICO.md)** - SSL automático
+
+**👉 Veja o [índice completo](docs/README.md)**
 
 ---
 

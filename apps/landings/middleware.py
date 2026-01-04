@@ -26,7 +26,7 @@ class TenantMiddleware(MiddlewareMixin):
     Adiciona ao request:
     - request.tenant: A LandingPage correspondente ou None
     - request.is_landing_page: Boolean indicando se é uma requisição de landing page
-    
+
     SEGURANÇA:
     - Domínios não registrados no sistema retornam 404
     - Previne acesso não autorizado mesmo com ALLOWED_HOSTS='*'
@@ -35,12 +35,12 @@ class TenantMiddleware(MiddlewareMixin):
     - Protegido contra Host Header Injection
     - Loga tentativas de acesso a domínios não registrados
     """
-    
+
     @staticmethod
     def _is_valid_hostname(hostname: str) -> bool:
         """
         Valida se o hostname é seguro e está em formato correto.
-        
+
         SEGURANÇA:
         - Previne CRLF injection
         - Previne Unicode tricks
@@ -48,57 +48,57 @@ class TenantMiddleware(MiddlewareMixin):
         - Valida formato RFC 1123
         """
         import re
-        
+
         # Tamanho máximo de hostname (RFC 1123)
         if len(hostname) > 253:
             return False
-        
+
         # Previne CRLF injection
         if '\r' in hostname or '\n' in hostname or '\x00' in hostname:
             return False
-        
+
         # Previne Unicode tricks (apenas ASCII)
         try:
             hostname.encode('ascii')
         except UnicodeEncodeError:
             return False
-        
+
         # Valida formato: letras, números, hífens e pontos apenas
         # RFC 1123: hostname = (dominio\.)+tld
         pattern = r'^([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)*[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?$'
         if not re.match(pattern, hostname):
             return False
-        
+
         # Previne hostname que é apenas números (pode ser IP)
         if hostname.replace('.', '').isdigit():
             # Permite apenas se for localhost/127.0.0.1
             if hostname in ('127.0.0.1', 'localhost'):
                 return True
             return False
-        
+
         return True
-    
+
     @staticmethod
     def _is_valid_subdomain(subdomain: str) -> bool:
         """
         Valida se o subdomínio é seguro.
-        
+
         SEGURANÇA:
         - Apenas letras, números e hífens
         - Máximo 63 caracteres (RFC 1123)
         - Não pode começar ou terminar com hífen
         """
         import re
-        
+
         if not subdomain or len(subdomain) > 63:
             return False
-        
+
         # Apenas ASCII
         try:
             subdomain.encode('ascii')
         except UnicodeEncodeError:
             return False
-        
+
         # Padrão: letras, números, hífens (não no início/fim)
         pattern = r'^[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?$'
         return bool(re.match(pattern, subdomain))
@@ -110,7 +110,7 @@ class TenantMiddleware(MiddlewareMixin):
             # request.get_host() já valida contra ALLOWED_HOSTS do Django
             # e checa X-Forwarded-Host se USE_X_FORWARDED_HOST=True
             host = request.get_host().split(":")[0].lower()
-            
+
             # PROTEÇÃO: Valida formato do host (previne CRLF, Unicode tricks, etc)
             if not self._is_valid_hostname(host):
                 logger.warning(
@@ -118,7 +118,7 @@ class TenantMiddleware(MiddlewareMixin):
                     f"(IP: {request.META.get('REMOTE_ADDR')})"
                 )
                 raise Http404("Host inválido")
-                
+
         except Exception as e:
             logger.error(f"Erro ao processar host: {e}")
             raise Http404("Host inválido")
@@ -175,7 +175,7 @@ class TenantMiddleware(MiddlewareMixin):
                 if not self._is_valid_subdomain(subdomain):
                     logger.warning(f"Subdomínio inválido: {repr(subdomain)}")
                     raise Http404("Subdomínio inválido")
-                
+
                 landing_page = LandingPage.objects.select_related("owner", "theme").get(
                     subdomain=subdomain,  # Django ORM sanitiza automaticamente
                     is_active=True,
