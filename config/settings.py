@@ -382,6 +382,11 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True  # Proteção XSS no navegador
     SECURE_CONTENT_TYPE_NOSNIFF = True  # Previne MIME-sniffing
     X_FRAME_OPTIONS = "DENY"  # Previne clickjacking
+    
+    # CUSTOMIZADO: Confia no header X-Forwarded-Proto do proxy reverso (NGINX/Cloudflare)
+    # Necessário para evitar loop de redirect quando o Cloudflare/NGINX já fornecem HTTPS
+    USE_X_FORWARDED_HOST = config("USE_X_FORWARDED_HOST", default=True, cast=bool)
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # ============================================================================
