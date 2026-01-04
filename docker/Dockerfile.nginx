@@ -1,0 +1,14 @@
+FROM nginx:alpine
+
+# Copia a configuração customizada do NGINX
+COPY docker/nginx_proxy.conf /etc/nginx/nginx.conf
+
+# Cria diretórios necessários
+RUN mkdir -p /app/staticfiles /app/media /var/www/certbot
+
+# Exposição de portas
+EXPOSE 80 443
+
+# Comando padrão do NGINX
+CMD ["nginx", "-g", "daemon off;"]
+

@@ -6,16 +6,17 @@ version: '3.8'
 services:
   # Proxy Reverso NGINX (recebe todas as requisições)
   nginx:
-    image: nginx:alpine
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.nginx
     container_name: propzy-nginx
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./docker/nginx_proxy.conf:/etc/nginx/nginx.conf:ro
-      - ./staticfiles:/app/staticfiles:ro
-      - ./media:/app/media:ro
+      - /opt/propzy/staticfiles:/app/staticfiles:ro
+      - /opt/propzy/media:/app/media:ro
       - propzy-ssl-certs:/etc/letsencrypt:ro
       - propzy-webroot:/var/www/certbot:ro
     depends_on:
@@ -40,8 +41,8 @@ services:
     expose:
       - "8000"
     volumes:
-      - ./staticfiles:/app/staticfiles
-      - ./media:/app/media
+      - /opt/propzy/staticfiles:/app/staticfiles
+      - /opt/propzy/media:/app/media
     depends_on:
       db:
         condition: service_healthy
@@ -67,7 +68,7 @@ services:
     restart: unless-stopped
     command: celery -A config worker -l info --concurrency=4
     volumes:
-      - ./media:/app/media
+      - /opt/propzy/media:/app/media
     depends_on:
       db:
         condition: service_healthy
