@@ -11,6 +11,8 @@ from pathlib import Path
 from decouple import Csv, config
 from django.utils.translation import gettext_lazy as _
 
+from config.dynamic_hosts import DynamicAllowedHosts
+
 # ============================================================================
 # CONFIGURAÇÕES BÁSICAS
 # ============================================================================
@@ -24,7 +26,9 @@ SECRET_KEY = config("SECRET_KEY", default="wv%0t#z=b&5@(1bpqh(i8ahgse9npgd&g#%hu
 DEBUG = config("DEBUG", default=True, cast=bool)
 
 # Hosts permitidos para servir a aplicação (obrigatório em produção)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
+# CUSTOMIZADO: Usa DynamicAllowedHosts para aceitar domínios personalizados cadastrados no banco
+_base_hosts = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
+ALLOWED_HOSTS = DynamicAllowedHosts(_base_hosts)
 
 # Origens confiáveis para proteção CSRF (necessário quando frontend está em domínio diferente)
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="http://localhost:3000", cast=Csv())
