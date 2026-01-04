@@ -542,10 +542,14 @@
 
     <!-- Modal de confirmação para ativar -->
     {% if object %}
-        {% include "includes/modal_activate.html" with modal_title="Ativar Usuário" modal_message="Tem certeza que deseja ativar este usuário?" %}
+        {% trans "Ativar Usuário" as modal_title_activate %}
+        {% trans "Tem certeza que deseja ativar este usuário?" as modal_message_activate %}
+        {% include "includes/modal_activate.html" with modal_title=modal_title_activate modal_message=modal_message_activate %}
 
         <!-- Modal de confirmação para desativar -->
-        {% include "includes/modal_deactivate.html" with modal_title="Desativar Usuário" modal_message="Tem certeza que deseja desativar este usuário?" %}
+        {% trans "Desativar Usuário" as modal_title_deactivate %}
+        {% trans "Tem certeza que deseja desativar este usuário?" as modal_message_deactivate %}
+        {% include "includes/modal_deactivate.html" with modal_title=modal_title_deactivate modal_message=modal_message_deactivate %}
     {% endif %}
 </div>
 {% endblock %}

@@ -3,104 +3,104 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-03 23:17-0300\n"
-"PO-Revision-Date: 2025-10-26 22:00+0000\n"
-"Last-Translator: propzy Team <contato@propzy.local>\n"
-"Language-Team: Portuguese (Brazil) <propzy@example.com>\n"
-"Language: pt_BR\n"
+"POT-Creation-Date: 2026-01-04 03:13+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
 #: apps/accounts/admin.py:23
 msgid "Informações pessoais"
-msgstr "Informações pessoais"
+msgstr ""
 
-#: apps/accounts/admin.py:27 apps/accounts/forms.py:264
+#: apps/accounts/admin.py:27 apps/accounts/forms.py:272
 #: templates/accounts/group_list.html:401
 msgid "Permissões"
-msgstr "Permissões"
+msgstr ""
 
 #: apps/accounts/admin.py:30
 msgid "Datas importantes"
-msgstr "Datas importantes"
+msgstr ""
 
 #: apps/accounts/forms.py:73 apps/accounts/forms.py:88
-#: apps/accounts/forms.py:157 apps/accounts/forms.py:233
+#: apps/accounts/forms.py:161 apps/accounts/forms.py:241
 msgid "E-mail"
-msgstr "E-mail"
+msgstr ""
 
-#: apps/accounts/forms.py:74 apps/accounts/forms.py:175
+#: apps/accounts/forms.py:74 apps/accounts/forms.py:179
 msgid "Senha"
-msgstr "Senha"
+msgstr ""
 
 #: apps/accounts/forms.py:77
 msgid "Lembrar acesso"
-msgstr "Lembrar acesso"
+msgstr ""
 
 #: apps/accounts/forms.py:100
 msgid "Nova senha"
-msgstr "Nova senha"
+msgstr ""
 
 #: apps/accounts/forms.py:101
 msgid "Confirme a nova senha"
-msgstr "Confirme a nova senha"
+msgstr ""
 
-#: apps/accounts/forms.py:110 apps/accounts/forms.py:195
+#: apps/accounts/forms.py:110 apps/accounts/forms.py:199
 #: templates/accounts/user_list.html:442
 msgid "Grupos"
-msgstr "Grupos"
+msgstr ""
 
-#: apps/accounts/forms.py:158 apps/accounts/forms.py:234
+#: apps/accounts/forms.py:162 apps/accounts/forms.py:242
 #: apps/accounts/models.py:49
 msgid "Nome completo"
-msgstr "Nome completo"
+msgstr ""
 
-#: apps/accounts/forms.py:160 apps/accounts/forms.py:236
+#: apps/accounts/forms.py:164 apps/accounts/forms.py:244
 #: apps/accounts/models.py:53 templates/accounts/user_list.html:441
 msgid "Telefone"
-msgstr "Telefone"
+msgstr ""
 
-#: apps/accounts/forms.py:169 apps/accounts/forms.py:245
+#: apps/accounts/forms.py:173 apps/accounts/forms.py:253
 #: apps/accounts/models.py:50
 msgid "Endereço"
-msgstr "Endereço"
+msgstr ""
 
-#: apps/accounts/forms.py:170 apps/accounts/forms.py:246
+#: apps/accounts/forms.py:174 apps/accounts/forms.py:254
 #: apps/accounts/models.py:51
 msgid "Cidade"
-msgstr "Cidade"
+msgstr ""
 
-#: apps/accounts/forms.py:171 apps/accounts/forms.py:247
+#: apps/accounts/forms.py:175 apps/accounts/forms.py:255
 #: apps/accounts/models.py:52
 msgid "Estado"
-msgstr "Estado"
+msgstr ""
 
-#: apps/accounts/forms.py:173 apps/accounts/forms.py:249
+#: apps/accounts/forms.py:177 apps/accounts/forms.py:257
 #: templates/accounts/user_list.html:469
 msgid "Ativo"
-msgstr "Ativo"
+msgstr ""
 
-#: apps/accounts/forms.py:177
+#: apps/accounts/forms.py:181
 msgid "Confirme a senha"
-msgstr "Confirme a senha"
+msgstr ""
 
-#: apps/accounts/forms.py:265
+#: apps/accounts/forms.py:273
 msgid "Selecione apenas as ações disponíveis para os usuários do sistema."
-msgstr "Selecione apenas as ações disponíveis para os usuários do sistema."
+msgstr ""
 
-#: apps/accounts/forms.py:284
+#: apps/accounts/forms.py:294
 msgid "Nome do grupo"
-msgstr "Nome do grupo"
+msgstr ""
 
-#: apps/accounts/forms.py:301
+#: apps/accounts/forms.py:311
 msgid "Permissões disponíveis"
-msgstr "Permissões disponíveis"
+msgstr ""
 
 #: apps/accounts/models.py:56
 msgid "Claro"
@@ -115,103 +115,103 @@ msgid "Preferência de tema"
 msgstr ""
 
 #: apps/accounts/models.py:69 templates/accounts/user_list.html:439
-#: templates/base.html:61
+#: templates/base.html:62
 msgid "Usuário"
-msgstr "Usuário"
+msgstr ""
 
 #: apps/accounts/models.py:70 templates/accounts/user_list.html:4
-#: templates/accounts/user_list.html:389 templates/base.html:121
+#: templates/accounts/user_list.html:389 templates/base.html:122
 msgid "Usuários"
-msgstr "Usuários"
+msgstr ""
 
 #: apps/accounts/permissions.py:13
 msgid "Gestão de usuários"
-msgstr "Gestão de usuários"
+msgstr ""
 
 #: apps/accounts/permissions.py:14
 msgid "Controle de acesso"
-msgstr "Controle de acesso"
+msgstr ""
 
 #: apps/accounts/permissions.py:15
 msgid "Aplicativo principal"
-msgstr "Aplicativo principal"
+msgstr ""
 
 #: apps/accounts/permissions.py:19
 #, python-format
 msgid "Adicionar %(object)s"
-msgstr "Adicionar %(object)s"
+msgstr ""
 
 #: apps/accounts/permissions.py:20
 #, python-format
 msgid "Editar %(object)s"
-msgstr "Editar %(object)s"
+msgstr ""
 
 #: apps/accounts/permissions.py:21
 #, python-format
 msgid "Excluir %(object)s"
-msgstr "Excluir %(object)s"
+msgstr ""
 
 #: apps/accounts/permissions.py:22
 #, python-format
 msgid "Visualizar %(object)s"
-msgstr "Visualizar %(object)s"
+msgstr ""
 
 #: apps/accounts/permissions.py:59
 #, python-format
 msgid "%(action)s %(object)s"
-msgstr "%(action)s %(object)s"
+msgstr ""
 
 #: apps/accounts/views.py:49
 msgid "Usuário criado com sucesso."
-msgstr "Usuário criado com sucesso."
+msgstr ""
 
 #: apps/accounts/views.py:54 templates/accounts/user_list.html:396
 msgid "Criar usuário"
-msgstr "Criar usuário"
+msgstr ""
 
 #: apps/accounts/views.py:66
 msgid "Usuário atualizado com sucesso."
-msgstr "Usuário atualizado com sucesso."
+msgstr ""
 
 #: apps/accounts/views.py:76
 msgid "Editar usuário"
-msgstr "Editar usuário"
+msgstr ""
 
 #: apps/accounts/views.py:88
 msgid "Você não pode remover a si mesmo."
-msgstr "Você não pode remover a si mesmo."
+msgstr ""
 
 #: apps/accounts/views.py:92
 msgid "Usuário removido com sucesso."
-msgstr "Usuário removido com sucesso."
+msgstr ""
 
 #: apps/accounts/views.py:132
 msgid "Grupo criado com sucesso."
-msgstr "Grupo criado com sucesso."
+msgstr ""
 
 #: apps/accounts/views.py:137 templates/accounts/group_list.html:357
 msgid "Criar grupo"
-msgstr "Criar grupo"
+msgstr ""
 
 #: apps/accounts/views.py:149
 msgid "Grupo atualizado com sucesso."
-msgstr "Grupo atualizado com sucesso."
+msgstr ""
 
 #: apps/accounts/views.py:159
 msgid "Editar grupo"
-msgstr "Editar grupo"
+msgstr ""
 
 #: apps/accounts/views.py:171
 msgid "Grupo removido com sucesso."
-msgstr "Grupo removido com sucesso."
+msgstr ""
 
 #: config/settings.py:242
 msgid "Português"
-msgstr "Português"
+msgstr ""
 
 #: config/settings.py:243
 msgid "English"
-msgstr "Inglês"
+msgstr ""
 
 #: config/settings.py:244
 msgid "Español"
@@ -219,250 +219,255 @@ msgstr ""
 
 #: templates/account/login.html:5 templates/account/login.html:8
 msgid "Entrar"
-msgstr "Entrar"
+msgstr ""
 
-#: templates/account/login.html:48
-#, fuzzy
-#| msgid "Nova senha"
+#: templates/account/login.html:58
+#: templates/account/password_reset_from_key.html:42
+#: templates/account/password_reset_from_key.html:75
 msgid "Mostrar senha"
-msgstr "Nova senha"
+msgstr ""
 
-#: templates/account/login.html:79
+#: templates/account/login.html:95
 msgid "Acessar Sistema"
 msgstr ""
 
-#: templates/account/login.html:83
+#: templates/account/login.html:99
 msgid "Esqueceu sua senha?"
 msgstr ""
 
-#: templates/account/password_reset.html:4
-#: templates/account/password_reset.html:9
+#: templates/account/password_reset.html:5
+#: templates/account/password_reset.html:8
 msgid "Recuperar senha"
-msgstr "Recuperar senha"
+msgstr ""
 
-#: templates/account/password_reset.html:18
+#: templates/account/password_reset.html:10
+msgid ""
+"Informe seu e-mail cadastrado para receber o link de redefinição de senha."
+msgstr ""
+
+#: templates/account/password_reset.html:49
 msgid "Enviar instruções"
-msgstr "Enviar instruções"
+msgstr ""
 
-#: templates/account/password_reset_done.html:4
-msgid "E-mail enviado"
-msgstr "E-mail enviado"
-
-#: templates/account/password_reset_done.html:9
-msgid "Verifique seu e-mail"
-msgstr "Verifique seu e-mail"
-
-#: templates/account/password_reset_done.html:15
+#: templates/account/password_reset.html:53
+#: templates/account/password_reset_done.html:12
 msgid "Voltar ao login"
-msgstr "Voltar ao login"
+msgstr ""
 
-#: templates/account/password_reset_from_key.html:4
-#: templates/account/password_reset_from_key.html:9
+#: templates/account/password_reset_done.html:5
+msgid "E-mail enviado"
+msgstr ""
+
+#: templates/account/password_reset_done.html:8
+msgid "Verifique seu e-mail"
+msgstr ""
+
+#: templates/account/password_reset_done.html:10
+msgid ""
+"Enviamos um link para redefinir sua senha. Caso não encontre a mensagem, "
+"verifique a caixa de spam."
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:5
+#: templates/account/password_reset_from_key.html:8
 msgid "Definir nova senha"
-msgstr "Definir nova senha"
+msgstr ""
 
-#: templates/account/password_reset_from_key.html:12
+#: templates/account/password_reset_from_key.html:11
 msgid "O link de redefinição é inválido ou já foi utilizado."
-msgstr "O link de redefinição é inválido ou já foi utilizado."
+msgstr ""
 
-#: templates/account/password_reset_from_key.html:16
+#: templates/account/password_reset_from_key.html:14
 msgid "Solicitar novo link"
-msgstr "Solicitar novo link"
+msgstr ""
 
-#: templates/account/password_reset_from_key.html:25
+#: templates/account/password_reset_from_key.html:96
 msgid "Atualizar senha"
-msgstr "Atualizar senha"
+msgstr ""
 
-#: templates/account/password_reset_from_key_done.html:4
+#: templates/account/password_reset_from_key_done.html:5
 msgid "Senha atualizada"
-msgstr "Senha atualizada"
+msgstr ""
+
+#: templates/account/password_reset_from_key_done.html:8
+msgid "Senha alterada com sucesso"
+msgstr ""
 
 #: templates/account/password_reset_from_key_done.html:10
-msgid "Senha alterada com sucesso"
-msgstr "Senha alterada com sucesso"
-
-#: templates/account/password_reset_from_key_done.html:13
 msgid "Você já pode acessar a plataforma com a nova senha."
-msgstr "Você já pode acessar a plataforma com a nova senha."
+msgstr ""
 
-#: templates/account/password_reset_from_key_done.html:16
-#: templates/account/signup_closed.html:15
+#: templates/account/password_reset_from_key_done.html:12
+#: templates/account/signup_closed.html:16
 msgid "Ir para o login"
-msgstr "Ir para o login"
+msgstr ""
 
-#: templates/account/signup_closed.html:4
+#: templates/account/signup_closed.html:5
 msgid "Inscrições encerradas"
-msgstr "Inscrições encerradas"
+msgstr ""
 
-#: templates/account/signup_closed.html:9
+#: templates/account/signup_closed.html:10
 msgid "Criar conta não está disponível"
-msgstr "Criar conta não está disponível"
+msgstr ""
 
-#: templates/accounts/group_confirm_delete.html:7
+#: templates/accounts/group_confirm_delete.html:1
+#: templates/accounts/group_confirm_delete.html:6
 msgid "Excluir grupo"
-msgstr "Excluir grupo"
+msgstr ""
 
-#: templates/accounts/group_confirm_delete.html:9
-#, fuzzy, python-format
-#| msgid "Você tem certeza que deseja remover o grupo %(name)s?"
+#: templates/accounts/group_confirm_delete.html:8
+#, python-format
 msgid ""
 "Você tem certeza que deseja remover o\n"
 "      grupo %(name)s?"
-msgstr "Você tem certeza que deseja remover o grupo %(name)s?"
+msgstr ""
 
-#: templates/accounts/group_confirm_delete.html:14
+#: templates/accounts/group_confirm_delete.html:13
 #: templates/accounts/group_form.html:356
 #: templates/accounts/user_confirm_delete.html:14
 #: templates/accounts/user_form.html:398
 msgid "Voltar"
-msgstr "Voltar"
+msgstr ""
 
-#: templates/accounts/group_confirm_delete.html:24
+#: templates/accounts/group_confirm_delete.html:23
 #: templates/accounts/user_confirm_delete.html:24
 msgid "Esta ação não pode ser desfeita."
-msgstr "Esta ação não pode ser desfeita."
+msgstr ""
 
-#: templates/accounts/group_confirm_delete.html:29
+#: templates/accounts/group_confirm_delete.html:28
 #: templates/accounts/group_form.html:435
 #: templates/accounts/user_confirm_delete.html:29
 #: templates/accounts/user_form.html:534
-#: templates/includes/modal_activate.html:14
-#: templates/includes/modal_deactivate.html:14
+#: templates/includes/modal_activate.html:15
+#: templates/includes/modal_deactivate.html:15
 msgid "Cancelar"
-msgstr "Cancelar"
+msgstr ""
 
-#: templates/accounts/group_confirm_delete.html:32
+#: templates/accounts/group_confirm_delete.html:31
 #: templates/accounts/user_confirm_delete.html:32
 msgid "Confirmar exclusão"
-msgstr "Confirmar exclusão"
+msgstr ""
 
 #: templates/accounts/group_form.html:352
 msgid "Defina o nome do grupo e selecione as permissões disponíveis."
-msgstr "Defina o nome do grupo e selecione as permissões disponíveis."
+msgstr ""
 
 #: templates/accounts/group_form.html:438 templates/accounts/user_form.html:537
 msgid "Salvar"
-msgstr "Salvar"
+msgstr ""
 
 #: templates/accounts/group_list.html:4 templates/accounts/group_list.html:350
 msgid "Grupos e permissões"
-msgstr "Grupos e permissões"
+msgstr ""
 
 #: templates/accounts/group_list.html:351
 msgid "Organize as permissões de acesso por perfis."
-msgstr "Organize as permissões de acesso por perfis."
+msgstr ""
 
 #: templates/accounts/group_list.html:367 templates/accounts/user_list.html:406
 msgid "Buscar"
-msgstr "Buscar"
+msgstr ""
 
 #: templates/accounts/group_list.html:368
 msgid "Buscar grupos..."
-msgstr "Buscar grupos..."
+msgstr ""
 
 #: templates/accounts/group_list.html:383 templates/accounts/user_list.html:422
 msgid "Limpar filtros"
-msgstr "Limpar filtros"
+msgstr ""
 
 #: templates/accounts/group_list.html:388 templates/accounts/user_list.html:427
 msgid "Filtrar"
-msgstr "Filtrar"
+msgstr ""
 
 #: templates/accounts/group_list.html:400
 msgid "Grupo"
-msgstr "Grupo"
+msgstr ""
 
 #: templates/accounts/group_list.html:418
 msgid "Sem permissões"
-msgstr "Sem permissões"
+msgstr ""
 
 #: templates/accounts/group_list.html:456 templates/accounts/user_list.html:513
 msgid "de"
-msgstr "de"
+msgstr ""
 
 #: templates/accounts/group_list.html:493
 msgid "Nenhum grupo encontrado"
-msgstr "Nenhum grupo encontrado"
+msgstr ""
 
 #: templates/accounts/group_list.html:495 templates/accounts/user_list.html:552
 msgid "Tente ajustar os termos da busca"
-msgstr "Tente ajustar os termos da busca"
+msgstr ""
 
 #: templates/accounts/group_list.html:497
 msgid "Ainda não há grupos cadastrados no sistema"
-msgstr "Ainda não há grupos cadastrados no sistema"
+msgstr ""
 
 #: templates/accounts/user_confirm_delete.html:7
 msgid "Excluir usuário"
-msgstr "Excluir usuário"
+msgstr ""
 
 #: templates/accounts/user_confirm_delete.html:9
-#, fuzzy, python-format
-#| msgid "Você tem certeza que deseja remover %(email)s?"
+#, python-format
 msgid ""
 "Você tem certeza que deseja remover\n"
 "      %(email)s?"
-msgstr "Você tem certeza que deseja remover %(email)s?"
+msgstr ""
 
 #: templates/accounts/user_form.html:394
 msgid "Preencha os dados do usuário e defina os grupos de acesso."
-msgstr "Preencha os dados do usuário e defina os grupos de acesso."
+msgstr ""
 
 #: templates/accounts/user_form.html:524
-#: templates/includes/modal_deactivate.html:18
+#: templates/includes/modal_deactivate.html:19
 msgid "Desativar"
-msgstr "Desativar"
+msgstr ""
 
 #: templates/accounts/user_form.html:529
-#: templates/includes/modal_activate.html:18
+#: templates/includes/modal_activate.html:19
 msgid "Ativar"
-msgstr "Ativar"
+msgstr ""
 
-#: templates/accounts/user_form.html:546
+#: templates/accounts/user_form.html:545
 msgid "Ativar Usuário"
-msgstr "Ativar Usuário"
+msgstr ""
 
 #: templates/accounts/user_form.html:546
 msgid "Tem certeza que deseja ativar este usuário?"
-msgstr "Tem certeza que deseja ativar este usuário?"
+msgstr ""
 
 #: templates/accounts/user_form.html:550
 msgid "Desativar Usuário"
-msgstr "Desativar Usuário"
+msgstr ""
 
 #: templates/accounts/user_form.html:551
 msgid "Tem certeza que deseja desativar este usuário?"
-msgstr "Tem certeza que deseja desativar este usuário?"
+msgstr ""
 
 #: templates/accounts/user_list.html:390
 msgid "Gerencie as contas internas, grupos e permissões."
-msgstr "Gerencie as contas internas, grupos e permissões."
+msgstr ""
 
 #: templates/accounts/user_list.html:407
 msgid "Buscar usuários..."
-msgstr "Buscar usuários..."
+msgstr ""
 
 #: templates/accounts/user_list.html:440
-#, fuzzy
-#| msgid "E-mail"
 msgid "Email"
-msgstr "E-mail"
+msgstr ""
 
 #: templates/accounts/user_list.html:443
 msgid "Status"
 msgstr ""
 
 #: templates/accounts/user_list.html:474
-#, fuzzy
-#| msgid "Ativo"
 msgid "Inativo"
-msgstr "Ativo"
+msgstr ""
 
 #: templates/accounts/user_list.html:550
-#, fuzzy
-#| msgid "Nenhum grupo cadastrado."
 msgid "Nenhum usuário encontrado"
-msgstr "Nenhum grupo cadastrado."
+msgstr ""
 
 #: templates/accounts/user_list.html:554
 msgid "Ainda não há usuários cadastrados no sistema"
@@ -472,120 +477,112 @@ msgstr ""
 msgid "Abrir menu"
 msgstr ""
 
-#: templates/base.html:44
+#: templates/base.html:44 templates/base.html:45
 msgid "propzy"
 msgstr ""
 
-#: templates/base.html:53
+#: templates/base.html:54
 msgid "Olá"
-msgstr "Olá"
+msgstr ""
 
-#: templates/base.html:79
+#: templates/base.html:80
 msgid "Modo claro"
-msgstr "Modo claro"
+msgstr ""
 
-#: templates/base.html:79
+#: templates/base.html:80
 msgid "Modo escuro"
-msgstr "Modo escuro"
+msgstr ""
 
-#: templates/base.html:87
+#: templates/base.html:88
 msgid "Sair"
-msgstr "Sair"
+msgstr ""
 
-#: templates/base.html:114 templates/main/index.html:4
+#: templates/base.html:115 templates/main/index.html:4
 msgid "Página Inicial"
-msgstr "Página Inicial"
+msgstr ""
 
-#: templates/base.html:129
+#: templates/base.html:130
 msgid "Grupos/Permissões"
-msgstr "Grupos/Permissões"
+msgstr ""
 
-#: templates/base.html:180
+#: templates/base.html:183
 msgid "Fechar"
-msgstr "Fechar"
+msgstr ""
 
 #: templates/base_authentication.html:56
-#, fuzzy
-#| msgid "Nova senha"
 msgid "Contato"
-msgstr "Nova senha"
+msgstr ""
 
-#: templates/base_authentication.html:110
+#: templates/base_authentication.html:112
 msgid "Sistema de gestão para organizações não governamentais."
 msgstr ""
 
-#: templates/base_authentication.html:113
+#: templates/base_authentication.html:115
 msgid ""
 "Gerencie projetos, membros, parceiros e recursos financeiros de forma "
 "eficiente e organizada."
 msgstr ""
 
 #: templates/main/index.html:207
-#, fuzzy
-#| msgid "Bem-vindo(a) ao propzy"
 msgid "Bem-vindo ao propzy"
-msgstr "Bem-vindo(a) ao propzy"
+msgstr ""
 
 #: templates/main/index.html:208
 msgid ""
 "Gerencie projetos, membros, parceiros e recursos financeiros de forma "
 "eficiente."
-msgstr "Gerencie projetos, membros, parceiros e recursos financeiros de forma eficiente."
+msgstr ""
 
 #: templates/main/index.html:219
 msgid "Usuários Cadastrados"
-msgstr "Usuários Cadastrados"
+msgstr ""
 
 #: templates/main/index.html:231
 msgid "Grupos Cadastrados"
-msgstr "Grupos Cadastrados"
+msgstr ""
 
 #: templates/main/index.html:242
 msgid "Projetos"
-msgstr "Projetos"
+msgstr ""
 
 #: templates/main/index.html:250
 msgid "Sistema de Gestão para ONGs"
-msgstr "Sistema de Gestão para ONGs"
+msgstr ""
 
 #: templates/main/index.html:252
 msgid ""
 "Utilize o menu lateral para navegar pelas funcionalidades do sistema. "
 "Gerencie usuários, grupos de permissões, projetos e muito mais."
-msgstr "Utilize o menu lateral para navegar pelas funcionalidades do sistema. Gerencie usuários, grupos de permissões, projetos e muito mais."
+msgstr ""
 
 #: templates/main/index.html:263
-#, fuzzy
-#| msgid "Criar usuário"
 msgid "Criar Usuário"
-msgstr "Criar usuário"
+msgstr ""
 
 #: templates/main/index.html:264
 msgid "Adicione um novo usuário ao sistema"
-msgstr "Adicione um novo usuário ao sistema"
+msgstr ""
 
 #: templates/main/index.html:273
-#, fuzzy
-#| msgid "Criar grupo"
 msgid "Criar Grupo"
-msgstr "Criar grupo"
+msgstr ""
 
 #: templates/main/index.html:274
 msgid "Defina um novo grupo de permissões"
-msgstr "Defina um novo grupo de permissões"
+msgstr ""
 
 #: templates/main/index.html:283
 msgid "Gerenciar Usuários"
-msgstr "Gerenciar Usuários"
+msgstr ""
 
 #: templates/main/index.html:284
 msgid "Visualize e edite usuários cadastrados"
-msgstr "Visualize e edite usuários cadastrados"
+msgstr ""
 
 #: templates/main/index.html:293
 msgid "Gerenciar Grupos"
-msgstr "Gerenciar Grupos"
+msgstr ""
 
 #: templates/main/index.html:294
 msgid "Visualize e edite grupos de permissões"
-msgstr "Visualize e edite grupos de permissões"
+msgstr ""
