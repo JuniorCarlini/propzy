@@ -62,6 +62,8 @@ services:
       - SECURE_SSL_REDIRECT=${SECURE_SSL_REDIRECT}
       - SESSION_COOKIE_SECURE=${SESSION_COOKIE_SECURE}
       - CSRF_COOKIE_SECURE=${CSRF_COOKIE_SECURE}
+      - SECURE_PROXY_SSL_HEADER=${SECURE_PROXY_SSL_HEADER}
+      - USE_X_FORWARDED_HOST=${USE_X_FORWARDED_HOST}
     volumes:
       - /opt/propzy/staticfiles:/app/staticfiles
       - /opt/propzy/media:/app/media
