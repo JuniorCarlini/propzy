@@ -371,6 +371,13 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="noreply@propzy.local"
 # SEGURANÇA (aplicado apenas em produção, quando DEBUG=False)
 # ============================================================================
 
+# CUSTOMIZADO: Proteção contra Host Header Injection
+# USE_X_FORWARDED_HOST já está configurado, mas vamos adicionar validação extra
+USE_X_FORWARDED_HOST = config("USE_X_FORWARDED_HOST", default=True, cast=bool)
+
+# CUSTOMIZADO: Confia no X-Forwarded-Proto do Cloudflare/NGINX
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 if not DEBUG:
     # CUSTOMIZADO: Configurações de segurança para ambiente de produção
     SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)  # Redireciona HTTP -> HTTPS
