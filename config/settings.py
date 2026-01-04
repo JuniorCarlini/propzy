@@ -446,6 +446,11 @@ LOGGING = {
             "level": "WARNING" if not DEBUG else "INFO",
             "propagate": False,
         },
+        "config.dynamic_hosts": {
+            "handlers": ["console"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
     },
 }
 
