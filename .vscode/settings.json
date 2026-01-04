@@ -49,26 +49,6 @@
             "source.organizeImports": "explicit"
         }
     },
-    "cursorpyright.analysis.autoImportCompletions": true,
-    "cursorpyright.analysis.autoSearchPaths": true,
-    "cursorpyright.analysis.diagnosticMode": "workspace",
-    "cursorpyright.analysis.diagnosticSeverityOverrides": {
-        "reportGeneralTypeIssues": "none",
-        "reportOptionalSubscript": "none",
-        "reportOptionalMemberAccess": "none",
-        "reportOptionalCall": "none",
-        "reportOptionalIterable": "none",
-        "reportOptionalContextManager": "none",
-        "reportOptionalOperand": "none",
-        "reportUnusedImport": "none",
-        "reportUnusedVariable": "warning",
-        "reportDuplicateImport": "none",
-        "reportPrivateImportUsage": "none",
-        "reportConstantRedefinition": "none",
-        "reportMissingTypeStubs": "none"
-    },
-    "cursorpyright.analysis.extraPaths": [
-        "/app"
-    ],
-    "cursorpyright.analysis.typeCheckingMode": "basic"
+    // Configurações do CursorPyright migradas para pyproject.toml
+    // As configurações de diagnosticSeverityOverrides agora estão em [tool.pyright] no pyproject.toml
 }

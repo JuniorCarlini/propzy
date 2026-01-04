@@ -92,7 +92,7 @@ line-ending = "auto"
 
 # Configuração do Pylance/Pyright (para melhor integração)
 [tool.pyright]
-include = ["apps", "apps.accounts", "apps.main", "config"]
+include = ["apps", "config"]
 exclude = [
     "**/migrations",
     "**/__pycache__",
@@ -109,6 +109,7 @@ typeCheckingMode = "basic"
 reportMissingImports = true
 reportMissingTypeStubs = false
 reportUnusedImport = false  # Ruff já faz isso
+reportUnusedVariable = "warning"  # Avisar sobre variáveis não utilizadas
 reportUnusedClass = false
 reportUnusedFunction = false
 reportDuplicateImport = false  # Ruff já faz isso
