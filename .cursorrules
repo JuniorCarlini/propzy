@@ -17,7 +17,8 @@
 
 ## 🚀 Deploy via Portainer
 - Sistema otimizado para Portainer (interface web)
-- **docs/PORTAINER_STACK.txt** - Cole este conteúdo no Portainer
+- **docs/PORTAINER_STACK.txt** - Stack pronta para copiar no Portainer
+- **docs/PORTAINER_ENV_VARS.txt** - Variáveis de ambiente para Portainer (USE ESTE!)
 - Caminhos absolutos: `/opt/propzy/`
 - Variável `ALLOWED_HOSTS=*` (validação de segurança no middleware)
 

@@ -1,0 +1,89 @@
+# =============================================================================
+# VARIÁVEIS DE AMBIENTE PARA PORTAINER
+# =============================================================================
+# Cole estas variáveis na seção "Environment" do Portainer Stack
+# IMPORTANTE: Substitua os valores marcados com ALTERE-ISSO
+# =============================================================================
+
+# =============================================================================
+# SEGURANÇA (OBRIGATÓRIO)
+# =============================================================================
+SECRET_KEY=ALTERE-ISSO-POR-UMA-CHAVE-SECRETA-FORTE-E-ALEATORIA
+DEBUG=False
+ALLOWED_HOSTS=*
+CSRF_TRUSTED_ORIGINS=https://propzy.com.br,https://*.propzy.com.br,https://app.propzy.com.br,http://localhost,http://127.0.0.1
+
+# =============================================================================
+# MULTI-TENANT
+# =============================================================================
+BASE_DOMAIN=propzy.com.br
+
+# =============================================================================
+# DJANGO
+# =============================================================================
+DJANGO_SETTINGS_MODULE=config.settings
+
+# =============================================================================
+# BANCO DE DADOS
+# =============================================================================
+DB_NAME=propzy_prod
+DB_USER=propzy_user
+DB_PASSWORD=ALTERE-ISSO-POR-SENHA-FORTE-DO-POSTGRES
+DB_HOST=db
+DB_PORT=5432
+
+# =============================================================================
+# REDIS
+# =============================================================================
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_PASSWORD=ALTERE-ISSO-POR-SENHA-FORTE-DO-REDIS
+
+# =============================================================================
+# CELERY
+# =============================================================================
+CELERY_BROKER_URL=redis://:ALTERE-ISSO-POR-SENHA-FORTE-DO-REDIS@redis:6379/0
+CELERY_RESULT_BACKEND=redis://:ALTERE-ISSO-POR-SENHA-FORTE-DO-REDIS@redis:6379/0
+
+# =============================================================================
+# E-MAIL
+# =============================================================================
+EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+DEFAULT_FROM_EMAIL=noreply@propzy.com.br
+
+# =============================================================================
+# SEGURANÇA SSL/PROXY
+# =============================================================================
+SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
+SECURE_PROXY_SSL_HEADER=HTTP_X_FORWARDED_PROTO,https
+USE_X_FORWARDED_HOST=True
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+LOG_LEVEL=INFO
+
+# =============================================================================
+# NOTAS IMPORTANTES:
+# =============================================================================
+# 1. ALLOWED_HOSTS='*' é seguro porque:
+#    - TenantMiddleware valida todos os domínios no banco
+#    - Domínios não registrados retornam 404
+#    - Ver: apps/landings/middleware.py
+#
+# 2. CSRF_TRUSTED_ORIGINS inclui apenas domínios do sistema:
+#    - Landing pages públicas não precisam de CSRF
+#    - Admin e Dashboard têm proteção CSRF completa
+#
+# 3. SECURE_PROXY_SSL_HEADER é necessário para Cloudflare:
+#    - Evita loop de redirect HTTPS
+#    - Confia no header X-Forwarded-Proto do Cloudflare
+#
+# 4. LOG_LEVEL pode ser DEBUG para troubleshooting:
+#    - Use DEBUG temporariamente para debug
+#    - Use INFO ou WARNING em produção
+#
+# =============================================================================
+
