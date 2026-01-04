@@ -2,10 +2,11 @@
 Gerenciador de Certificados SSL para Domínios Personalizados
 Gera e renova certificados Let's Encrypt automaticamente
 """
-import os
-import subprocess
+
 import logging
+import subprocess
 from pathlib import Path
+
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -67,13 +68,18 @@ class SSLManager:
                 self.certbot_path,
                 "certonly",
                 "--webroot",
-                "-w", self.webroot_path,
-                "-d", domain,
-                "-d", f"www.{domain}",  # Incluir www também
+                "-w",
+                self.webroot_path,
+                "-d",
+                domain,
+                "-d",
+                f"www.{domain}",  # Incluir www também
                 "--non-interactive",
                 "--agree-tos",
-                "--email", email,
-                "--deploy-hook", "nginx -s reload"  # Recarregar NGINX após sucesso
+                "--email",
+                email,
+                "--deploy-hook",
+                "nginx -s reload",  # Recarregar NGINX após sucesso
             ]
 
             logger.info(f"Gerando certificado para {domain}...")
@@ -83,7 +89,7 @@ class SSLManager:
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=120  # Timeout de 2 minutos
+                timeout=120,  # Timeout de 2 minutos
             )
 
             if result.returncode == 0:
@@ -116,25 +122,15 @@ class SSLManager:
             if not self.domain_has_certificate(domain):
                 return False, f"Domínio {domain} não tem certificado para renovar"
 
-            cmd = [
-                self.certbot_path,
-                "renew",
-                "--cert-name", domain,
-                "--deploy-hook", "nginx -s reload"
-            ]
+            cmd = [self.certbot_path, "renew", "--cert-name", domain, "--deploy-hook", "nginx -s reload"]
 
             logger.info(f"Renovando certificado para {domain}...")
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=120
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
 
             if result.returncode == 0:
                 logger.info(f"✅ Certificado renovado para {domain}")
-                return True, f"Certificado renovado com sucesso"
+                return True, "Certificado renovado com sucesso"
             else:
                 # Certbot retorna código 0 mesmo se não precisa renovar
                 if "not yet due for renewal" in result.stdout:
@@ -157,11 +153,7 @@ class SSLManager:
             (total_renovados, total_erros)
         """
         try:
-            cmd = [
-                self.certbot_path,
-                "renew",
-                "--deploy-hook", "nginx -s reload"
-            ]
+            cmd = [self.certbot_path, "renew", "--deploy-hook", "nginx -s reload"]
 
             logger.info("Renovando todos os certificados...")
 
@@ -169,7 +161,7 @@ class SSLManager:
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minutos para renovar todos
+                timeout=300,  # 5 minutos para renovar todos
             )
 
             # Analisar resultado
@@ -197,21 +189,11 @@ class SSLManager:
             if not self.domain_has_certificate(domain):
                 return True, f"Domínio {domain} não tem certificado"
 
-            cmd = [
-                self.certbot_path,
-                "delete",
-                "--cert-name", domain,
-                "--non-interactive"
-            ]
+            cmd = [self.certbot_path, "delete", "--cert-name", domain, "--non-interactive"]
 
             logger.info(f"Removendo certificado de {domain}...")
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=60
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
 
             if result.returncode == 0:
                 logger.info(f"✅ Certificado removido: {domain}")
@@ -236,51 +218,29 @@ class SSLManager:
             Dicionário com informações do certificado
         """
         try:
-            cmd = [
-                self.certbot_path,
-                "certificates",
-                "-d", domain
-            ]
+            cmd = [self.certbot_path, "certificates", "-d", domain]
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
 
             if result.returncode == 0:
                 output = result.stdout
 
                 # Extrair informações básicas
-                info = {
-                    "domain": domain,
-                    "has_certificate": self.domain_has_certificate(domain),
-                    "raw_output": output
-                }
+                info = {"domain": domain, "has_certificate": self.domain_has_certificate(domain), "raw_output": output}
 
                 # Extrair data de expiração (se existir)
                 if "Expiry Date:" in output:
-                    expiry_line = [line for line in output.split('\n') if 'Expiry Date:' in line][0]
-                    info["expiry_date"] = expiry_line.split('Expiry Date:')[1].strip()
+                    expiry_line = [line for line in output.split("\n") if "Expiry Date:" in line][0]
+                    info["expiry_date"] = expiry_line.split("Expiry Date:")[1].strip()
 
                 return info
             else:
-                return {
-                    "domain": domain,
-                    "has_certificate": False,
-                    "error": "Certificado não encontrado"
-                }
+                return {"domain": domain, "has_certificate": False, "error": "Certificado não encontrado"}
 
         except Exception as e:
             logger.error(f"❌ Erro ao obter info do certificado de {domain}: {str(e)}")
-            return {
-                "domain": domain,
-                "has_certificate": False,
-                "error": str(e)
-            }
+            return {"domain": domain, "has_certificate": False, "error": str(e)}
 
 
 # Instância global
 ssl_manager = SSLManager()
-

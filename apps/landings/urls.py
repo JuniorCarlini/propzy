@@ -16,6 +16,3 @@ urlpatterns = [
     # Landing page pública (catch-all - será adicionada no urls.py principal)
     path("", views.landing_page_view, name="view"),
 ]
-
-
-

@@ -6,7 +6,12 @@
   "description": "Tema moderno com design limpo e animações suaves. Ideal para corretores que querem uma presença digital profissional.",
   "screenshot": "preview.jpg",
   "category": "modern",
-  "tags": ["responsivo", "animado", "minimalista", "whatsapp"],
+  "tags": [
+    "responsivo",
+    "animado",
+    "minimalista",
+    "whatsapp"
+  ],
   "colors": {
     "primary": "#2563eb",
     "secondary": "#64748b",
@@ -23,6 +28,3 @@
   ],
   "premium": false
 }
-
-
-

@@ -6,7 +6,12 @@
   "description": "Tema clássico e elegante com design tradicional. Perfeito para imobiliárias que valorizam sofisticação.",
   "screenshot": "preview.jpg",
   "category": "classic",
-  "tags": ["elegante", "tradicional", "sofisticado", "profissional"],
+  "tags": [
+    "elegante",
+    "tradicional",
+    "sofisticado",
+    "profissional"
+  ],
   "colors": {
     "primary": "#8b4513",
     "secondary": "#d4af37",
@@ -22,6 +27,3 @@
   ],
   "premium": false
 }
-
-
-

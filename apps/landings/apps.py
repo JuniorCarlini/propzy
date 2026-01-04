@@ -12,7 +12,3 @@ class LandingsConfig(AppConfig):
 
     def ready(self):
         """Importa signals quando o app estiver pronto"""
-        import apps.landings.signals  # Importa signals para gerar SSL automaticamente
-
-
-

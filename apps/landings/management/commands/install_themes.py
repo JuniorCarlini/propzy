@@ -29,9 +29,7 @@ class Command(BaseCommand):
             action="store_true",
             help="Força atualização de temas existentes (incluindo screenshots)",
         )
-        parser.add_argument(
-            "--validate", action="store_true", help="Valida a estrutura dos temas sem instalar"
-        )
+        parser.add_argument("--validate", action="store_true", help="Valida a estrutura dos temas sem instalar")
 
     def handle(self, *args, **options):
         """Executa o comando"""
@@ -68,9 +66,7 @@ class Command(BaseCommand):
                 category = theme.get("category", "?")
                 version = theme.get("version", "?")
                 premium = " [PREMIUM]" if theme.get("premium", False) else ""
-                self.stdout.write(
-                    f"  • {theme['name']} ({theme['slug']}) - v{version} - {category}{premium}"
-                )
+                self.stdout.write(f"  • {theme['name']} ({theme['slug']}) - v{version} - {category}{premium}")
                 if theme.get("description"):
                     self.stdout.write(f"    {theme['description']}")
             self.stdout.write("")
@@ -121,11 +117,7 @@ class Command(BaseCommand):
         if success_count == len(theme_slugs):
             self.stdout.write(self.style.SUCCESS(f"✅ {success_count} tema(s) instalado(s) com sucesso!\n"))
         else:
-            self.stdout.write(
-                self.style.WARNING(
-                    f"⚠️  {success_count}/{len(theme_slugs)} tema(s) instalado(s)\n"
-                )
-            )
+            self.stdout.write(self.style.WARNING(f"⚠️  {success_count}/{len(theme_slugs)} tema(s) instalado(s)\n"))
 
     def _install_all_themes(self, manager: ThemeManager, force_update: bool):
         """Instala todos os temas encontrados"""
@@ -138,6 +130,3 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"✅ {installed_count} tema(s) instalado(s) com sucesso!\n"))
         else:
             self.stdout.write(self.style.WARNING("⚠️  Nenhum tema foi instalado\n"))
-
-
-

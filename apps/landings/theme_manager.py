@@ -7,7 +7,6 @@ a partir das pastas em templates/landings/themes/
 
 import json
 from pathlib import Path
-from typing import List, Optional
 
 from django.conf import settings
 from django.core.files import File
@@ -22,7 +21,7 @@ class ThemeManager:
         """Inicializa o gerenciador"""
         self.themes_dir = Path(settings.BASE_DIR) / "templates" / "landings" / "themes"
 
-    def scan_themes(self) -> List[dict]:
+    def scan_themes(self) -> list[dict]:
         """
         Escaneia a pasta de temas e retorna lista de temas encontrados.
 
@@ -38,16 +37,16 @@ class ThemeManager:
                 config_file = theme_dir / "theme.json"
                 if config_file.exists():
                     try:
-                        with open(config_file, "r", encoding="utf-8") as f:
+                        with open(config_file, encoding="utf-8") as f:
                             config = json.load(f)
                             config["path"] = str(theme_dir)
                             themes.append(config)
-                    except (json.JSONDecodeError, IOError) as e:
+                    except (OSError, json.JSONDecodeError) as e:
                         print(f"⚠️  Erro ao ler {config_file}: {e}")
 
         return themes
 
-    def install_theme(self, slug: str, force_update: bool = False) -> Optional[LandingPageTheme]:
+    def install_theme(self, slug: str, force_update: bool = False) -> LandingPageTheme | None:
         """
         Instala ou atualiza um tema no banco de dados baseado no theme.json.
 
@@ -65,7 +64,7 @@ class ThemeManager:
             raise FileNotFoundError(f"Tema '{slug}' não encontrado em {theme_dir}")
 
         try:
-            with open(config_file, "r", encoding="utf-8") as f:
+            with open(config_file, encoding="utf-8") as f:
                 config = json.load(f)
         except json.JSONDecodeError as e:
             raise ValueError(f"Arquivo theme.json inválido para tema '{slug}': {e}")
@@ -101,7 +100,7 @@ class ThemeManager:
             try:
                 with open(screenshot_file, "rb") as f:
                     theme.screenshot.save(f"{slug}_preview.jpg", File(f), save=True)
-            except IOError as e:
+            except OSError as e:
                 print(f"⚠️  Erro ao salvar screenshot do tema '{slug}': {e}")
 
         action = "instalado" if created else "atualizado"
@@ -154,12 +153,12 @@ class ThemeManager:
             return {}
 
         try:
-            with open(config_file, "r", encoding="utf-8") as f:
+            with open(config_file, encoding="utf-8") as f:
                 return json.load(f)
-        except (json.JSONDecodeError, IOError):
+        except (OSError, json.JSONDecodeError):
             return {}
 
-    def validate_theme(self, slug: str) -> tuple[bool, List[str]]:
+    def validate_theme(self, slug: str) -> tuple[bool, list[str]]:
         """
         Valida se um tema está corretamente estruturado.
 
@@ -184,7 +183,7 @@ class ThemeManager:
         else:
             # Valida o JSON
             try:
-                with open(config_file, "r", encoding="utf-8") as f:
+                with open(config_file, encoding="utf-8") as f:
                     config = json.load(f)
 
                 # Valida campos obrigatórios
@@ -202,6 +201,3 @@ class ThemeManager:
             errors.append("Arquivo index.html não encontrado")
 
         return len(errors) == 0, errors
-
-
-

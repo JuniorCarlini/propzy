@@ -6,14 +6,14 @@ Inclui:
 - Views do dashboard para configuração
 """
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_http_methods
-from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_http_methods
 
-from .models import LandingPage, LandingPageTheme, Property
+from .models import LandingPage, LandingPageTheme
 
 
 @require_http_methods(["GET"])
@@ -133,6 +133,3 @@ def dashboard_theme_preview(request, theme_slug):
     }
 
     return render(request, template_path, context)
-
-
-

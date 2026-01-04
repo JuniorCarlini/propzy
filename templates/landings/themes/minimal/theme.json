@@ -6,7 +6,13 @@
   "description": "Tema minimalista e limpo focado nos imóveis. Para quem valoriza simplicidade e objetividade.",
   "screenshot": "preview.jpg",
   "category": "minimal",
-  "tags": ["minimalista", "limpo", "simples", "moderno", "rápido"],
+  "tags": [
+    "minimalista",
+    "limpo",
+    "simples",
+    "moderno",
+    "rápido"
+  ],
   "colors": {
     "primary": "#000000",
     "secondary": "#ffffff",
@@ -22,6 +28,3 @@
   ],
   "premium": false
 }
-
-
-

@@ -225,6 +225,3 @@ class LandingPageAdmin(admin.ModelAdmin):
         """Otimiza query"""
         qs = super().get_queryset(request)
         return qs.select_related("owner", "theme")
-
-
-

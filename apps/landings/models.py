@@ -89,7 +89,7 @@ class LandingPageTheme(models.Model):
         config_file = theme_dir / "theme.json"
 
         if config_file.exists():
-            with open(config_file, "r", encoding="utf-8") as f:
+            with open(config_file, encoding="utf-8") as f:
                 return json.load(f)
         return {}
 
@@ -136,43 +136,37 @@ class LandingPage(models.Model):
 
     # Status SSL do domínio personalizado
     SSL_STATUS_CHOICES = [
-        ('none', _('Sem SSL')),
-        ('generating', _('Gerando...')),
-        ('active', _('Ativo')),
-        ('error', _('Erro')),
+        ("none", _("Sem SSL")),
+        ("generating", _("Gerando...")),
+        ("active", _("Ativo")),
+        ("error", _("Erro")),
     ]
     ssl_status = models.CharField(
         _("Status SSL"),
         max_length=20,
         choices=SSL_STATUS_CHOICES,
-        default='none',
-        help_text=_("Status do certificado SSL do domínio personalizado")
+        default="none",
+        help_text=_("Status do certificado SSL do domínio personalizado"),
     )
     ssl_error = models.TextField(
-        _("Erro SSL"),
-        blank=True,
-        null=True,
-        help_text=_("Mensagem de erro se falhar geração do SSL")
+        _("Erro SSL"), blank=True, null=True, help_text=_("Mensagem de erro se falhar geração do SSL")
     )
 
     # Status DNS do domínio personalizado
     DNS_STATUS_CHOICES = [
-        ('pending', _('Pendente')),
-        ('ok', _('Configurado')),
-        ('error', _('Erro')),
+        ("pending", _("Pendente")),
+        ("ok", _("Configurado")),
+        ("error", _("Erro")),
     ]
     dns_status = models.CharField(
         _("Status DNS"),
         max_length=20,
         choices=DNS_STATUS_CHOICES,
-        default='pending',
-        help_text=_("Status da configuração DNS do domínio personalizado")
+        default="pending",
+        help_text=_("Status da configuração DNS do domínio personalizado"),
     )
     dns_error = models.TextField(
-        _("Erro DNS"),
-        blank=True,
-        null=True,
-        help_text=_("Mensagem de erro se DNS não estiver configurado")
+        _("Erro DNS"), blank=True, null=True, help_text=_("Mensagem de erro se DNS não estiver configurado")
     )
 
     # Tema selecionado
@@ -277,12 +271,8 @@ class Property(models.Model):
     transaction_type = models.CharField(_("Transação"), max_length=10, choices=TRANSACTION_TYPES)
 
     # Valores
-    sale_price = models.DecimalField(
-        _("Preço de Venda"), max_digits=12, decimal_places=2, null=True, blank=True
-    )
-    rent_price = models.DecimalField(
-        _("Preço de Aluguel"), max_digits=12, decimal_places=2, null=True, blank=True
-    )
+    sale_price = models.DecimalField(_("Preço de Venda"), max_digits=12, decimal_places=2, null=True, blank=True)
+    rent_price = models.DecimalField(_("Preço de Aluguel"), max_digits=12, decimal_places=2, null=True, blank=True)
 
     # Características
     bedrooms = models.PositiveIntegerField(_("Quartos"), default=0)
@@ -353,6 +343,3 @@ class PropertyImage(models.Model):
 
     def __str__(self):
         return f"Imagem {self.order} - {self.property.title}"
-
-
-

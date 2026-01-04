@@ -6,7 +6,11 @@
   "description": "Tema padrão básico. Usado como fallback quando nenhum tema está selecionado.",
   "screenshot": "preview.jpg",
   "category": "modern",
-  "tags": ["default", "básico", "simples"],
+  "tags": [
+    "default",
+    "básico",
+    "simples"
+  ],
   "colors": {
     "primary": "#007bff",
     "secondary": "#6c757d"
@@ -18,6 +22,3 @@
   ],
   "premium": false
 }
-
-
-

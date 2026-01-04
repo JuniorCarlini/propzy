@@ -54,25 +54,25 @@ class TenantMiddleware(MiddlewareMixin):
             return False
 
         # Previne CRLF injection
-        if '\r' in hostname or '\n' in hostname or '\x00' in hostname:
+        if "\r" in hostname or "\n" in hostname or "\x00" in hostname:
             return False
 
         # Previne Unicode tricks (apenas ASCII)
         try:
-            hostname.encode('ascii')
+            hostname.encode("ascii")
         except UnicodeEncodeError:
             return False
 
         # Valida formato: letras, números, hífens e pontos apenas
         # RFC 1123: hostname = (dominio\.)+tld
-        pattern = r'^([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)*[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?$'
+        pattern = r"^([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)*[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?$"
         if not re.match(pattern, hostname):
             return False
 
         # Previne hostname que é apenas números (pode ser IP)
-        if hostname.replace('.', '').isdigit():
+        if hostname.replace(".", "").isdigit():
             # Permite apenas se for localhost/127.0.0.1
-            if hostname in ('127.0.0.1', 'localhost'):
+            if hostname in ("127.0.0.1", "localhost"):
                 return True
             return False
 
@@ -95,12 +95,12 @@ class TenantMiddleware(MiddlewareMixin):
 
         # Apenas ASCII
         try:
-            subdomain.encode('ascii')
+            subdomain.encode("ascii")
         except UnicodeEncodeError:
             return False
 
         # Padrão: letras, números, hífens (não no início/fim)
-        pattern = r'^[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?$'
+        pattern = r"^[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?$"
         return bool(re.match(pattern, subdomain))
 
     def process_request(self, request):
@@ -113,10 +113,7 @@ class TenantMiddleware(MiddlewareMixin):
 
             # PROTEÇÃO: Valida formato do host (previne CRLF, Unicode tricks, etc)
             if not self._is_valid_hostname(host):
-                logger.warning(
-                    f"Host inválido detectado: {repr(host)} "
-                    f"(IP: {request.META.get('REMOTE_ADDR')})"
-                )
+                logger.warning(f"Host inválido detectado: {repr(host)} (IP: {request.META.get('REMOTE_ADDR')})")
                 raise Http404("Host inválido")
 
         except Exception as e:
@@ -149,7 +146,7 @@ class TenantMiddleware(MiddlewareMixin):
             landing_page = LandingPage.objects.select_related("owner", "theme").get(
                 custom_domain=host,  # Django ORM sanitiza automaticamente
                 is_active=True,
-                is_published=True
+                is_published=True,
             )
             request.tenant = landing_page
             request.is_landing_page = True
@@ -179,7 +176,7 @@ class TenantMiddleware(MiddlewareMixin):
                 landing_page = LandingPage.objects.select_related("owner", "theme").get(
                     subdomain=subdomain,  # Django ORM sanitiza automaticamente
                     is_active=True,
-                    is_published=True
+                    is_published=True,
                 )
                 request.tenant = landing_page
                 request.is_landing_page = True
@@ -193,11 +190,5 @@ class TenantMiddleware(MiddlewareMixin):
 
         # SEGURANÇA: Se chegou aqui, é um domínio não registrado
         # Loga a tentativa e retorna 404
-        logger.warning(
-            f"Acesso negado a domínio não registrado: {host} "
-            f"(IP: {request.META.get('REMOTE_ADDR')})"
-        )
+        logger.warning(f"Acesso negado a domínio não registrado: {host} (IP: {request.META.get('REMOTE_ADDR')})")
         raise Http404(f"Domínio '{host}' não registrado no sistema.")
-
-
-
