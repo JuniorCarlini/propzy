@@ -16,6 +16,7 @@ dependencies = [
     "django-allauth>=0.63.3",
     "django-crispy-forms>=2.4",
     "crispy-bootstrap5>=2025.6",
+    "pillow>=10.0.0",
 ]
 
 [project.optional-dependencies]

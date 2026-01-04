@@ -1,0 +1,23 @@
+{
+  "name": "Default Theme",
+  "slug": "default",
+  "version": "1.0.0",
+  "author": "Propzy Team",
+  "description": "Tema padrão básico. Usado como fallback quando nenhum tema está selecionado.",
+  "screenshot": "preview.jpg",
+  "category": "modern",
+  "tags": ["default", "básico", "simples"],
+  "colors": {
+    "primary": "#007bff",
+    "secondary": "#6c757d"
+  },
+  "features": [
+    "whatsapp_integration",
+    "property_gallery",
+    "responsive_design"
+  ],
+  "premium": false
+}
+
+
+

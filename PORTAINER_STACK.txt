@@ -1,0 +1,174 @@
+version: '3.8'
+
+# ============================================================================
+# Stack Propzy - Sistema Multi-Tenant de Landing Pages
+# ============================================================================
+# Cole este conteúdo no Portainer → Stacks → Add stack → Web editor
+# Nome da stack: propzy
+# ============================================================================
+
+services:
+  # Proxy Reverso NGINX
+  nginx:
+    image: nginx:alpine
+    container_name: propzy-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /opt/propzy/docker/nginx_proxy.conf:/etc/nginx/nginx.conf:ro
+      - /opt/propzy/staticfiles:/app/staticfiles:ro
+      - /opt/propzy/media:/app/media:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - app
+    networks:
+      - propzy_network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Aplicação Django + Gunicorn
+  app:
+    build:
+      context: /opt/propzy
+      dockerfile: docker/Dockerfile.prod
+    image: propzy-app:latest
+    container_name: propzy-app
+    restart: unless-stopped
+    expose:
+      - "8000"
+    env_file:
+      - /opt/propzy/.env.prod
+    volumes:
+      - /opt/propzy/staticfiles:/app/staticfiles
+      - /opt/propzy/media:/app/media
+    depends_on:
+      - db
+      - redis
+    networks:
+      - propzy_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/admin/login/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Celery Worker (tarefas assíncronas)
+  celery-worker:
+    image: propzy-app:latest
+    container_name: propzy-celery-worker
+    restart: unless-stopped
+    command: celery -A config worker -l info --concurrency=4
+    env_file:
+      - /opt/propzy/.env.prod
+    volumes:
+      - /opt/propzy/media:/app/media
+    depends_on:
+      - db
+      - redis
+    networks:
+      - propzy_network
+
+  # Celery Beat (tarefas agendadas)
+  celery-beat:
+    image: propzy-app:latest
+    container_name: propzy-celery-beat
+    restart: unless-stopped
+    command: celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - /opt/propzy/.env.prod
+    depends_on:
+      - db
+      - redis
+    networks:
+      - propzy_network
+
+  # PostgreSQL 17
+  db:
+    image: postgres:17-alpine
+    container_name: propzy-db
+    restart: unless-stopped
+    env_file:
+      - /opt/propzy/.env.prod
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - propzy_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${DB_USER:-propzy}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Redis 7 (Cache + Broker)
+  redis:
+    image: redis:7-alpine
+    container_name: propzy-redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
+    env_file:
+      - /opt/propzy/.env.prod
+    volumes:
+      - redis_data:/data
+    networks:
+      - propzy_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Watchtower (atualizações automáticas)
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: propzy-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=86400  # 24 horas
+      - WATCHTOWER_LABEL_ENABLE=true
+    networks:
+      - propzy_network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  propzy_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ============================================================================
+# INSTRUÇÕES:
+# ============================================================================
+# 1. Certifique-se que o código está em /opt/propzy/
+# 2. Certifique-se que o .env.prod está em /opt/propzy/.env.prod
+# 3. Certifique-se que os certificados SSL estão em /etc/letsencrypt/
+# 4. Cole este conteúdo no Portainer
+# 5. Clique em "Deploy the stack"
+# 6. Aguarde 2-3 minutos para build
+# 7. Execute: docker exec propzy-app python manage.py migrate
+# 8. Execute: docker exec propzy-app python manage.py collectstatic --noinput
+# 9. Execute: docker exec propzy-app python manage.py install_themes
+# 10. Execute: docker exec -it propzy-app python manage.py createsuperuser
+# ============================================================================
+

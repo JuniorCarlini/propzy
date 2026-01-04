@@ -1,0 +1,434 @@
+{% extends "landings/base_landing.html" %}
+{% load static i18n %}
+
+{% block extra_css %}
+<style>
+/* Minimal Theme - Clean & Simple */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: #333;
+    background: #fff;
+    line-height: 1.6;
+}
+
+/* Header Minimal */
+.header-minimal {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-minimal .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000;
+    text-decoration: none;
+}
+
+.header-minimal nav a {
+    color: #333;
+    text-decoration: none;
+    margin-left: 2rem;
+    transition: color 0.3s;
+}
+
+.header-minimal nav a:hover {
+    color: #000;
+}
+
+/* Hero Minimal */
+.hero-minimal {
+    padding: 5rem 0;
+    text-align: center;
+    background: #fafafa;
+}
+
+.hero-minimal h1 {
+    font-size: 3rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+    color: #000;
+}
+
+.hero-minimal p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+/* Section */
+.section-minimal {
+    padding: 4rem 0;
+}
+
+.section-title-minimal {
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 3rem;
+    text-align: center;
+    color: #000;
+}
+
+/* Property Card Minimal */
+.property-card-minimal {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.property-card-minimal:hover {
+    border-color: #000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.property-card-minimal img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+}
+
+.property-card-minimal .content {
+    padding: 1.5rem;
+}
+
+.property-card-minimal h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #000;
+}
+
+.property-card-minimal .location {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.property-card-minimal .specs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.property-card-minimal .price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 1rem;
+}
+
+/* Button Minimal */
+.btn-minimal {
+    background: #000;
+    color: #fff;
+    border: 1px solid #000;
+    padding: 0.75rem 2rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.btn-minimal:hover {
+    background: #fff;
+    color: #000;
+}
+
+.btn-minimal-outline {
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
+    padding: 0.75rem 2rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.btn-minimal-outline:hover {
+    background: #000;
+    color: #fff;
+}
+
+/* Contact Section Minimal */
+.contact-minimal {
+    background: #000;
+    color: #fff;
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.contact-minimal h2 {
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+}
+
+.contact-minimal .contact-methods {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.contact-minimal .contact-item {
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.contact-minimal .contact-item:hover {
+    opacity: 0.7;
+    color: #fff;
+}
+
+/* WhatsApp Float Minimal */
+.whatsapp-float-minimal {
+    position: fixed;
+    width: 56px;
+    height: 56px;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.whatsapp-float-minimal:hover {
+    background-color: #128c7e;
+    color: #FFF;
+    transform: scale(1.1);
+}
+
+/* Grid */
+.grid-minimal {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .hero-minimal h1 {
+        font-size: 2rem;
+    }
+
+    .header-minimal nav a {
+        margin-left: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .grid-minimal {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<header class="header-minimal">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="#" class="logo">
+                {% if landing_page.logo %}
+                <img src="{{ landing_page.logo.url }}" alt="{{ landing_page.business_name }}" style="max-height: 40px;">
+                {% else %}
+                {{ landing_page.business_name }}
+                {% endif %}
+            </a>
+            <nav class="d-none d-md-block">
+                <a href="#imoveis">{% trans "Imóveis" %}</a>
+                <a href="#contato">{% trans "Contato" %}</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero-minimal">
+    <div class="container">
+        <h1>{{ landing_page.business_name }}</h1>
+        <p>{{ landing_page.business_description|default:"Imóveis Selecionados" }}</p>
+        <div>
+            <a href="#imoveis" class="btn-minimal">{% trans "Ver Imóveis" %}</a>
+            {% if landing_page.whatsapp %}
+            <a href="https://wa.me/{{ landing_page.whatsapp }}" class="btn-minimal-outline ms-3" target="_blank">
+                {% trans "Contato" %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Properties -->
+{% if featured_properties %}
+<section class="section-minimal bg-light">
+    <div class="container">
+        <h2 class="section-title-minimal">{% trans "Em Destaque" %}</h2>
+
+        <div class="grid-minimal">
+            {% for property in featured_properties %}
+            <div class="property-card-minimal">
+                {% if property.main_image %}
+                <img src="{{ property.main_image.url }}" alt="{{ property.title }}">
+                {% else %}
+                <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
+                    <i class="bi bi-house-fill text-white" style="font-size: 4rem;"></i>
+                </div>
+                {% endif %}
+
+                <div class="content">
+                    <h3>{{ property.title|truncatewords:6 }}</h3>
+                    <div class="location">
+                        <i class="bi bi-geo-alt"></i> {{ property.neighborhood }}, {{ property.city }}
+                    </div>
+                    <div class="specs">
+                        {% if property.bedrooms > 0 %}<span>{{ property.bedrooms }} quartos</span>{% endif %}
+                        {% if property.bathrooms > 0 %}<span>{{ property.bathrooms }} banheiros</span>{% endif %}
+                        <span>{{ property.area }} m²</span>
+                    </div>
+                    <div class="price">{{ property.get_price_display }}</div>
+                    {% if landing_page.whatsapp %}
+                    <a href="https://wa.me/{{ landing_page.whatsapp }}?text=Interesse: {{ property.title }}"
+                       class="btn-minimal w-100 text-center"
+                       target="_blank">
+                        {% trans "Tenho Interesse" %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- All Properties -->
+<section id="imoveis" class="section-minimal">
+    <div class="container">
+        <h2 class="section-title-minimal">{% trans "Todos os Imóveis" %}</h2>
+
+        <div class="grid-minimal">
+            {% for property in properties %}
+            <div class="property-card-minimal">
+                {% if property.main_image %}
+                <img src="{{ property.main_image.url }}" alt="{{ property.title }}">
+                {% else %}
+                <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
+                    <i class="bi bi-house-fill text-white" style="font-size: 4rem;"></i>
+                </div>
+                {% endif %}
+
+                <div class="content">
+                    <h3>{{ property.title|truncatewords:6 }}</h3>
+                    <div class="location">
+                        <i class="bi bi-geo-alt"></i> {{ property.neighborhood }}, {{ property.city }}
+                    </div>
+                    <div class="specs">
+                        {% if property.bedrooms > 0 %}<span>{{ property.bedrooms }} quartos</span>{% endif %}
+                        {% if property.bathrooms > 0 %}<span>{{ property.bathrooms }} banheiros</span>{% endif %}
+                        <span>{{ property.area }} m²</span>
+                    </div>
+                    <div class="price">{{ property.get_price_display }}</div>
+                    {% if landing_page.whatsapp %}
+                    <a href="https://wa.me/{{ landing_page.whatsapp }}?text=Interesse: {{ property.title }}"
+                       class="btn-minimal w-100 text-center"
+                       target="_blank">
+                        {% trans "Tenho Interesse" %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-5" style="grid-column: 1 / -1;">
+                <p class="text-muted">{% trans "Nenhum imóvel disponível." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Contact -->
+<section id="contato" class="contact-minimal">
+    <div class="container">
+        <h2>{% trans "Entre em Contato" %}</h2>
+        <p>{% trans "Agende uma visita e conheça nossos imóveis" %}</p>
+
+        <div class="contact-methods">
+            {% if landing_page.whatsapp %}
+            <a href="https://wa.me/{{ landing_page.whatsapp }}" class="contact-item" target="_blank">
+                <i class="bi bi-whatsapp fs-1"></i><br>
+                WhatsApp
+            </a>
+            {% endif %}
+
+            {% if landing_page.phone %}
+            <a href="tel:{{ landing_page.phone }}" class="contact-item">
+                <i class="bi bi-telephone fs-1"></i><br>
+                {{ landing_page.phone }}
+            </a>
+            {% endif %}
+
+            {% if landing_page.email %}
+            <a href="mailto:{{ landing_page.email }}" class="contact-item">
+                <i class="bi bi-envelope fs-1"></i><br>
+                {{ landing_page.email }}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- WhatsApp Float -->
+{% if landing_page.whatsapp %}
+<a href="https://wa.me/{{ landing_page.whatsapp }}"
+   class="whatsapp-float-minimal"
+   target="_blank"
+   title="{% trans 'WhatsApp' %}">
+    <i class="bi bi-whatsapp"></i>
+</a>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
+
+
+

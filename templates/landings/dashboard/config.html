@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Configurar Landing Page" %}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">{% trans "Configurar Landing Page" %}</h1>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                {% trans "Configure os dados da sua landing page através do painel administrativo em" %}
+                <a href="/admin/landings/landingpage/{{ landing_page.id }}/change/" target="_blank">
+                    {% trans "Admin > Landing Pages" %}
+                </a>
+            </div>
+
+            <!-- Informações Atuais -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">{% trans "Dados Atuais" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>{% trans "Nome do Negócio:" %}</strong> {{ landing_page.business_name }}</p>
+                            <p><strong>{% trans "E-mail:" %}</strong> {{ landing_page.email }}</p>
+                            <p><strong>{% trans "Telefone:" %}</strong> {{ landing_page.phone|default:"-" }}</p>
+                            <p><strong>{% trans "WhatsApp:" %}</strong> {{ landing_page.whatsapp|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>{% trans "Subdomínio:" %}</strong> {{ landing_page.get_full_subdomain }}</p>
+                            <p><strong>{% trans "Domínio Personalizado:" %}</strong> {{ landing_page.custom_domain|default:"-" }}</p>
+                            <p><strong>{% trans "Tema:" %}</strong> {{ landing_page.theme.name|default:"Padrão" }}</p>
+                            <p>
+                                <strong>{% trans "Status:" %}</strong>
+                                {% if landing_page.is_published %}
+                                <span class="badge bg-success">{% trans "Publicada" %}</span>
+                                {% else %}
+                                <span class="badge bg-warning">{% trans "Rascunho" %}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <a href="/admin/landings/landingpage/{{ landing_page.id }}/change/" class="btn btn-primary" target="_blank">
+                            <i class="bi bi-pencil"></i> {% trans "Editar no Admin" %}
+                        </a>
+
+                        {% if landing_page.is_published %}
+                        <a href="{{ landing_page.get_primary_url }}" class="btn btn-success" target="_blank">
+                            <i class="bi bi-box-arrow-up-right"></i> {% trans "Ver Landing Page" %}
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seleção de Tema -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">{% trans "Temas Disponíveis" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        {% for theme in themes %}
+                        <div class="col-md-4">
+                            <div class="card h-100 {% if landing_page.theme.id == theme.id %}border-primary{% endif %}">
+                                {% if theme.screenshot %}
+                                <img src="{{ theme.screenshot.url }}" class="card-img-top" alt="{{ theme.name }}">
+                                {% else %}
+                                <div class="bg-secondary text-white text-center p-5">
+                                    <i class="bi bi-brush fs-1"></i>
+                                </div>
+                                {% endif %}
+
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        {{ theme.name }}
+                                        {% if landing_page.theme.id == theme.id %}
+                                        <span class="badge bg-primary">{% trans "Atual" %}</span>
+                                        {% endif %}
+                                        {% if theme.is_premium %}
+                                        <span class="badge bg-warning">Premium</span>
+                                        {% endif %}
+                                    </h5>
+                                    <p class="card-text small">{{ theme.description }}</p>
+                                    <p class="small text-muted">
+                                        <strong>{% trans "Categoria:" %}</strong> {{ theme.get_category_display }}
+                                    </p>
+                                </div>
+
+                                <div class="card-footer">
+                                    <a href="{% url 'landings:theme_preview' theme.slug %}"
+                                       class="btn btn-sm btn-outline-primary w-100"
+                                       target="_blank">
+                                        <i class="bi bi-eye"></i> {% trans "Preview" %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12">
+                            <p class="text-muted">{% trans "Nenhum tema disponível. Execute: python manage.py install_themes" %}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

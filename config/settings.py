@@ -58,6 +58,7 @@ THIRD_PARTY_APPS = [
 APP_APPS = [
     "apps.accounts",  # Gestão de usuários customizados, grupos e permissões
     "apps.main",  # Dashboard e páginas principais
+    "apps.landings",  # Landing Pages Multi-tenant
 ]
 
 INSTALLED_APPS = BASE_APPS + THIRD_PARTY_APPS + APP_APPS
@@ -72,6 +73,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",  # Gerencia sessões de usuários
     "django.middleware.locale.LocaleMiddleware",  # CUSTOMIZADO: Detecta idioma preferido do usuário
     "django.middleware.common.CommonMiddleware",  # Funcionalidades comuns (redirect, ETags, etc.)
+    "apps.landings.middleware.TenantMiddleware",  # CUSTOMIZADO: Detecta tenant para multi-tenant
     "django.middleware.csrf.CsrfViewMiddleware",  # Proteção contra CSRF
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Associa usuário à request
     "allauth.account.middleware.AccountMiddleware",  # CUSTOMIZADO: Middleware do django-allauth
@@ -445,3 +447,15 @@ LOGGING = {
 
 # Tipo de chave primária padrão para novos modelos
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# ============================================================================
+# MULTI-TENANT / LANDING PAGES
+# ============================================================================
+
+# Domínio base do sistema (usado para detectar subdomínios)
+BASE_DOMAIN = config("BASE_DOMAIN", default="propzy.com.br")
+
+# ALLOWED_HOSTS deve incluir o domínio base e seus subdomínios (wildcard)
+# Em produção, configure: ALLOWED_HOSTS=.propzy.com.br,propzy.com.br
+# O ponto antes do domínio permite todos os subdomínios

@@ -1,0 +1,34 @@
+# Regras do Projeto Propzy
+
+## Documentação Essencial
+- README.md - Visão geral
+- COMECE_AQUI.md - Ponto de entrada (LEIA PRIMEIRO!)
+- DEPLOY.md - Deploy em produção via Portainer (GUIA PRINCIPAL)
+- PORTAINER_QUICKSTART.md - Resumo rápido (5 passos)
+- PORTAINER_STACK.txt - Stack pronta para copiar no Portainer
+- QUICKSTART.md - Desenvolvimento local
+- LANDINGS_README.md - Documentação técnica completa
+- SECURITY_SUMMARY.md - Auditoria de segurança
+- ARQUIVOS_IMPORTANTES.md - Lista de todos arquivos importantes
+
+## Deploy via Portainer
+- Sistema otimizado para Portainer (interface web)
+- PORTAINER_STACK.txt - Cole este conteúdo no Portainer
+- Caminhos absolutos: /opt/propzy/
+
+## Scripts Importantes
+- scripts/backup.sh - Backup automático
+- scripts/security_check.sh - Verificação de segurança
+- scripts/setup_autoscaling.sh - Auto-scaling (opcional)
+
+## Arquivos de Deploy
+- docker-compose.prod.yml - Compose de produção
+- PORTAINER_STACK.txt - Stack para Portainer (USE ESTE!)
+- .env.prod.example - Template de configuração
+- docker/nginx_proxy.conf - Configuração NGINX
+
+## Não Modificar
+- apps/landings/ - App principal de landing pages
+- templates/landings/themes/ - Temas do sistema
+- monitoring/ - Configurações de monitoramento
+

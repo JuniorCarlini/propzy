@@ -1,0 +1,27 @@
+{
+  "name": "Classic Elegance",
+  "slug": "classic",
+  "version": "1.0.0",
+  "author": "Propzy Team",
+  "description": "Tema clássico e elegante com design tradicional. Perfeito para imobiliárias que valorizam sofisticação.",
+  "screenshot": "preview.jpg",
+  "category": "classic",
+  "tags": ["elegante", "tradicional", "sofisticado", "profissional"],
+  "colors": {
+    "primary": "#8b4513",
+    "secondary": "#d4af37",
+    "accent": "#2c3e50",
+    "background": "#f5f5f0",
+    "text": "#2c3e50"
+  },
+  "features": [
+    "whatsapp_integration",
+    "property_gallery",
+    "contact_form",
+    "responsive_design"
+  ],
+  "premium": false
+}
+
+
+

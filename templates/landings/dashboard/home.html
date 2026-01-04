@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Minha Landing Page" %}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">{% trans "Minha Landing Page" %}</h1>
+
+            {% if landing_page %}
+            <div class="row g-4 mb-4">
+                <!-- Status da Landing Page -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{% trans "Status" %}</h5>
+                            {% if landing_page.is_published %}
+                            <span class="badge bg-success fs-6">{% trans "Publicada" %}</span>
+                            {% else %}
+                            <span class="badge bg-warning fs-6">{% trans "Rascunho" %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total de Imóveis -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{% trans "Imóveis Ativos" %}</h5>
+                            <p class="fs-3 mb-0">{{ properties_count }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Link da Landing Page -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{% trans "Seu Link" %}</h5>
+                            <a href="{{ landing_page.get_primary_url }}" target="_blank" class="btn btn-primary btn-sm">
+                                <i class="bi bi-box-arrow-up-right"></i> {% trans "Ver Landing Page" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informações da Landing Page -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{% trans "Informações" %}</h5>
+                    <p><strong>{% trans "Nome do Negócio:" %}</strong> {{ landing_page.business_name }}</p>
+                    <p><strong>{% trans "Subdomínio:" %}</strong> {{ landing_page.get_full_subdomain }}</p>
+                    {% if landing_page.custom_domain %}
+                    <p><strong>{% trans "Domínio Personalizado:" %}</strong> {{ landing_page.custom_domain }}</p>
+                    {% endif %}
+                    <p><strong>{% trans "Tema:" %}</strong> {{ landing_page.theme.name|default:"Nenhum" }}</p>
+
+                    <a href="{% url 'landings:dashboard_config' %}" class="btn btn-primary">
+                        <i class="bi bi-gear"></i> {% trans "Configurar" %}
+                    </a>
+                </div>
+            </div>
+
+            {% else %}
+            <!-- Landing Page não criada -->
+            <div class="alert alert-info">
+                <h4 class="alert-heading">{% trans "Crie sua Landing Page!" %}</h4>
+                <p>{% trans "Você ainda não tem uma landing page. Crie agora e comece a divulgar seus imóveis online." %}</p>
+                <a href="{% url 'landings:dashboard_config' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> {% trans "Criar Landing Page" %}
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

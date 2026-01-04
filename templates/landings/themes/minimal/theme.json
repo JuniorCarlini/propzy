@@ -1,0 +1,27 @@
+{
+  "name": "Minimal Clean",
+  "slug": "minimal",
+  "version": "1.0.0",
+  "author": "Propzy Team",
+  "description": "Tema minimalista e limpo focado nos imóveis. Para quem valoriza simplicidade e objetividade.",
+  "screenshot": "preview.jpg",
+  "category": "minimal",
+  "tags": ["minimalista", "limpo", "simples", "moderno", "rápido"],
+  "colors": {
+    "primary": "#000000",
+    "secondary": "#ffffff",
+    "accent": "#e0e0e0",
+    "background": "#ffffff",
+    "text": "#333333"
+  },
+  "features": [
+    "whatsapp_integration",
+    "property_gallery",
+    "fast_loading",
+    "responsive_design"
+  ],
+  "premium": false
+}
+
+
+

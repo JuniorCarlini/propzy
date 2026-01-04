@@ -1,0 +1,323 @@
+{% extends "landings/base_landing.html" %}
+{% load static i18n %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'landings/themes/modern/css/modern.css' %}">
+<style>
+/* Hero Section */
+.hero-section {
+    min-height: 600px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(59, 130, 246, 0.7) 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.hero-actions {
+    animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Property Cards */
+.property-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+}
+
+/* Section Headers */
+.section-header {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: #64748b;
+}
+
+/* WhatsApp Float Button */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    background-color: #128c7e;
+    color: #FFF;
+    transform: scale(1.1);
+}
+
+/* Filters */
+.property-filters {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section" style="background-image: url('{% if landing_page.hero_image %}{{ landing_page.hero_image.url }}{% else %}https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920{% endif %}');">
+    <div class="hero-overlay"></div>
+    <div class="container">
+        <div class="hero-content text-center">
+            {% if landing_page.logo %}
+            <img src="{{ landing_page.logo.url }}"
+                 alt="{{ landing_page.business_name }}"
+                 class="mb-4"
+                 style="max-height: 100px;">
+            {% endif %}
+
+            <h1 class="hero-title">
+                {{ landing_page.business_name }}
+            </h1>
+            <p class="hero-subtitle">
+                {{ landing_page.business_description|default:"Encontre o imóvel dos seus sonhos" }}
+            </p>
+            <div class="hero-actions">
+                <a href="#properties" class="btn btn-light btn-lg px-5 me-3">
+                    <i class="bi bi-house-fill"></i> {% trans "Ver Imóveis" %}
+                </a>
+                {% if landing_page.whatsapp %}
+                <a href="https://wa.me/{{ landing_page.whatsapp }}"
+                   class="btn btn-success btn-lg px-5"
+                   target="_blank">
+                    <i class="bi bi-whatsapp"></i> {% trans "Fale Conosco" %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Properties -->
+{% if featured_properties %}
+<section class="featured-section py-5 bg-light">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">{% trans "Imóveis em Destaque" %}</h2>
+            <p class="section-subtitle">{% trans "Confira nossas melhores oportunidades" %}</p>
+        </div>
+
+        <div class="row g-4">
+            {% for property in featured_properties %}
+            <div class="col-lg-4 col-md-6">
+                {% include "landings/_components/property_card.html" with property=property %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- All Properties -->
+<section id="properties" class="properties-section py-5">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">{% trans "Todos os Imóveis" %}</h2>
+            <p class="section-subtitle">{% trans "Encontre o imóvel ideal para você" %}</p>
+        </div>
+
+        <!-- Filtros -->
+        <div class="property-filters mb-5">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">{% trans "Tipo de Imóvel" %}</label>
+                    <select class="form-select" id="filter-type">
+                        <option value="">{% trans "Todos os tipos" %}</option>
+                        <option value="house">{% trans "Casa" %}</option>
+                        <option value="apartment">{% trans "Apartamento" %}</option>
+                        <option value="commercial">{% trans "Comercial" %}</option>
+                        <option value="land">{% trans "Terreno" %}</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{% trans "Transação" %}</label>
+                    <select class="form-select" id="filter-transaction">
+                        <option value="">{% trans "Venda/Aluguel" %}</option>
+                        <option value="sale">{% trans "Venda" %}</option>
+                        <option value="rent">{% trans "Aluguel" %}</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{% trans "Cidade" %}</label>
+                    <select class="form-select" id="filter-city">
+                        <option value="">{% trans "Todas as cidades" %}</option>
+                        {% regroup properties by city as cities_list %}
+                        {% for city in cities_list %}
+                        <option value="{{ city.grouper }}">{{ city.grouper }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grade de Imóveis -->
+        <div class="row g-4" id="properties-grid">
+            {% for property in properties %}
+            <div class="col-lg-4 col-md-6 property-item"
+                 data-type="{{ property.property_type }}"
+                 data-transaction="{{ property.transaction_type }}"
+                 data-city="{{ property.city }}">
+                {% include "landings/_components/property_card.html" with property=property %}
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-house-x-fill text-muted" style="font-size: 4rem;"></i>
+                <p class="text-muted mt-3">{% trans "Nenhum imóvel disponível no momento." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+{% include "landings/_components/contact_section.html" %}
+
+<!-- WhatsApp Floating Button -->
+{% if landing_page.whatsapp %}
+<a href="https://wa.me/{{ landing_page.whatsapp }}"
+   class="whatsapp-float"
+   target="_blank"
+   title="{% trans 'Fale conosco no WhatsApp' %}">
+    <i class="bi bi-whatsapp"></i>
+</a>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filtro de imóveis
+document.addEventListener('DOMContentLoaded', function() {
+    const filterType = document.getElementById('filter-type');
+    const filterTransaction = document.getElementById('filter-transaction');
+    const filterCity = document.getElementById('filter-city');
+    const properties = document.querySelectorAll('.property-item');
+
+    function filterProperties() {
+        const type = filterType.value;
+        const transaction = filterTransaction.value;
+        const city = filterCity.value;
+
+        properties.forEach(property => {
+            const propertyType = property.dataset.type;
+            const propertyTransaction = property.dataset.transaction;
+            const propertyCity = property.dataset.city;
+
+            let show = true;
+
+            if (type && propertyType !== type) show = false;
+            if (transaction && propertyTransaction !== transaction && propertyTransaction !== 'both') show = false;
+            if (city && propertyCity !== city) show = false;
+
+            if (show) {
+                property.style.display = 'block';
+            } else {
+                property.style.display = 'none';
+            }
+        });
+    }
+
+    filterType.addEventListener('change', filterProperties);
+    filterTransaction.addEventListener('change', filterProperties);
+    filterCity.addEventListener('change', filterProperties);
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
+
+
+

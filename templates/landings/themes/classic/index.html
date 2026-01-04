@@ -1,0 +1,355 @@
+{% extends "landings/base_landing.html" %}
+{% load static i18n %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* Typography */
+body {
+    font-family: 'Lato', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Hero Section */
+.hero-classic {
+    background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)),
+                url('{% if landing_page.hero_image %}{{ landing_page.hero_image.url }}{% else %}https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920{% endif %}');
+    background-size: cover;
+    background-position: center;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    color: white;
+    text-align: center;
+    border-bottom: 5px solid #d4af37;
+}
+
+.hero-classic h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-classic p {
+    font-size: 1.3rem;
+    font-weight: 300;
+}
+
+/* Navbar */
+.navbar-classic {
+    background-color: #2c3e50;
+    padding: 1rem 0;
+}
+
+.navbar-classic a {
+    color: white !important;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.navbar-classic a:hover {
+    color: #d4af37 !important;
+}
+
+/* Sections */
+.section-classic {
+    padding: 4rem 0;
+}
+
+.section-title-classic {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #2c3e50;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.section-title-classic::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(to right, #8b4513, #d4af37, #8b4513);
+}
+
+/* Property Cards */
+.property-card-classic {
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.property-card-classic:hover {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+}
+
+/* Badge Premium */
+.badge-classic {
+    background: linear-gradient(135deg, #8b4513, #d4af37);
+    color: white;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* About Section */
+.about-classic {
+    background: linear-gradient(135deg, #f5f5f0, #ffffff);
+}
+
+/* Contact CTA */
+.contact-cta-classic {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    padding: 3rem 0;
+}
+
+.btn-classic {
+    background: linear-gradient(135deg, #8b4513, #d4af37);
+    border: none;
+    color: white;
+    padding: 0.8rem 2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-classic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 69, 19, 0.4);
+    color: white;
+}
+
+/* WhatsApp Float */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    background-color: #128c7e;
+    color: #FFF;
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .hero-classic h1 {
+        font-size: 2rem;
+    }
+
+    .section-title-classic {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-classic sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            {% if landing_page.logo %}
+            <img src="{{ landing_page.logo.url }}" alt="{{ landing_page.business_name }}" style="max-height: 50px;">
+            {% else %}
+            {{ landing_page.business_name }}
+            {% endif %}
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#home">{% trans "Início" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#destaques">{% trans "Destaques" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#imoveis">{% trans "Imóveis" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contato">{% trans "Contato" %}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero-classic">
+    <div class="container">
+        <h1>{{ landing_page.business_name }}</h1>
+        <p>{{ landing_page.business_description|default:"Excelência em Imóveis" }}</p>
+        <div class="mt-4">
+            <a href="#imoveis" class="btn btn-classic btn-lg me-3">
+                <i class="bi bi-house-fill"></i> {% trans "Ver Imóveis" %}
+            </a>
+            {% if landing_page.whatsapp %}
+            <a href="https://wa.me/{{ landing_page.whatsapp }}" class="btn btn-success btn-lg" target="_blank">
+                <i class="bi bi-whatsapp"></i> {% trans "Contato" %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Properties -->
+{% if featured_properties %}
+<section id="destaques" class="section-classic bg-light">
+    <div class="container">
+        <h2 class="section-title-classic">{% trans "Imóveis em Destaque" %}</h2>
+
+        <div class="row g-4">
+            {% for property in featured_properties %}
+            <div class="col-lg-4 col-md-6">
+                <div class="property-card-classic">
+                    {% include "landings/_components/property_card.html" with property=property %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- About Section -->
+<section class="about-classic section-classic">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                {% if landing_page.logo %}
+                <img src="{{ landing_page.logo.url }}"
+                     alt="{{ landing_page.business_name }}"
+                     class="img-fluid rounded shadow-lg">
+                {% else %}
+                <div class="bg-secondary rounded p-5 text-center text-white">
+                    <i class="bi bi-building" style="font-size: 8rem;"></i>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                <h2 class="mb-4" style="font-size: 2.5rem;">{% trans "Sobre Nós" %}</h2>
+                <p class="lead">{{ landing_page.business_description }}</p>
+
+                <div class="mt-4">
+                    {% if landing_page.email %}
+                    <p><i class="bi bi-envelope-fill text-primary me-2"></i> {{ landing_page.email }}</p>
+                    {% endif %}
+                    {% if landing_page.phone %}
+                    <p><i class="bi bi-telephone-fill text-primary me-2"></i> {{ landing_page.phone }}</p>
+                    {% endif %}
+                    {% if landing_page.address %}
+                    <p><i class="bi bi-geo-alt-fill text-primary me-2"></i> {{ landing_page.address }}, {{ landing_page.city }}/{{ landing_page.state }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- All Properties -->
+<section id="imoveis" class="section-classic">
+    <div class="container">
+        <h2 class="section-title-classic">{% trans "Nosso Portfólio" %}</h2>
+
+        <div class="row g-4">
+            {% for property in properties %}
+            <div class="col-lg-4 col-md-6">
+                <div class="property-card-classic">
+                    {% include "landings/_components/property_card.html" with property=property %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-house-x-fill text-muted" style="font-size: 4rem;"></i>
+                <p class="text-muted mt-3">{% trans "Nenhum imóvel disponível no momento." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Contact CTA -->
+<section id="contato" class="contact-cta-classic text-center">
+    <div class="container">
+        <h2 class="mb-4">{% trans "Pronto para Encontrar Seu Imóvel?" %}</h2>
+        <p class="lead mb-4">{% trans "Entre em contato e agende uma visita" %}</p>
+        {% if landing_page.whatsapp %}
+        <a href="https://wa.me/{{ landing_page.whatsapp }}" class="btn btn-classic btn-lg" target="_blank">
+            <i class="bi bi-whatsapp"></i> {% trans "Falar no WhatsApp" %}
+        </a>
+        {% endif %}
+        {% if landing_page.phone %}
+        <a href="tel:{{ landing_page.phone }}" class="btn btn-outline-light btn-lg ms-3">
+            <i class="bi bi-telephone"></i> {% trans "Ligar Agora" %}
+        </a>
+        {% endif %}
+    </div>
+</section>
+
+<!-- WhatsApp Float Button -->
+{% if landing_page.whatsapp %}
+<a href="https://wa.me/{{ landing_page.whatsapp }}"
+   class="whatsapp-float"
+   target="_blank"
+   title="{% trans 'Fale conosco no WhatsApp' %}">
+    <i class="bi bi-whatsapp"></i>
+</a>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Smooth scroll para links âncora
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Navbar ao scroll
+window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar-classic');
+    if (window.scrollY > 50) {
+        navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    } else {
+        navbar.style.boxShadow = 'none';
+    }
+});
+</script>
+{% endblock %}
+
+
+

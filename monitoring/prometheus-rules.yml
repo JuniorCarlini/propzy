@@ -1,0 +1,97 @@
+# Prometheus Alert Rules - Auto-scaling Triggers
+
+groups:
+  - name: autoscaling_rules
+    interval: 30s
+    rules:
+      # Alert quando CPU alta por 2 minutos
+      - alert: HighCPUUsage
+        expr: avg(rate(container_cpu_usage_seconds_total{container_label_com_docker_swarm_service_name="propzy_app"}[5m])) > 0.7
+        for: 2m
+        labels:
+          severity: warning
+          service: app
+          action: scale_up
+        annotations:
+          summary: "Alta utilização de CPU no serviço App"
+          description: "CPU média acima de 70% por 2 minutos. Considere escalar."
+
+      # Alert quando CPU muito baixa por 10 minutos
+      - alert: LowCPUUsage
+        expr: avg(rate(container_cpu_usage_seconds_total{container_label_com_docker_swarm_service_name="propzy_app"}[5m])) < 0.2
+        for: 10m
+        labels:
+          severity: info
+          service: app
+          action: scale_down
+        annotations:
+          summary: "Baixa utilização de CPU no serviço App"
+          description: "CPU média abaixo de 20% por 10 minutos. Considere reduzir réplicas."
+
+      # Alert quando Memória alta
+      - alert: HighMemoryUsage
+        expr: avg(container_memory_usage_bytes{container_label_com_docker_swarm_service_name="propzy_app"} / container_spec_memory_limit_bytes{container_label_com_docker_swarm_service_name="propzy_app"}) > 0.8
+        for: 2m
+        labels:
+          severity: warning
+          service: app
+          action: scale_up
+        annotations:
+          summary: "Alta utilização de memória no serviço App"
+          description: "Memória acima de 80% por 2 minutos."
+
+      # Alert quando muitas requisições por segundo
+      - alert: HighRequestRate
+        expr: sum(rate(nginx_http_requests_total[5m])) > 100
+        for: 1m
+        labels:
+          severity: warning
+          service: nginx
+          action: scale_up
+        annotations:
+          summary: "Alta taxa de requisições"
+          description: "Mais de 100 req/s. Sistema sob carga."
+
+      # Alert quando containers não saudáveis
+      - alert: UnhealthyContainers
+        expr: sum(container_tasks_state{state="running"}) < 2
+        for: 1m
+        labels:
+          severity: critical
+          service: app
+        annotations:
+          summary: "Containers não saudáveis"
+          description: "Menos de 2 containers rodando."
+
+      # Alert quando banco de dados lento
+      - alert: DatabaseSlowQueries
+        expr: rate(pg_stat_activity_count[5m]) > 50
+        for: 2m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Banco de dados com muitas queries"
+          description: "Mais de 50 queries ativas."
+
+      # Alert quando Redis com muitas conexões
+      - alert: RedisHighConnections
+        expr: redis_connected_clients > 100
+        for: 2m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "Redis com muitas conexões"
+          description: "Mais de 100 clientes conectados."
+
+      # Alert quando disco cheio
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disco com pouco espaço"
+          description: "Menos de 10% de espaço disponível."
+

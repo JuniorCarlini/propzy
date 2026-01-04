@@ -1,0 +1,58 @@
+{% extends "landings/base_landing.html" %}
+{% load static i18n %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        {% if landing_page.logo %}
+        <img src="{{ landing_page.logo.url }}" alt="{{ landing_page.business_name }}" class="mb-4" style="max-height: 100px;">
+        {% endif %}
+        <h1 class="display-4">{{ landing_page.business_name }}</h1>
+        <p class="lead">{{ landing_page.business_description }}</p>
+    </div>
+
+    {% if featured_properties %}
+    <section class="mb-5">
+        <h2 class="mb-4">{% trans "Imóveis em Destaque" %}</h2>
+        <div class="row g-4">
+            {% for property in featured_properties %}
+            <div class="col-lg-4 col-md-6">
+                {% include "landings/_components/property_card.html" with property=property %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <section>
+        <h2 class="mb-4">{% trans "Todos os Imóveis" %}</h2>
+        <div class="row g-4">
+            {% for property in properties %}
+            <div class="col-lg-4 col-md-6">
+                {% include "landings/_components/property_card.html" with property=property %}
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">{% trans "Nenhum imóvel disponível." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+{% include "landings/_components/contact_section.html" %}
+
+{% if landing_page.whatsapp %}
+<a href="https://wa.me/{{ landing_page.whatsapp }}"
+   style="position: fixed; width: 60px; height: 60px; bottom: 30px; right: 30px;
+          background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center;
+          font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.3); z-index: 1000;
+          display: flex; align-items: center; justify-content: center;"
+   target="_blank">
+    <i class="bi bi-whatsapp"></i>
+</a>
+{% endif %}
+{% endblock %}
+
+
+

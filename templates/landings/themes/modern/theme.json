@@ -1,0 +1,28 @@
+{
+  "name": "Modern Real Estate",
+  "slug": "modern",
+  "version": "1.0.0",
+  "author": "Propzy Team",
+  "description": "Tema moderno com design limpo e animações suaves. Ideal para corretores que querem uma presença digital profissional.",
+  "screenshot": "preview.jpg",
+  "category": "modern",
+  "tags": ["responsivo", "animado", "minimalista", "whatsapp"],
+  "colors": {
+    "primary": "#2563eb",
+    "secondary": "#64748b",
+    "accent": "#f59e0b",
+    "background": "#ffffff",
+    "text": "#1e293b"
+  },
+  "features": [
+    "whatsapp_integration",
+    "property_gallery",
+    "contact_form",
+    "property_filters",
+    "responsive_design"
+  ],
+  "premium": false
+}
+
+
+

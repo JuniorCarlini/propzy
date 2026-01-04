@@ -1,0 +1,70 @@
+# Prometheus Configuration - Auto-scaling Metrics
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'propzy-production'
+    environment: 'production'
+
+# Alertmanager configuration (opcional)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets: ['alertmanager:9093']
+
+# Rules for auto-scaling
+rule_files:
+  - '/etc/prometheus/rules/*.yml'
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter (métricas do host)
+  - job_name: 'node-exporter'
+    dns_sd_configs:
+      - names:
+          - 'tasks.node-exporter'
+        type: 'A'
+        port: 9100
+
+  # cAdvisor (métricas dos containers)
+  - job_name: 'cadvisor'
+    dns_sd_configs:
+      - names:
+          - 'tasks.cadvisor'
+        type: 'A'
+        port: 8080
+
+  # Django App (métricas da aplicação)
+  - job_name: 'django-app'
+    dns_sd_configs:
+      - names:
+          - 'tasks.app'
+        type: 'A'
+        port: 8000
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # PostgreSQL Exporter (se configurar)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+  # Redis Exporter (se configurar)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+
+  # NGINX Exporter (se configurar)
+  - job_name: 'nginx'
+    dns_sd_configs:
+      - names:
+          - 'tasks.nginx'
+        type: 'A'
+        port: 9113
+

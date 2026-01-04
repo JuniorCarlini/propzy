@@ -1,0 +1,87 @@
+{% load static i18n %}
+
+{# Card de imóvel - Componente reutilizável #}
+<div class="card property-card h-100 shadow-sm">
+    <div class="position-relative">
+        {% if property.main_image %}
+        <img src="{{ property.main_image.url }}"
+             class="card-img-top"
+             alt="{{ property.title }}"
+             style="height: 250px; object-fit: cover;">
+        {% else %}
+        <div class="bg-secondary d-flex align-items-center justify-content-center"
+             style="height: 250px;">
+            <i class="bi bi-house-fill text-white" style="font-size: 4rem;"></i>
+        </div>
+        {% endif %}
+
+        {# Badge de destaque #}
+        {% if property.is_featured %}
+        <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">
+            <i class="bi bi-star-fill"></i> {% trans "Destaque" %}
+        </span>
+        {% endif %}
+
+        {# Badge de tipo de transação #}
+        <span class="badge position-absolute top-0 start-0 m-2
+                     {% if property.transaction_type == 'sale' %}bg-success
+                     {% elif property.transaction_type == 'rent' %}bg-info
+                     {% else %}bg-primary{% endif %}">
+            {% if property.transaction_type == 'sale' %}
+                {% trans "Venda" %}
+            {% elif property.transaction_type == 'rent' %}
+                {% trans "Aluguel" %}
+            {% else %}
+                {% trans "Venda/Aluguel" %}
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">{{ property.title|truncatewords:8 }}</h5>
+        <p class="card-text text-muted small">
+            <i class="bi bi-geo-alt"></i> {{ property.neighborhood }}, {{ property.city }}/{{ property.state }}
+        </p>
+
+        {# Características #}
+        <div class="d-flex gap-3 mb-3 text-muted small">
+            {% if property.bedrooms > 0 %}
+            <span><i class="bi bi-door-closed"></i> {{ property.bedrooms }}</span>
+            {% endif %}
+            {% if property.bathrooms > 0 %}
+            <span><i class="bi bi-droplet"></i> {{ property.bathrooms }}</span>
+            {% endif %}
+            {% if property.garage_spaces > 0 %}
+            <span><i class="bi bi-car-front"></i> {{ property.garage_spaces }}</span>
+            {% endif %}
+            <span><i class="bi bi-rulers"></i> {{ property.area }} m²</span>
+        </div>
+
+        {# Preço #}
+        <div class="mb-3">
+            <h4 class="text-primary mb-0">{{ property.get_price_display }}</h4>
+        </div>
+
+        {# Descrição curta #}
+        <p class="card-text small">{{ property.description|truncatewords:15 }}</p>
+    </div>
+
+    <div class="card-footer bg-transparent">
+        {# Botão de contato via WhatsApp #}
+        {% if landing_page.whatsapp %}
+        <a href="https://wa.me/{{ landing_page.whatsapp }}?text=Olá! Tenho interesse no imóvel: {{ property.title }}"
+           class="btn btn-success w-100"
+           target="_blank">
+            <i class="bi bi-whatsapp"></i> {% trans "Tenho Interesse" %}
+        </a>
+        {% else %}
+        <a href="mailto:{{ landing_page.email }}?subject=Interesse em {{ property.title }}"
+           class="btn btn-primary w-100">
+            <i class="bi bi-envelope"></i> {% trans "Solicitar Informações" %}
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+
+
