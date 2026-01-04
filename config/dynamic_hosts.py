@@ -33,7 +33,7 @@ class DynamicAllowedHosts(list):
 
         Primeiro verifica nos hosts base, depois consulta o banco de dados
         para ver se é um domínio personalizado cadastrado.
-        
+
         USA CACHE para evitar queries repetidas no banco!
 
         Args:
@@ -53,13 +53,13 @@ class DynamicAllowedHosts(list):
         # Verifica no cache primeiro (TTL de 5 minutos)
         try:
             from django.core.cache import cache
-            
+
             cache_key = f'allowed_host:{host}'
             cached_result = cache.get(cache_key)
-            
+
             if cached_result is not None:
                 return cached_result  # True ou False do cache
-            
+
             # Se não está no cache, consulta o banco
             from apps.landings.models import LandingPage
 
@@ -70,15 +70,18 @@ class DynamicAllowedHosts(list):
                 is_active=True,
                 is_published=True
             ).exists()
-            
+
             # Salva no cache por 5 minutos (300 segundos)
             cache.set(cache_key, is_allowed, 300)
-            
+
             return is_allowed
-            
-        except Exception:
+
+        except Exception as e:
             # Se houver qualquer erro (banco não inicializado, migration pendente, etc)
             # retorna False para não quebrar a aplicação
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"DynamicAllowedHosts error for '{host}': {type(e).__name__}: {e}", exc_info=True)
             return False
 
     def __repr__(self):

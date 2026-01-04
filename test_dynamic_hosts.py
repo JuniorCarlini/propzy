@@ -36,7 +36,7 @@ try:
         print(f"     Custom Domain: {lp.custom_domain}")
         print(f"     Is Active: {lp.is_active}")
         print(f"     Is Published: {lp.is_published}")
-        
+
         # Verificar a query .exists()
         is_allowed = LandingPage.objects.filter(
             custom_domain=host,
@@ -57,7 +57,7 @@ try:
     cache.set(cache_key, True, 300)
     result = cache.get(cache_key)
     print(f"   Salvou True no cache: {result}")
-    
+
     cache.set(cache_key, False, 300)
     result = cache.get(cache_key)
     print(f"   Salvou False no cache: {result}")
@@ -70,9 +70,26 @@ except Exception as e:
 print(f"\n4. Testando DynamicAllowedHosts.__contains__():")
 try:
     from django.conf import settings
+    
+    # Ativar logging detalhado
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger('config.dynamic_hosts')
+    logger.setLevel(logging.DEBUG)
+    
+    # Limpar cache antes do teste
+    cache.delete(cache_key)
+    print(f"   Cache limpo para testar query real...")
+    
+    # Testar agora
     result = host in settings.ALLOWED_HOSTS
     print(f"   '{host}' in ALLOWED_HOSTS: {result}")
     print(f"   Type: {type(settings.ALLOWED_HOSTS)}")
+    
+    # Verificar o que foi salvo no cache
+    cached_after = cache.get(cache_key)
+    print(f"   Cache após teste: {cached_after}")
+    
 except Exception as e:
     print(f"   ❌ ERRO: {type(e).__name__}: {e}")
     import traceback
