@@ -32,9 +32,18 @@ def root_view(request: HttpRequest) -> HttpResponse:
     """
     # Se for um site válido, redireciona para a view do site
     if getattr(request, "is_site", False) and getattr(request, "tenant", None):
-        from apps.landings.views import site_view
+        try:
+            from apps.landings.views import site_view
 
-        return site_view(request)
+            return site_view(request)
+        except Exception as e:
+            # Se houver erro ao carregar o site, mostra página inicial
+            # Isso pode acontecer se o banco foi resetado e não há dados
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.error(f"Erro ao carregar site: {e}")
+            return home(request)
 
     # Caso contrário, mostra a página inicial
     return home(request)
