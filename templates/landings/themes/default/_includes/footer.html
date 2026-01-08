@@ -1,0 +1,93 @@
+{% load static i18n %}
+<!-- Footer -->
+<footer class="footer-section" id="contato">
+    <div class="container">
+        <div class="footer-content">
+            <!-- Brand -->
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    {% if site.logo %}
+                    <img src="{{ site.logo.url }}" alt="{{ site.business_name }}" style="height: 50px;">
+                    {% else %}
+                    <i class="bi bi-building"></i>
+                    {% endif %}
+                </div>
+                <h4 class="footer-brand-name">{{ site.business_name|default:"Nome do Corretor" }}</h4>
+                <p class="footer-brand-subtitle">{% trans "CORRETORA DE IMÓVEIS" %}</p>
+                <p class="footer-brand-subtitle">CRECI 39958 F</p>
+            </div>
+
+            <!-- Links Rápidos -->
+            <div>
+                <h5 class="footer-section-title">{% trans "Links rápidos" %}</h5>
+                <ul class="footer-links">
+                    <li><a href="{% url 'site_public' %}#inicio">{% trans "Início" %}</a></li>
+                    <li><a href="{% url 'landings:properties_list' %}">{% trans "Imóveis" %}</a></li>
+                    <li><a href="{% url 'site_public' %}#sobre">{% trans "Sobre mim" %}</a></li>
+                    <li><a href="{% url 'site_public' %}#contato">{% trans "Contato" %}</a></li>
+                </ul>
+            </div>
+
+            <!-- Endereço e Contato -->
+            <div>
+                <h5 class="footer-section-title">{% trans "Endereço" %}</h5>
+                <div class="footer-contact-item">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>{{ site.address|default:"Rua Fauri de Lima, 706 — Campo da Água Verde" }}, {{ site.city|default:"Canoinhas" }}/{{ site.state|default:"SC" }}</span>
+                </div>
+                <h5 class="footer-section-title mt-4">{% trans "Contato" %}</h5>
+                {% if site.email %}
+                <div class="footer-contact-item">
+                    <i class="bi bi-envelope"></i>
+                    <span>{{ site.email }}</span>
+                </div>
+                {% endif %}
+                {% if site.whatsapp %}
+                <div class="footer-contact-item">
+                    <i class="bi bi-whatsapp"></i>
+                    <span>{{ site.phone|default:site.whatsapp }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Redes Sociais -->
+            <div>
+                <h5 class="footer-section-title">{% trans "Siga-nos" %}</h5>
+                <div class="social-icons">
+                    {% if site.facebook_url %}
+                    <a href="{{ site.facebook_url }}" class="social-icon" target="_blank">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    {% endif %}
+                    {% if site.instagram_url %}
+                    <a href="{{ site.instagram_url }}" class="social-icon" target="_blank">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p class="mb-0">
+                &copy; {% now "Y" %} {{ site.business_name|default:"Nome do Corretor" }}. {% trans "Todos os direitos reservados." %}
+                <span style="color: var(--text-gray);">| {% trans "Página gerada por" %} Propzy</span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- WhatsApp Float Button -->
+{% if site.whatsapp %}
+<a href="https://wa.me/{{ site.whatsapp }}?text={% trans 'Olá, vim através do site, quero saber mais sobre os imóveis.' %}"
+   class="whatsapp-float"
+   target="_blank">
+    <i class="bi bi-whatsapp"></i>
+</a>
+{% endif %}
+
+
+
+
+
+

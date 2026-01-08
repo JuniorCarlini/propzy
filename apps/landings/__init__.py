@@ -6,3 +6,14 @@ com suporte a subdomínios automáticos e domínios personalizados.
 """
 
 default_app_config = "apps.landings.apps.LandingsConfig"
+
+
+
+
+
+
+
+
+
+
+

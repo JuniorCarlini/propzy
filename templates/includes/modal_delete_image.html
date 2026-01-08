@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<div id="delete-image-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>{% trans "Excluir Imagem" %}</h3>
+        </div>
+        <div class="modal-body text-center">
+            <p>{% trans "Tem certeza que deseja remover esta imagem?" %}</p>
+            <p><strong id="delete-image-modal-filename"></strong></p>
+        </div>
+        <div class="modal-actions">
+            <button type="button" id="btn-delete-image-modal-cancel" class="btn-modal-cancel">
+                {% trans "Cancelar" %}
+            </button>
+            <button type="button" id="btn-delete-image-modal-confirm" class="btn-modal-confirm">
+                <i class="fa-solid fa-trash"></i>
+                {% trans "Excluir" %}
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+

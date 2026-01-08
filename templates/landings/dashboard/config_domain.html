@@ -1,0 +1,683 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Domínio e SEO" %} | Propzy{% endblock %}
+
+{% block extra_head %}
+<style>
+    .config-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .config-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .config-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
+        line-height: 0.9;
+    }
+
+    .config-header-content p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+        margin-top: 0;
+        line-height: 1;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .config-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 1.5rem;
+    }
+
+    .config-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .config-card-header h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .form-fields-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 109, 255, 0.1);
+    }
+
+    .form-group .help-text {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.375rem;
+    }
+
+    .form-group .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0.375rem 0 0 0;
+    }
+
+    .form-group .errorlist li {
+        font-size: 0.75rem;
+        color: var(--color-danger);
+        margin-top: 0.25rem;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .btn-action {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+    }
+
+    .btn-action-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-action-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 109, 255, 0.2);
+    }
+
+    .info-alert {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+    }
+
+    .info-alert i {
+        color: #3b82f6;
+        font-size: 1.125rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .info-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value {
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .info-value a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .info-value a:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .config-header {
+            flex-direction: column;
+        }
+
+        .btn-back {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .config-card {
+            padding: 1.5rem;
+        }
+
+        .form-fields-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    .provider-tab.active {
+        color: var(--primary-color) !important;
+        border-bottom-color: var(--primary-color) !important;
+        font-weight: 600 !important;
+    }
+
+    .provider-tab:hover {
+        color: var(--text-primary) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="config-container fade-in">
+    {% include "partials/onboarding_progress.html" %}
+    <div class="config-header">
+        <div class="config-header-content">
+            <h1>{% trans "Domínio" %}</h1>
+            <p>{% trans "Gerencie seu domínio gratuito ou configure um domínio personalizado." %}</p>
+        </div>
+        <a href="{% url 'administration_panel:dashboard' %}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            {% trans "Voltar" %}
+        </a>
+    </div>
+
+    {% if site %}
+    <!-- Domínio Gratuito Automático -->
+    <div class="config-card">
+        <div class="config-card-header">
+            <h2>{% trans "Seu Domínio Gratuito" %}</h2>
+        </div>
+
+        <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <i class="fa-solid fa-circle-check" style="color: #22c55e; font-size: 1.5rem;"></i>
+                <div style="flex: 1;">
+                    <strong style="color: var(--text-primary); font-size: 1rem; display: block; margin-bottom: 0.25rem;">{% trans "✅ Domínio Gratuito Ativo" %}</strong>
+                    <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+                        {% trans "Você já tem um domínio gratuito funcionando! Seu site está acessível em:" %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">{% trans "Seu Domínio Gratuito" %}</span>
+                <span class="info-value">
+                    <a href="https://{{ site.get_full_subdomain }}" target="_blank" style="font-size: 1rem; font-weight: 600;">
+                        {{ site.get_full_subdomain }}
+                        <i class="fa-solid fa-external-link" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                    </a>
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Configurar Domínio Personalizado (Opcional) -->
+    <div class="config-card">
+        <div class="config-card-header">
+            <h2>{% trans "Domínio Personalizado (Opcional)" %}</h2>
+        </div>
+
+        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                <i class="fa-solid fa-info-circle" style="color: #3b82f6; font-size: 1.125rem; margin-top: 0.125rem;"></i>
+                <div>
+                    <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+                        {% trans "Se você já possui um domínio próprio (ex: www.seusite.com.br), você pode configurá-lo abaixo para usar no lugar do domínio gratuito. Esta etapa é completamente opcional - se você não tiver um domínio próprio ou não quiser configurá-lo agora, você pode continuar usando seu domínio gratuito sem problemas. Você sempre pode voltar aqui depois para configurar um domínio personalizado." %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem;">
+                    {% for error in form.non_field_errors %}
+                        <div style="color: #ef4444; font-size: 0.875rem;">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-fields-grid">
+                {% for field in form %}
+                    <div class="form-group {% if field.name == 'custom_domain' %}full-width{% endif %}">
+                        <label for="{{ field.id_for_label }}" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fa-solid fa-globe" style="color: var(--primary-color); font-size: 0.875rem;"></i>
+                            {{ field.label }}
+                            {% if field.field.required %}<span style="color: var(--color-danger);">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-action btn-action-primary">
+                    <i class="fa-solid fa-save"></i>
+                    {% trans "Salvar Domínio" %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Status e Informações -->
+    {% if site.custom_domain %}
+    <div class="config-card">
+        <div class="config-card-header">
+            <h2>{% trans "Status da Configuração" %}</h2>
+        </div>
+
+        <div class="info-grid" style="margin-bottom: 1.5rem;">
+            <div class="info-item">
+                <span class="info-label">{% trans "Subdomínio Gratuito" %}</span>
+                <span class="info-value">
+                    <a href="https://{{ site.get_full_subdomain }}" target="_blank">
+                        {{ site.get_full_subdomain }}
+                        <i class="fa-solid fa-external-link" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                    </a>
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">{% trans "Domínio Personalizado" %}</span>
+                <span class="info-value">
+                    <a href="https://{{ site.custom_domain }}" target="_blank">
+                        {{ site.custom_domain }}
+                        <i class="fa-solid fa-external-link" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                    </a>
+                </span>
+            </div>
+        </div>
+
+        {% if site.dns_status == 'ok' %}
+        <div class="dns-status-card" style="padding: 1.25rem; border-radius: 12px; background: rgba(34, 197, 94, 0.1); border: 2px solid rgba(34, 197, 94, 0.3);">
+        {% elif site.dns_status == 'error' %}
+        <div class="dns-status-card" style="padding: 1.25rem; border-radius: 12px; background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.3);">
+        {% else %}
+        <div class="dns-status-card" style="padding: 1.25rem; border-radius: 12px; background: rgba(59, 130, 246, 0.1); border: 2px solid rgba(59, 130, 246, 0.3);">
+        {% endif %}
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    {% if site.dns_status == 'ok' %}
+                    <i class="fa-solid fa-circle-check" style="color: #22c55e; font-size: 1.5rem;"></i>
+                    <div>
+                        <strong style="color: var(--text-primary); font-size: 1rem; display: block; margin-bottom: 0.25rem;">{% trans "✅ DNS Configurado Corretamente" %}</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary);">{% trans "Seu domínio está funcionando perfeitamente!" %}</p>
+                    </div>
+                    {% elif site.dns_status == 'error' %}
+                    <i class="fa-solid fa-circle-exclamation" style="color: #ef4444; font-size: 1.5rem;"></i>
+                    <div>
+                        <strong style="color: var(--text-primary); font-size: 1rem; display: block; margin-bottom: 0.25rem;">{% trans "⚠️ DNS Não Configurado" %}</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary);">
+                            {% if site.dns_error %}{{ site.dns_error }}{% else %}{% trans "Siga as instruções abaixo para configurar." %}{% endif %}
+                        </p>
+                    </div>
+                    {% else %}
+                    <i class="fa-solid fa-clock" style="color: #3b82f6; font-size: 1.5rem;"></i>
+                    <div>
+                        <strong style="color: var(--text-primary); font-size: 1rem; display: block; margin-bottom: 0.25rem;">{% trans "⏳ Verificando DNS..." %}</strong>
+                        <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary);">{% trans "Aguarde alguns instantes." %}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                <form method="post" style="margin: 0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="verify_dns" value="1">
+                    <button type="submit" class="btn-action" style="background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.625rem 1.25rem; font-size: 0.875rem; white-space: nowrap;">
+                        <i class="fa-solid fa-rotate"></i>
+                        {% trans "Verificar Agora" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Configurar DNS -->
+    {% if site.custom_domain %}
+    <div class="config-card">
+        <div class="config-card-header">
+            <h2>{% trans "Configure o DNS no seu Registrador" %}</h2>
+        </div>
+
+        <p style="color: var(--text-primary); margin-bottom: 1.5rem; font-size: 0.875rem; line-height: 1.6;">
+            {% trans "Agora você precisa configurar o DNS no painel do seu registrador de domínio (onde você comprou o domínio). Escolha abaixo o serviço que você usa:" %}
+        </p>
+
+        <!-- Tabs para diferentes provedores -->
+        <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem;">
+                <button onclick="showProvider('cloudflare')" id="tab-cloudflare" class="provider-tab active" style="padding: 0.75rem 1.5rem; background: transparent; border: none; border-bottom: 3px solid var(--primary-color); color: var(--primary-color); font-weight: 600; font-size: 0.875rem; cursor: pointer; transition: all 0.2s;">
+                    <i class="fa-brands fa-cloudflare"></i> Cloudflare
+                </button>
+                <button onclick="showProvider('registrobr')" id="tab-registrobr" class="provider-tab" style="padding: 0.75rem 1.5rem; background: transparent; border: none; border-bottom: 3px solid transparent; color: var(--text-secondary); font-weight: 500; font-size: 0.875rem; cursor: pointer; transition: all 0.2s;">
+                    <i class="fa-solid fa-globe"></i> Registro.br
+                </button>
+                <button onclick="showProvider('godaddy')" id="tab-godaddy" class="provider-tab" style="padding: 0.75rem 1.5rem; background: transparent; border: none; border-bottom: 3px solid transparent; color: var(--text-secondary); font-weight: 500; font-size: 0.875rem; cursor: pointer; transition: all 0.2s;">
+                    <i class="fa-solid fa-globe"></i> GoDaddy
+                </button>
+                <button onclick="showProvider('outros')" id="tab-outros" class="provider-tab" style="padding: 0.75rem 1.5rem; background: transparent; border: none; border-bottom: 3px solid transparent; color: var(--text-secondary); font-weight: 500; font-size: 0.875rem; cursor: pointer; transition: all 0.2s;">
+                    <i class="fa-solid fa-ellipsis"></i> Outros
+                </button>
+            </div>
+
+            <!-- Cloudflare -->
+            <div id="provider-cloudflare" class="provider-content">
+                <div style="background: linear-gradient(135deg, rgba(243, 244, 246, 0.5) 0%, rgba(229, 231, 235, 0.5) 100%); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-brands fa-cloudflare" style="color: #f38020;"></i>
+                        {% trans "Configuração no Cloudflare" %}
+                    </h3>
+                    <ol style="margin: 0; padding-left: 1.5rem; color: var(--text-primary); line-height: 2.5;">
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Acesse" %} <a href="https://dash.cloudflare.com" target="_blank" style="color: var(--primary-color); font-weight: 600;">dash.cloudflare.com</a> {% trans "e faça login na sua conta" %}
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Selecione o domínio" %} <strong>{{ site.custom_domain|default:"seusite.com.br" }}</strong> {% trans "na lista" %}
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Clique em" %} <strong>{% trans "DNS" %}</strong> {% trans "no menu lateral" %}
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Clique em" %} <strong>{% trans "Adicionar registro" %}</strong> {% trans "e configure:" %}
+                            <div style="background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-top: 0.75rem; font-family: 'Courier New', monospace; font-size: 0.875rem;">
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem; margin-bottom: 0.5rem;">
+                                    <strong style="color: var(--text-secondary);">{% trans "Tipo:" %}</strong>
+                                    <span style="color: var(--text-primary);">CNAME</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem; margin-bottom: 0.5rem;">
+                                    <strong style="color: var(--text-secondary);">{% trans "Nome:" %}</strong>
+                                    <span style="color: var(--text-primary);">www</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem; margin-bottom: 0.5rem;">
+                                    <strong style="color: var(--text-secondary);">{% trans "Destino:" %}</strong>
+                                    <span style="color: var(--primary-color); font-weight: 600;">{{ base_domain }}</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem; margin-bottom: 0.5rem;">
+                                    <strong style="color: var(--text-secondary);">{% trans "Proxy:" %}</strong>
+                                    <span style="color: #f38020; font-weight: 600;">✅ {% trans "Proxied (nuvem laranja)" %}</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem;">
+                                    <strong style="color: var(--text-secondary);">{% trans "TTL:" %}</strong>
+                                    <span style="color: var(--text-primary);">{% trans "Automático" %}</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Clique em" %} <strong>{% trans "Salvar" %}</strong>
+                        </li>
+                        <li>
+                            {% trans "Aguarde a propagação do DNS (pode levar até 2 horas). Você pode clicar em 'Verificar Agora' acima para verificar manualmente a qualquer momento." %}
+                        </li>
+                    </ol>
+                </div>
+                <div style="background: rgba(243, 128, 32, 0.1); border: 1px solid rgba(243, 128, 32, 0.3); border-radius: 12px; padding: 1rem 1.25rem;">
+                    <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                        <i class="fa-solid fa-circle-info" style="color: #f38020; font-size: 1.125rem; margin-top: 0.125rem;"></i>
+                        <div>
+                            <strong style="color: var(--text-primary); display: block; margin-bottom: 0.25rem;">{% trans "Importante no Cloudflare:" %}</strong>
+                            <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+                                {% trans "Certifique-se de que o botão de proxy está ATIVADO (ícone de nuvem laranja). Se estiver cinza, clique nele para ativar. Isso é essencial para o SSL funcionar corretamente." %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registro.br -->
+            <div id="provider-registrobr" class="provider-content" style="display: none;">
+                <div style="background: linear-gradient(135deg, rgba(243, 244, 246, 0.5) 0%, rgba(229, 231, 235, 0.5) 100%); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-globe"></i> {% trans "Configuração no Registro.br" %}
+                    </h3>
+                    <ol style="margin: 0; padding-left: 1.5rem; color: var(--text-primary); line-height: 2.5;">
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Acesse" %} <a href="https://registro.br" target="_blank" style="color: var(--primary-color); font-weight: 600;">registro.br</a> {% trans "e faça login" %}
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Vá em" %} <strong>{% trans "Meus Domínios" %}</strong> → <strong>{{ site.custom_domain|default:"seusite.com.br" }}</strong> → <strong>{% trans "DNS" %}</strong>
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Clique em" %} <strong>{% trans "Adicionar" %}</strong> {% trans "e configure:" %}
+                            <div style="background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-top: 0.75rem; font-family: 'Courier New', monospace; font-size: 0.875rem;">
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem;">
+                                    <strong>{% trans "Tipo:" %}</strong> <span>CNAME</span>
+                                    <strong>{% trans "Nome:" %}</strong> <span>www</span>
+                                    <strong>{% trans "Valor:" %}</strong> <span style="color: var(--primary-color); font-weight: 600;">{{ base_domain }}</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>{% trans "Salve e aguarde a propagação (pode levar até 2 horas)" %}</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- GoDaddy -->
+            <div id="provider-godaddy" class="provider-content" style="display: none;">
+                <div style="background: linear-gradient(135deg, rgba(243, 244, 246, 0.5) 0%, rgba(229, 231, 235, 0.5) 100%); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-globe"></i> {% trans "Configuração no GoDaddy" %}
+                    </h3>
+                    <ol style="margin: 0; padding-left: 1.5rem; color: var(--text-primary); line-height: 2.5;">
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Acesse" %} <a href="https://godaddy.com" target="_blank" style="color: var(--primary-color); font-weight: 600;">godaddy.com</a> {% trans "e faça login" %}
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Vá em" %} <strong>{% trans "Meus Produtos" %}</strong> → <strong>{% trans "DNS" %}</strong>
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Clique em" %} <strong>{% trans "Adicionar" %}</strong> {% trans "e configure:" %}
+                            <div style="background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-top: 0.75rem; font-family: 'Courier New', monospace; font-size: 0.875rem;">
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem;">
+                                    <strong>{% trans "Tipo:" %}</strong> <span>CNAME</span>
+                                    <strong>{% trans "Nome:" %}</strong> <span>www</span>
+                                    <strong>{% trans "Valor:" %}</strong> <span style="color: var(--primary-color); font-weight: 600;">{{ base_domain }}</span>
+                                    <strong>{% trans "TTL:" %}</strong> <span>600</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>{% trans "Salve e aguarde a propagação (pode levar até 2 horas)" %}</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Outros -->
+            <div id="provider-outros" class="provider-content" style="display: none;">
+                <div style="background: linear-gradient(135deg, rgba(243, 244, 246, 0.5) 0%, rgba(229, 231, 235, 0.5) 100%); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-ellipsis"></i> {% trans "Outros Registradores" %}
+                    </h3>
+                    <p style="color: var(--text-primary); margin-bottom: 1rem; line-height: 1.6;">
+                        {% trans "Para outros registradores (Namecheap, Hostinger, etc.), siga estes passos gerais:" %}
+                    </p>
+                    <ol style="margin: 0; padding-left: 1.5rem; color: var(--text-primary); line-height: 2.5;">
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Acesse o painel de DNS do seu registrador" %}
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Procure por 'DNS', 'Zona DNS' ou 'Gerenciar DNS'" %}
+                        </li>
+                        <li style="margin-bottom: 1rem;">
+                            {% trans "Adicione um registro CNAME com:" %}
+                            <div style="background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin-top: 0.75rem; font-family: 'Courier New', monospace; font-size: 0.875rem;">
+                                <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem;">
+                                    <strong>{% trans "Tipo:" %}</strong> <span>CNAME</span>
+                                    <strong>{% trans "Nome/Host:" %}</strong> <span>www</span>
+                                    <strong>{% trans "Valor/Destino:" %}</strong> <span style="color: var(--primary-color); font-weight: 600;">{{ base_domain }}</span>
+                                    <strong>{% trans "TTL:" %}</strong> <span>{% trans "Automático ou 3600" %}</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>{% trans "Salve e aguarde a propagação (pode levar até 2 horas)" %}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações importantes -->
+        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem;">
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                <i class="fa-solid fa-info-circle" style="color: #3b82f6; font-size: 1.125rem; margin-top: 0.125rem;"></i>
+                <div>
+                    <strong style="color: var(--text-primary); display: block; margin-bottom: 0.25rem;">{% trans "O que acontece depois?" %}</strong>
+                    <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
+                        {% trans "Após configurar o DNS, nosso sistema verificará automaticamente em 5 minutos, 30 minutos, 1 hora e 2 horas. A propagação DNS pode levar até 2 horas para completar. Quando o DNS estiver configurado corretamente, o certificado SSL será gerado automaticamente. Você pode clicar em 'Verificar Agora' acima para verificar manualmente a qualquer momento." %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+</div>
+
+<script>
+    function showProvider(provider) {
+        // Esconder todos os conteúdos
+        document.querySelectorAll('.provider-content').forEach(content => {
+            content.style.display = 'none';
+        });
+
+        // Remover active de todas as tabs
+        document.querySelectorAll('.provider-tab').forEach(tab => {
+            tab.classList.remove('active');
+            tab.style.borderBottomColor = 'transparent';
+            tab.style.color = 'var(--text-secondary)';
+            tab.style.fontWeight = '500';
+        });
+
+        // Mostrar conteúdo selecionado
+        document.getElementById('provider-' + provider).style.display = 'block';
+
+        // Ativar tab selecionada
+        const activeTab = document.getElementById('tab-' + provider);
+        activeTab.classList.add('active');
+        activeTab.style.borderBottomColor = 'var(--primary-color)';
+        activeTab.style.color = 'var(--primary-color)';
+        activeTab.style.fontWeight = '600';
+    }
+</script>
+{% endblock %}

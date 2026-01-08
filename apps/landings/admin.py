@@ -1,134 +1,21 @@
 """
-Admin do app Landings.
+Admin do app Landings - Site
 
-Configuração da interface administrativa para gerenciar:
-- Temas
-- Landing Pages
-- Imóveis
+NOTA: Admins movidos para seus respectivos apps:
+- ThemeAdmin → apps.themes.admin
+- PropertyAdmin → apps.properties.admin
 """
 
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from .models import LandingPage, LandingPageTheme, Property, PropertyImage
+from .models import Site
 
 
-@admin.register(LandingPageTheme)
-class LandingPageThemeAdmin(admin.ModelAdmin):
-    """Admin para temas de landing pages"""
-
-    list_display = ["name", "slug", "category", "version", "is_active", "is_premium", "order"]
-    list_filter = ["category", "is_active", "is_premium"]
-    search_fields = ["name", "slug", "description", "author"]
-    prepopulated_fields = {"slug": ("name",)}
-    ordering = ["order", "name"]
-
-    fieldsets = (
-        (
-            _("Informações Básicas"),
-            {
-                "fields": ("name", "slug", "description", "author", "version", "category"),
-            },
-        ),
-        (
-            _("Aparência"),
-            {
-                "fields": ("screenshot", "default_primary_color", "default_secondary_color"),
-            },
-        ),
-        (
-            _("Configurações"),
-            {
-                "fields": ("is_active", "is_premium", "order", "features"),
-            },
-        ),
-    )
-
-    def get_readonly_fields(self, request, obj=None):
-        """Torna slug readonly após criação"""
-        if obj:  # Editando
-            return ["slug"]
-        return []
-
-
-class PropertyImageInline(admin.TabularInline):
-    """Inline para imagens adicionais do imóvel"""
-
-    model = PropertyImage
-    extra = 3
-    fields = ["image", "caption", "order"]
-
-
-@admin.register(Property)
-class PropertyAdmin(admin.ModelAdmin):
-    """Admin para imóveis"""
-
-    list_display = [
-        "title",
-        "landing_page",
-        "property_type",
-        "transaction_type",
-        "city",
-        "state",
-        "is_featured",
-        "is_active",
-        "created_at",
-    ]
-    list_filter = ["property_type", "transaction_type", "is_featured", "is_active", "state", "city", "created_at"]
-    search_fields = ["title", "description", "address", "neighborhood", "city"]
-    list_editable = ["is_featured", "is_active"]
-    date_hierarchy = "created_at"
-    inlines = [PropertyImageInline]
-
-    fieldsets = (
-        (
-            _("Landing Page"),
-            {
-                "fields": ("landing_page",),
-            },
-        ),
-        (
-            _("Informações Básicas"),
-            {
-                "fields": ("title", "description", "property_type", "transaction_type", "main_image"),
-            },
-        ),
-        (
-            _("Valores"),
-            {
-                "fields": ("sale_price", "rent_price"),
-            },
-        ),
-        (
-            _("Características"),
-            {
-                "fields": ("bedrooms", "bathrooms", "garage_spaces", "area"),
-            },
-        ),
-        (
-            _("Localização"),
-            {
-                "fields": ("address", "neighborhood", "city", "state", "zipcode"),
-            },
-        ),
-        (
-            _("Configurações"),
-            {
-                "fields": ("is_featured", "is_active", "order"),
-            },
-        ),
-    )
-
-    def get_queryset(self, request):
-        """Otimiza query"""
-        qs = super().get_queryset(request)
-        return qs.select_related("landing_page", "landing_page__owner")
-
-
-@admin.register(LandingPage)
-class LandingPageAdmin(admin.ModelAdmin):
-    """Admin para landing pages"""
+@admin.register(Site)
+class SiteAdmin(admin.ModelAdmin):
+    """Admin para sites"""
 
     list_display = [
         "business_name",
@@ -169,7 +56,7 @@ class LandingPageAdmin(admin.ModelAdmin):
         (
             _("Dados do Negócio"),
             {
-                "fields": ("business_name", "business_description"),
+                "fields": ("business_name",),
             },
         ),
         (

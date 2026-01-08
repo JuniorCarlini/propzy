@@ -12,3 +12,14 @@ EXPOSE 80 443
 # Comando padrão do NGINX
 CMD ["nginx", "-g", "daemon off;"]
 
+
+
+
+
+
+
+
+
+
+
+

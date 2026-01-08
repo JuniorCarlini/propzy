@@ -137,29 +137,29 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section" style="background-image: url('{% if landing_page.hero_image %}{{ landing_page.hero_image.url }}{% else %}https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920{% endif %}');">
+<section class="hero-section" style="background-image: url('{% if site.hero_image %}{{ site.hero_image.url }}{% else %}https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920{% endif %}');">
     <div class="hero-overlay"></div>
     <div class="container">
         <div class="hero-content text-center">
-            {% if landing_page.logo %}
-            <img src="{{ landing_page.logo.url }}"
-                 alt="{{ landing_page.business_name }}"
+            {% if site.logo %}
+            <img src="{{ site.logo.url }}"
+                 alt="{{ site.business_name }}"
                  class="mb-4"
                  style="max-height: 100px;">
             {% endif %}
 
             <h1 class="hero-title">
-                {{ landing_page.business_name }}
+                {{ site.business_name }}
             </h1>
             <p class="hero-subtitle">
-                {{ landing_page.business_description|default:"Encontre o imóvel dos seus sonhos" }}
+                {{ site.business_description|default:"Encontre o imóvel dos seus sonhos" }}
             </p>
             <div class="hero-actions">
                 <a href="#properties" class="btn btn-light btn-lg px-5 me-3">
                     <i class="bi bi-house-fill"></i> {% trans "Ver Imóveis" %}
                 </a>
-                {% if landing_page.whatsapp %}
-                <a href="https://wa.me/{{ landing_page.whatsapp }}"
+                {% if site.whatsapp %}
+                <a href="https://wa.me/{{ site.whatsapp }}"
                    class="btn btn-success btn-lg px-5"
                    target="_blank">
                     <i class="bi bi-whatsapp"></i> {% trans "Fale Conosco" %}
@@ -255,8 +255,8 @@
 {% include "landings/_components/contact_section.html" %}
 
 <!-- WhatsApp Floating Button -->
-{% if landing_page.whatsapp %}
-<a href="https://wa.me/{{ landing_page.whatsapp }}"
+{% if site.whatsapp %}
+<a href="https://wa.me/{{ site.whatsapp }}"
    class="whatsapp-float"
    target="_blank"
    title="{% trans 'Fale conosco no WhatsApp' %}">
@@ -318,6 +318,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 </script>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

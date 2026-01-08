@@ -1,0 +1,567 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Dashboard Administrativo" %} | propzy{% endblock %}
+
+{% block extra_head %}
+<style>
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .dashboard-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
+        line-height: 0.9;
+    }
+
+    .dashboard-header-content p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+        margin-top: 0.5rem;
+        line-height: 1;
+    }
+
+    .site-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: var(--card-shadow);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card-icon {
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: var(--primary-color);
+        background: rgba(0, 109, 255, 0.1);
+        flex-shrink: 0;
+    }
+
+    .stat-card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-width: 0;
+    }
+
+    .stat-card-title {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .stat-card-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .site-info-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 1.5rem;
+    }
+
+    .site-info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .site-info-header h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .info-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value {
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .info-value a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .info-value a:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .status-badge.published {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+
+    .status-badge.draft {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+
+    .status-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+
+    .status-badge.published .status-badge-dot {
+        background: #10b981;
+    }
+
+    .status-badge.draft .status-badge-dot {
+        background: #f59e0b;
+    }
+
+    .site-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+    }
+
+    .btn-action-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-action-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 109, 255, 0.2);
+    }
+
+    .btn-action-secondary {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-action-secondary:hover {
+        background: var(--bg-secondary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-preview {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-preview:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        color: var(--text-secondary);
+        opacity: 0.5;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+    }
+
+    .admin-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .admin-stat-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: var(--card-shadow);
+        text-align: center;
+    }
+
+    .admin-stat-card h5 {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .admin-stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .quick-actions {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 1.5rem;
+    }
+
+    .quick-actions h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+    }
+
+    .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-header {
+            flex-direction: column;
+        }
+
+        .site-stats,
+        .admin-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .site-actions {
+            width: 100%;
+        }
+
+        .btn-action {
+            flex: 1;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container fade-in">
+    {% include "partials/onboarding_progress.html" %}
+    <div class="dashboard-header">
+        <div class="dashboard-header-content">
+            <h1>{% trans "Painel Administrativo" %}</h1>
+            <p>{% trans "Gerencie seu sistema e visualize estatísticas." %}</p>
+        </div>
+        {% if site and site.theme %}
+        <a href="{% url 'landings:theme_preview' site.theme.slug %}" target="_blank" class="btn-preview">
+            <i class="fa-solid fa-eye"></i>
+            {% trans "Preview do Site" %}
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Estatísticas Administrativas -->
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <h5>{% trans "Usuários Ativos" %}</h5>
+            <p class="stat-value">{{ total_users }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h5>{% trans "Grupos" %}</h5>
+            <p class="stat-value">{{ total_groups }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h5>{% trans "Sites" %}</h5>
+            <p class="stat-value">{{ total_sites }}</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h5>{% trans "Imóveis" %}</h5>
+            <p class="stat-value">{{ total_properties }}</p>
+        </div>
+    </div>
+
+    {% if site %}
+    <!-- Estatísticas do Site -->
+    <div class="site-stats">
+        <div class="stat-card">
+            <div class="stat-card-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="stat-card-content">
+                <h3 class="stat-card-title">{% trans "Status" %}</h3>
+                <p class="stat-card-value">
+                    {% if site.is_published %}
+                        <span class="status-badge published">
+                            <span class="status-badge-dot"></span>
+                            {% trans "Publicado" %}
+                        </span>
+                    {% else %}
+                        <span class="status-badge draft">
+                            <span class="status-badge-dot"></span>
+                            {% trans "Rascunho" %}
+                        </span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon">
+                <i class="fa-solid fa-home"></i>
+            </div>
+            <div class="stat-card-content">
+                <h3 class="stat-card-title">{% trans "Imóveis Ativos" %}</h3>
+                <p class="stat-card-value">{{ properties_count }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="stat-card-content">
+                <h3 class="stat-card-title">{% trans "Acessos" %}</h3>
+                <p class="stat-card-value">—</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informações do Site -->
+    <div class="site-info-card">
+        <div class="site-info-header">
+            <h2>{% trans "Informações do Site" %}</h2>
+            <div class="site-actions">
+                <a href="{% url 'landings:dashboard_config_basic' %}" class="btn-action btn-action-secondary">
+                    <i class="fa-solid fa-gear"></i>
+                    {% trans "Configurar" %}
+                </a>
+                {% if site.is_published %}
+                <a href="{{ site.get_primary_url }}" target="_blank" class="btn-action btn-action-primary">
+                    <i class="fa-solid fa-external-link"></i>
+                    {% trans "Ver Site" %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">{% trans "Nome do Negócio" %}</span>
+                <span class="info-value">{{ site.business_name }}</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">{% trans "Subdomínio" %}</span>
+                <span class="info-value">
+                    <a href="https://{{ site.get_full_subdomain }}" target="_blank">
+                        {{ site.get_full_subdomain }}
+                        <i class="fa-solid fa-external-link" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                    </a>
+                </span>
+            </div>
+
+            {% if site.custom_domain %}
+            <div class="info-item">
+                <span class="info-label">{% trans "Domínio Personalizado" %}</span>
+                <span class="info-value">
+                    <a href="https://{{ site.custom_domain }}" target="_blank">
+                        {{ site.custom_domain }}
+                        <i class="fa-solid fa-external-link" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+                    </a>
+                </span>
+            </div>
+            {% endif %}
+
+            <div class="info-item">
+                <span class="info-label">{% trans "Tema" %}</span>
+                <span class="info-value">{{ site.theme.name|default:"Nenhum tema selecionado" }}</span>
+            </div>
+
+            {% if site.email %}
+            <div class="info-item">
+                <span class="info-label">{% trans "E-mail de Contato" %}</span>
+                <span class="info-value">
+                    <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+                </span>
+            </div>
+            {% endif %}
+
+            {% if site.phone %}
+            <div class="info-item">
+                <span class="info-label">{% trans "Telefone" %}</span>
+                <span class="info-value">{{ site.phone }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <!-- Site não criado -->
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fa-solid fa-globe"></i>
+        </div>
+        <h3>{% trans "Crie seu Site!" %}</h3>
+        <p>{% trans "Você ainda não tem um site. Crie agora e comece a divulgar seus imóveis online." %}</p>
+        <a href="{% url 'landings:dashboard_config_basic' %}" class="btn-action btn-action-primary">
+            <i class="fa-solid fa-plus-circle"></i>
+            {% trans "Criar Site" %}
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Ações Rápidas -->
+    <div class="quick-actions">
+        <h2>{% trans "Ações Rápidas" %}</h2>
+        <div class="quick-actions-grid">
+            {% if perms.core.add_user %}
+            <a href="{% url 'administration_panel:user_create' %}" class="btn-action btn-action-primary">
+                <i class="fa-solid fa-user-plus"></i>
+                {% trans "Criar Usuário" %}
+            </a>
+            {% endif %}
+
+            {% if perms.core.view_user %}
+            <a href="{% url 'administration_panel:user_list' %}" class="btn-action btn-action-secondary">
+                <i class="fa-solid fa-users"></i>
+                {% trans "Gerenciar Usuários" %}
+            </a>
+            {% endif %}
+
+            {% if perms.auth.view_group %}
+            <a href="{% url 'administration_panel:group_list' %}" class="btn-action btn-action-secondary">
+                <i class="fa-solid fa-user-shield"></i>
+                {% trans "Gerenciar Grupos" %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

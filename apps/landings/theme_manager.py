@@ -201,3 +201,14 @@ class ThemeManager:
             errors.append("Arquivo index.html não encontrado")
 
         return len(errors) == 0, errors
+
+
+
+
+
+
+
+
+
+
+

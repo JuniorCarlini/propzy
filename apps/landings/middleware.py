@@ -1,7 +1,7 @@
 """
 Middleware para detecção de tenant (multi-tenant) com validação de segurança.
 
-Este middleware detecta qual landing page deve ser servida baseado no
+Este middleware detecta qual site deve ser servido baseado no
 domínio ou subdomínio da requisição, adicionando o tenant ao objeto request.
 
 SEGURANÇA: Domínios não registrados no sistema retornam 404, mesmo com ALLOWED_HOSTS='*'
@@ -13,19 +13,19 @@ from django.conf import settings
 from django.http import Http404
 from django.utils.deprecation import MiddlewareMixin
 
-from .models import LandingPage
+from .models import Site
 
 logger = logging.getLogger(__name__)
 
 
 class TenantMiddleware(MiddlewareMixin):
     """
-    Middleware que detecta qual landing page deve ser servida
+    Middleware que detecta qual site deve ser servido
     baseado no domínio/subdomínio da requisição.
 
     Adiciona ao request:
-    - request.tenant: A LandingPage correspondente ou None
-    - request.is_landing_page: Boolean indicando se é uma requisição de landing page
+    - request.tenant: O Site correspondente ou None
+    - request.is_site: Boolean indicando se é uma requisição de site
 
     SEGURANÇA:
     - Domínios não registrados no sistema retornam 404
@@ -122,12 +122,12 @@ class TenantMiddleware(MiddlewareMixin):
 
         # Inicializa o tenant como None
         request.tenant = None
-        request.is_landing_page = False
+        request.is_site = False
 
         # Pega o domínio base configurado
         base_domain = getattr(settings, "BASE_DOMAIN", "propzy.com.br")
 
-        # Lista de hosts que NÃO são landing pages (são do sistema principal)
+        # Lista de hosts que NÃO são sites (são do sistema principal)
         system_hosts = [
             base_domain,
             f"www.{base_domain}",
@@ -136,27 +136,26 @@ class TenantMiddleware(MiddlewareMixin):
             "127.0.0.1",
         ]
 
-        # Se for um host do sistema, não é landing page - permite acesso
+        # Se for um host do sistema, não é site - permite acesso
         if host in system_hosts:
             return
 
         # Tenta encontrar por domínio personalizado primeiro
         # SEGURANÇA: Django ORM usa prepared statements, protegido contra SQL injection
         try:
-            landing_page = LandingPage.objects.select_related("owner", "theme").get(
+            site = Site.objects.select_related("owner", "theme").get(
                 custom_domain=host,  # Django ORM sanitiza automaticamente
                 is_active=True,
-                is_published=True,
             )
-            request.tenant = landing_page
-            request.is_landing_page = True
-            logger.info(f"Tenant encontrado: {host} -> LandingPage ID {landing_page.id}")
+            request.tenant = site
+            request.is_site = True
+            logger.info(f"Tenant encontrado: {host} -> Site ID {site.id}")
             return
-        except LandingPage.DoesNotExist:
+        except Site.DoesNotExist:
             pass
-        except LandingPage.MultipleObjectsReturned:
+        except Site.MultipleObjectsReturned:
             # SEGURANÇA: Se houver duplicatas, loga e retorna 404
-            logger.error(f"Múltiplas landing pages encontradas para: {host}")
+            logger.error(f"Múltiplos sites encontrados para: {host}")
             raise Http404("Configuração inválida")
 
         # Tenta encontrar por subdomínio
@@ -173,19 +172,18 @@ class TenantMiddleware(MiddlewareMixin):
                     logger.warning(f"Subdomínio inválido: {repr(subdomain)}")
                     raise Http404("Subdomínio inválido")
 
-                landing_page = LandingPage.objects.select_related("owner", "theme").get(
+                site = Site.objects.select_related("owner", "theme").get(
                     subdomain=subdomain,  # Django ORM sanitiza automaticamente
                     is_active=True,
-                    is_published=True,
                 )
-                request.tenant = landing_page
-                request.is_landing_page = True
-                logger.info(f"Tenant encontrado: {subdomain}.{base_domain} -> LandingPage ID {landing_page.id}")
+                request.tenant = site
+                request.is_site = True
+                logger.info(f"Tenant encontrado: {subdomain}.{base_domain} -> Site ID {site.id}")
                 return
-            except LandingPage.DoesNotExist:
+            except Site.DoesNotExist:
                 pass
-            except LandingPage.MultipleObjectsReturned:
-                logger.error(f"Múltiplas landing pages encontradas para subdomínio: {subdomain}")
+            except Site.MultipleObjectsReturned:
+                logger.error(f"Múltiplos sites encontrados para subdomínio: {subdomain}")
                 raise Http404("Configuração inválida")
 
         # SEGURANÇA: Se chegou aqui, é um domínio não registrado

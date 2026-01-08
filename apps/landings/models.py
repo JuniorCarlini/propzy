@@ -1,124 +1,26 @@
 """
-Models do app Landings.
+Models do app Landings - Site de cada usuário
 
-Define os modelos para:
-- LandingPageTheme: Temas/templates disponíveis
-- LandingPage: Landing page de cada usuário
-- Property: Imóveis exibidos na landing page
-- PropertyImage: Imagens adicionais dos imóveis
+Os modelos foram reorganizados:
+- User: movido para apps.core
+- Theme: movido para apps.themes
+- Property/PropertyImage: movidos para apps.properties
 """
 
-import json
-from pathlib import Path
+import re
+import unicodedata
 
-from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class LandingPageTheme(models.Model):
-    """
-    Representa um tema instalado no sistema.
-    Os temas ficam em templates/landings/themes/<slug>/
-    """
-
-    # Identificação
-    name = models.CharField(_("Nome"), max_length=100)
-    slug = models.SlugField(
-        _("Slug"), max_length=50, unique=True, help_text=_("Nome da pasta do tema. Ex: modern, classic")
-    )
-
-    # Metadados
-    description = models.TextField(_("Descrição"), blank=True)
-    author = models.CharField(_("Autor"), max_length=100, blank=True)
-    version = models.CharField(_("Versão"), max_length=20, default="1.0.0")
-
-    # Categorização
-    CATEGORIES = [
-        ("modern", _("Moderno")),
-        ("classic", _("Clássico")),
-        ("minimal", _("Minimalista")),
-        ("luxury", _("Luxuoso")),
-        ("corporate", _("Corporativo")),
-    ]
-    category = models.CharField(_("Categoria"), max_length=20, choices=CATEGORIES, default="modern")
-
-    # Preview
-    screenshot = models.ImageField(
-        _("Screenshot"), upload_to="themes/screenshots/", blank=True, help_text=_("Preview do tema")
-    )
-
-    # Cores padrão (podem ser sobrescritas pelo usuário)
-    default_primary_color = models.CharField(_("Cor Primária Padrão"), max_length=7, default="#007bff")
-    default_secondary_color = models.CharField(_("Cor Secundária Padrão"), max_length=7, default="#6c757d")
-
-    # Status
-    is_active = models.BooleanField(_("Ativo"), default=True, help_text=_("Se desativado, não aparece para seleção"))
-    is_premium = models.BooleanField(_("Premium"), default=False, help_text=_("Requer plano premium"))
-
-    # Ordem de exibição
-    order = models.PositiveIntegerField(_("Ordem"), default=0)
-
-    # Metadados técnicos
-    features = models.JSONField(_("Recursos"), default=list, blank=True, help_text=_("Lista de recursos do tema"))
-
-    created_at = models.DateTimeField(_("Criado em"), auto_now_add=True)
-    updated_at = models.DateTimeField(_("Atualizado em"), auto_now=True)
-
-    class Meta:
-        verbose_name = _("Tema de Landing Page")
-        verbose_name_plural = _("Temas de Landing Pages")
-        ordering = ["order", "name"]
-
-    def __str__(self):
-        return f"{self.name} ({self.slug})"
-
-    def get_template_path(self, template_name: str = "index.html") -> str:
-        """Retorna o caminho do template"""
-        return f"landings/themes/{self.slug}/{template_name}"
-
-    def get_theme_dir(self) -> Path:
-        """Retorna o diretório do tema"""
-        base_template_dir = Path(settings.BASE_DIR) / "templates"
-        return base_template_dir / "landings" / "themes" / self.slug
-
-    def get_theme_config(self) -> dict:
-        """Lê o arquivo theme.json do tema"""
-        theme_dir = self.get_theme_dir()
-        config_file = theme_dir / "theme.json"
-
-        if config_file.exists():
-            with open(config_file, encoding="utf-8") as f:
-                return json.load(f)
-        return {}
-
-    def validate_theme_exists(self):
-        """Valida se a pasta do tema existe"""
-        theme_dir = self.get_theme_dir()
-        if not theme_dir.exists():
-            raise ValidationError(f"Pasta do tema não encontrada: {theme_dir}")
-
-        # Valida se tem pelo menos index.html
-        index_file = theme_dir / "index.html"
-        if not index_file.exists():
-            raise ValidationError(f"Arquivo index.html não encontrado no tema: {self.slug}")
-
-    def clean(self):
-        """Validação customizada"""
-        super().clean()
-        # Só valida se o tema já existe (em modo produção)
-        # Em desenvolvimento, permite criar o tema antes da pasta
-        if not settings.DEBUG:
-            self.validate_theme_exists()
-
-
-class LandingPage(models.Model):
-    """Landing page de cada usuário (corretor/imobiliária)"""
+class Site(models.Model):
+    """Site de cada usuário (corretor/imobiliária)"""
 
     # Relacionamento com o usuário
+    # Usa string para evitar problemas durante reload do Django
     owner = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="landing_page", verbose_name=_("Proprietário")
+        "core.User", on_delete=models.CASCADE, related_name="site", verbose_name=_("Proprietário")
     )
 
     # Domínios
@@ -171,16 +73,15 @@ class LandingPage(models.Model):
 
     # Tema selecionado
     theme = models.ForeignKey(
-        LandingPageTheme,
+        "themes.Theme",  # Referência ao app themes
         on_delete=models.SET_NULL,
         null=True,
         verbose_name=_("Tema"),
-        help_text=_("Selecione o tema/layout da landing page"),
+        help_text=_("Selecione o tema/layout do site"),
     )
 
     # Dados do negócio
     business_name = models.CharField(_("Nome do Negócio"), max_length=200)
-    business_description = models.TextField(_("Descrição"), blank=True)
     logo = models.ImageField(_("Logo"), upload_to="logos/", blank=True)
     hero_image = models.ImageField(_("Imagem Principal/Banner"), upload_to="heroes/", blank=True)
 
@@ -201,13 +102,6 @@ class LandingPage(models.Model):
     instagram_url = models.URLField(_("Instagram"), blank=True)
     linkedin_url = models.URLField(_("LinkedIn"), blank=True)
 
-    # Customização visual
-    primary_color = models.CharField(
-        _("Cor Primária"), max_length=7, default="#007bff", help_text=_("Formato: #RRGGBB")
-    )
-    secondary_color = models.CharField(
-        _("Cor Secundária"), max_length=7, default="#6c757d", help_text=_("Formato: #RRGGBB")
-    )
 
     # SEO
     meta_title = models.CharField(_("Meta Título"), max_length=60, blank=True, help_text=_("Para SEO (Google)"))
@@ -224,15 +118,18 @@ class LandingPage(models.Model):
     updated_at = models.DateTimeField(_("Atualizado em"), auto_now=True)
 
     class Meta:
-        verbose_name = _("Landing Page")
-        verbose_name_plural = _("Landing Pages")
+        verbose_name = _("Site")
+        verbose_name_plural = _("Sites")
         ordering = ["-created_at"]
+        db_table = "landings_landingpage"  # Mantém nome da tabela para compatibilidade
 
     def __str__(self):
         return f"{self.business_name} ({self.subdomain})"
 
     def get_full_subdomain(self) -> str:
         """Retorna o subdomínio completo"""
+        from django.conf import settings
+
         base_domain = getattr(settings, "BASE_DOMAIN", "propzy.com.br")
         return f"{self.subdomain}.{base_domain}"
 
@@ -242,104 +139,216 @@ class LandingPage(models.Model):
             return f"https://{self.custom_domain}"
         return f"https://{self.get_full_subdomain()}"
 
+    @staticmethod
+    def generate_subdomain_from_business_name(business_name: str) -> str:
+        """
+        Gera um subdomínio válido baseado no nome do negócio.
+        Remove acentos, espaços, caracteres especiais e limita o tamanho.
+        """
+        if not business_name:
+            return "site"
 
-class Property(models.Model):
-    """Imóveis disponíveis na landing page"""
+        # Normalizar e remover acentos
+        nfkd = unicodedata.normalize('NFKD', business_name)
+        text = ''.join([c for c in nfkd if not unicodedata.combining(c)])
 
-    PROPERTY_TYPES = [
-        ("house", _("Casa")),
-        ("apartment", _("Apartamento")),
-        ("commercial", _("Comercial")),
-        ("land", _("Terreno")),
-        ("farm", _("Fazenda")),
-    ]
+        # Converter para minúsculas e remover caracteres especiais
+        text = text.lower().strip()
+        # Substituir espaços e caracteres especiais por hífen
+        text = re.sub(r'[^\w\s-]', '', text)
+        text = re.sub(r'[-\s]+', '-', text)
+        # Remover hífens no início e fim
+        text = text.strip('-')
+        # Limitar tamanho (máximo 50 caracteres para SlugField)
+        text = text[:50]
 
-    TRANSACTION_TYPES = [
-        ("sale", _("Venda")),
-        ("rent", _("Aluguel")),
-        ("both", _("Venda/Aluguel")),
-    ]
+        # Se ficar vazio, usar fallback
+        if not text:
+            text = "site"
 
-    landing_page = models.ForeignKey(
-        LandingPage, on_delete=models.CASCADE, related_name="properties", verbose_name=_("Landing Page")
+        return text
+
+    def update_subdomain_from_business_name(self):
+        """
+        Atualiza o subdomínio baseado no nome do negócio.
+        Verifica se já existe e adiciona sufixo numérico se necessário.
+        """
+        if not self.business_name:
+            return
+
+        base_subdomain = self.generate_subdomain_from_business_name(self.business_name)
+        new_subdomain = base_subdomain
+
+        # Verificar se já existe (exceto o próprio site)
+        counter = 1
+        while Site.objects.filter(subdomain=new_subdomain).exclude(pk=self.pk).exists():
+            # Adicionar sufixo numérico
+            suffix = f"-{counter}"
+            max_length = 50 - len(suffix)
+            new_subdomain = base_subdomain[:max_length] + suffix
+            counter += 1
+
+            # Proteção contra loop infinito
+            if counter > 1000:
+                # Usar timestamp como fallback
+                import time
+                new_subdomain = f"site-{int(time.time())}"
+                break
+
+        self.subdomain = new_subdomain
+
+    def get_design(self):
+        """Retorna o design do site, criando se não existir."""
+        design, created = SiteDesign.objects.get_or_create(site=self)
+        return design
+
+
+class ThemeSectionConfig(models.Model):
+    """Configurações de seções do tema para cada site"""
+
+    site = models.OneToOneField(
+        Site,
+        on_delete=models.CASCADE,
+        related_name="theme_config",
+        verbose_name=_("Site"),
     )
 
-    # Informações básicas
-    title = models.CharField(_("Título"), max_length=200)
-    description = models.TextField(_("Descrição"))
-    property_type = models.CharField(_("Tipo"), max_length=20, choices=PROPERTY_TYPES)
-    transaction_type = models.CharField(_("Transação"), max_length=10, choices=TRANSACTION_TYPES)
+    # Configurações em JSON estruturado
+    sections_config = models.JSONField(
+        _("Configurações das Seções"),
+        default=dict,
+        blank=True,
+        help_text=_("Configurações de cada seção do tema"),
+    )
 
-    # Valores
-    sale_price = models.DecimalField(_("Preço de Venda"), max_digits=12, decimal_places=2, null=True, blank=True)
-    rent_price = models.DecimalField(_("Preço de Aluguel"), max_digits=12, decimal_places=2, null=True, blank=True)
+    # Ordem das seções
+    sections_order = models.JSONField(
+        _("Ordem das Seções"),
+        default=list,
+        blank=True,
+        help_text=_("Lista com a ordem de exibição das seções"),
+    )
 
-    # Características
-    bedrooms = models.PositiveIntegerField(_("Quartos"), default=0)
-    bathrooms = models.PositiveIntegerField(_("Banheiros"), default=0)
-    garage_spaces = models.PositiveIntegerField(_("Vagas"), default=0)
-    area = models.DecimalField(_("Área (m²)"), max_digits=10, decimal_places=2)
-
-    # Localização
-    address = models.CharField(_("Endereço"), max_length=255)
-    neighborhood = models.CharField(_("Bairro"), max_length=100)
-    city = models.CharField(_("Cidade"), max_length=100)
-    state = models.CharField(_("Estado"), max_length=2)
-    zipcode = models.CharField(_("CEP"), max_length=10, blank=True)
-
-    # Imagens (primeira é a principal)
-    main_image = models.ImageField(_("Imagem Principal"), upload_to="properties/")
-
-    # Status
-    is_featured = models.BooleanField(_("Destaque"), default=False)
-    is_active = models.BooleanField(_("Ativo"), default=True)
-
-    # Ordem de exibição
-    order = models.PositiveIntegerField(_("Ordem"), default=0)
-
-    # Metadados
     created_at = models.DateTimeField(_("Criado em"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Atualizado em"), auto_now=True)
 
     class Meta:
-        verbose_name = _("Imóvel")
-        verbose_name_plural = _("Imóveis")
-        ordering = ["order", "-created_at"]
+        verbose_name = _("Configuração do Tema")
+        verbose_name_plural = _("Configurações dos Temas")
 
     def __str__(self):
-        return self.title
+        return f"Configuração do tema - {self.site.business_name}"
 
-    def get_price_display(self) -> str:
-        """Retorna o preço formatado"""
-        if self.transaction_type == "sale" and self.sale_price:
-            return f"R$ {self.sale_price:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-        elif self.transaction_type == "rent" and self.rent_price:
-            return f"R$ {self.rent_price:,.2f}/mês".replace(",", "X").replace(".", ",").replace("X", ".")
-        elif self.transaction_type == "both":
-            prices = []
-            if self.sale_price:
-                prices.append(f"Venda: R$ {self.sale_price:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
-            if self.rent_price:
-                prices.append(
-                    f"Aluguel: R$ {self.rent_price:,.2f}/mês".replace(",", "X").replace(".", ",").replace("X", ".")
-                )
-            return " | ".join(prices)
-        return _("Consulte-nos")
+    def get_section_config(self, section_key: str) -> dict:
+        """Retorna as configurações de uma seção específica"""
+        return self.sections_config.get(section_key, {})
+
+    def is_section_enabled(self, section_key: str) -> bool:
+        """Verifica se uma seção está habilitada"""
+        section_config = self.get_section_config(section_key)
+        return section_config.get("enabled", True)
 
 
-class PropertyImage(models.Model):
-    """Imagens adicionais do imóvel"""
+class SiteDesign(models.Model):
+    """
+    Modelo para armazenar as configurações de design do site.
+    Separa as cores e estilos do modelo Site principal.
+    """
 
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="images", verbose_name=_("Imóvel"))
-    image = models.ImageField(_("Imagem"), upload_to="properties/")
-    caption = models.CharField(_("Legenda"), max_length=200, blank=True)
-    order = models.PositiveIntegerField(_("Ordem"), default=0)
-    created_at = models.DateTimeField(_("Criado em"), auto_now_add=True)
+    site = models.OneToOneField(
+        Site,
+        on_delete=models.CASCADE,
+        related_name="design",
+        verbose_name=_("Site"),
+    )
+
+    # Cores principais
+    primary_color = models.CharField(
+        _("Cor Primária"),
+        max_length=7,
+        default="#006DFF",
+        help_text=_("Cor principal do tema (formato: #RRGGBB)"),
+    )
+    secondary_color = models.CharField(
+        _("Cor Secundária"),
+        max_length=7,
+        default="#6c757d",
+        help_text=_("Cor secundária do tema (formato: #RRGGBB)"),
+    )
+    tertiary_color = models.CharField(
+        _("Cor Terciária"),
+        max_length=7,
+        default="#9333ea",
+        help_text=_("Cor terciária do tema (formato: #RRGGBB)"),
+    )
+    quaternary_color = models.CharField(
+        _("Cor Quaternária"),
+        max_length=7,
+        default="#f59e0b",
+        help_text=_("Cor quaternária do tema (formato: #RRGGBB)"),
+    )
+
+    # Cores de status
+    success_color = models.CharField(
+        _("Cor de Sucesso"),
+        max_length=7,
+        default="#10b981",
+        help_text=_("Cor para mensagens de sucesso (formato: #RRGGBB)"),
+    )
+    danger_color = models.CharField(
+        _("Cor de Erro"),
+        max_length=7,
+        default="#ef4444",
+        help_text=_("Cor para mensagens de erro (formato: #RRGGBB)"),
+    )
+    warning_color = models.CharField(
+        _("Cor de Aviso"),
+        max_length=7,
+        default="#f59e0b",
+        help_text=_("Cor para mensagens de aviso (formato: #RRGGBB)"),
+    )
+    info_color = models.CharField(
+        _("Cor de Informação"),
+        max_length=7,
+        default="#3b82f6",
+        help_text=_("Cor para mensagens informativas (formato: #RRGGBB)"),
+    )
+
+    # Cores de texto
+    text_primary_color = models.CharField(
+        _("Cor de Texto Primária"),
+        max_length=7,
+        default="#13112F",
+        help_text=_("Cor principal do texto (formato: #RRGGBB)"),
+    )
+    text_secondary_color = models.CharField(
+        _("Cor de Texto Secundária"),
+        max_length=7,
+        default="#585F76",
+        help_text=_("Cor secundária do texto (formato: #RRGGBB)"),
+    )
+
+    # Cores de fundo e bordas
+    background_color = models.CharField(
+        _("Cor de Fundo"),
+        max_length=7,
+        default="#EBECF4",
+        help_text=_("Cor de fundo principal (formato: #RRGGBB)"),
+    )
+    border_color = models.CharField(
+        _("Cor de Borda"),
+        max_length=7,
+        default="#d8dae8",
+        help_text=_("Cor das bordas (formato: #RRGGBB)"),
+    )
+
+    created_at = models.DateTimeField(_("Data de Criação"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("Data de Atualização"), auto_now=True)
 
     class Meta:
-        verbose_name = _("Imagem do Imóvel")
-        verbose_name_plural = _("Imagens dos Imóveis")
-        ordering = ["order", "created_at"]
+        verbose_name = _("Design do Site")
+        verbose_name_plural = _("Designs dos Sites")
+        ordering = ["-updated_at"]
 
     def __str__(self):
-        return f"Imagem {self.order} - {self.property.title}"
+        return f"Design de {self.site.business_name or self.site.owner.email}"

@@ -1,0 +1,43 @@
+{% load i18n %}
+
+{% if object %}
+<div id="delete-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>{% trans modal_title|default:"Excluir Item" %}</h3>
+        </div>
+        <div class="modal-body text-center">
+            <p>{% trans modal_message|default:"Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita." %}</p>
+            {% if object.title %}
+            <p><strong>{{ object.title }}</strong></p>
+            {% elif object.name %}
+            <p><strong>{{ object.name }}</strong></p>
+            {% elif object.get_display_name %}
+            <p><strong>{{ object.get_display_name }}</strong></p>
+            {% elif object.common_name_pt %}
+            <p><strong>{{ object.common_name_pt }}</strong></p>
+            {% elif object.get_full_name %}
+            <p><strong>{{ object.get_full_name }}</strong></p>
+            {% elif object.email %}
+            <p><strong>{{ object.email }}</strong></p>
+            {% else %}
+            <p><strong>{{ object }}</strong></p>
+            {% endif %}
+        </div>
+        <div class="modal-actions">
+            <button type="button" id="btn-delete-modal-cancel" class="btn-modal-cancel">
+                {% trans "Cancelar" %}
+            </button>
+            <button type="button" id="btn-delete-modal-confirm" class="btn-modal-confirm">
+                <i class="fa-solid fa-trash"></i>
+                {% trans "Excluir" %}
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+
+
+

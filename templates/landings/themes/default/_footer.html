@@ -1,0 +1,93 @@
+{% load static i18n %}
+<!-- Footer -->
+<footer class="footer-section" id="contato">
+    <div class="container">
+        <div class="footer-content">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-brand">
+                        <div class="footer-logo">
+                            {% if site.logo %}
+                            <img src="{{ site.logo.url }}" alt="{{ site.business_name }}" style="height: 50px;">
+                            {% else %}
+                            <div class="logo-icon">
+                                <i class="bi bi-house-fill"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <h4 class="footer-brand-name">{{ site.business_name|default:"Nome do Corretor" }}</h4>
+                        <p class="footer-brand-subtitle">{% trans "CORRETORA DE IMÓVEIS" %}</p>
+                        <p class="footer-brand-subtitle">CRECI 39958 F</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="footer-section-title">{% trans "Links rápidos" %}</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'site_public' %}#inicio">{% trans "Início" %}</a></li>
+                        <li><a href="{% url 'landings:properties_list' %}">{% trans "Imóveis" %}</a></li>
+                        <li><a href="{% url 'site_public' %}#sobre">{% trans "Sobre" %}</a></li>
+                        <li><a href="{% url 'site_public' %}#contato">{% trans "Contato" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-section-title">{% trans "Endereço" %}</h5>
+                    <div class="footer-contact-item">
+                        <i class="bi bi-geo-alt"></i>
+                        <span>{{ site.address|default:"Endereço não informado" }}, {{ site.city|default:"" }}/{{ site.state|default:"" }}</span>
+                    </div>
+                    <h5 class="footer-section-title mt-4">{% trans "Contato" %}</h5>
+                    {% if site.phone %}
+                    <div class="footer-contact-item">
+                        <i class="bi bi-telephone"></i>
+                        <span>{{ site.phone }}</span>
+                    </div>
+                    {% endif %}
+                    {% if site.email %}
+                    <div class="footer-contact-item">
+                        <i class="bi bi-envelope"></i>
+                        <span>{{ site.email }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-section-title">{% trans "Siga-nos" %}</h5>
+                    <div class="d-flex gap-3">
+                        {% if site.facebook_url %}
+                        <a href="{{ site.facebook_url }}" target="_blank" class="text-white">
+                            <i class="bi bi-facebook fs-4"></i>
+                        </a>
+                        {% endif %}
+                        {% if site.instagram_url %}
+                        <a href="{{ site.instagram_url }}" target="_blank" class="text-white">
+                            <i class="bi bi-instagram fs-4"></i>
+                        </a>
+                        {% endif %}
+                        {% if site.linkedin_url %}
+                        <a href="{{ site.linkedin_url }}" target="_blank" class="text-white">
+                            <i class="bi bi-linkedin fs-4"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% if site.whatsapp %}
+                    <div class="mt-3">
+                        <a href="https://wa.me/{{ site.whatsapp }}" class="btn btn-success" target="_blank">
+                            <i class="bi bi-whatsapp"></i> {% trans "Fale no WhatsApp" %}
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; {{ now|date:"Y" }} {{ site.business_name }}. {% trans "Todos os direitos reservados." %} | Powered by Propzy</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+
+

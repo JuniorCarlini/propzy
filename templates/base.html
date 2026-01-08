@@ -40,7 +40,7 @@
             <button class="menu-toggle" id="menuToggle" aria-label="{{ aria_label_menu }}">
                 <i class="fa-solid fa-bars"></i>
         </button>
-            <a href="{% url 'main:index' %}" style="display: flex; align-items: center;">
+            <a href="{% url 'administration_panel:dashboard' %}" style="display: flex; align-items: center;">
                 <img src="{% static 'icons/dark_logo_propzy.png' %}" alt="{% trans 'propzy' %}" class="logo-image logo-image-light">
                 <img src="{% static 'icons/light_logo_propzy.png' %}" alt="{% trans 'propzy' %}" class="logo-image logo-image-dark">
             </a>
@@ -73,7 +73,11 @@
                         <div class="user-menu-email">{{ request.user.email }}</div>
                     </div>
                     <div class="user-menu-items">
-                        <form method="post" action="{% url 'main:toggle_theme' %}" style="display: contents;">
+                        <a href="{% url 'core:profile' %}" class="user-menu-item">
+                            <i class="fa-solid fa-user"></i>
+                            <span>{% trans "Meu Perfil" %}</span>
+                        </a>
+                        <form method="post" action="{% url 'core:toggle_theme' %}" style="display: contents;">
                             {% csrf_token %}
                             <button type="submit" class="user-menu-item">
                                 <i class="fa-solid {% if request.user.theme_preference == 'dark' %}fa-sun{% else %}fa-moon{% endif %}"></i>
@@ -110,14 +114,14 @@
                 {% if request.user.is_authenticated %}
                     {% with current_url=request.resolver_match.url_name current_app=request.resolver_match.app_name %}
                     <li class="menu-item">
-                        <a href="{% url 'main:index' %}" class="menu-link {% if current_url == 'index' and current_app == 'main' %}active{% endif %}">
+                        <a href="{% url 'administration_panel:dashboard' %}" class="menu-link {% if current_url == 'dashboard' and current_app == 'administration_panel' %}active{% endif %}">
                             <i class="fa-solid fa-house"></i>
                             <span>{% trans "Página Inicial" %}</span>
                         </a>
                     </li>
-                    {% if perms.accounts.view_user %}
+                    {% if perms.core.view_user %}
                     <li class="menu-item">
-                        <a href="{% url 'accounts:user_list' %}" class="menu-link {% if current_app == 'accounts' and current_url|slice:':5' == 'user_' %}active{% endif %}">
+                        <a href="{% url 'administration_panel:user_list' %}" class="menu-link {% if current_app == 'administration_panel' and current_url|slice:':5' == 'user_' %}active{% endif %}">
                             <i class="fa-solid fa-users"></i>
                             <span>{% trans "Usuários" %}</span>
                         </a>
@@ -125,12 +129,45 @@
                     {% endif %}
                     {% if perms.auth.view_group %}
                     <li class="menu-item">
-                        <a href="{% url 'accounts:group_list' %}" class="menu-link {% if current_app == 'accounts' and current_url|slice:':6' == 'group_' %}active{% endif %}">
+                        <a href="{% url 'administration_panel:group_list' %}" class="menu-link {% if current_app == 'administration_panel' and current_url|slice:':6' == 'group_' %}active{% endif %}">
                             <i class="fa-solid fa-user-shield"></i>
                             <span>{% trans "Grupos/Permissões" %}</span>
                         </a>
                     </li>
                     {% endif %}
+                    <li class="menu-item">
+                        <a href="{% url 'properties:property_list' %}" class="menu-link {% if current_app == 'properties' %}active{% endif %}">
+                            <i class="fa-solid fa-home"></i>
+                            <span>{% trans "Imóveis" %}</span>
+                        </a>
+                    </li>
+                    <li class="menu-item menu-item-accordion">
+                        <a href="#" class="menu-link menu-link-accordion {% if current_app == 'landings' and current_url|slice:':9' == 'dashboard' %}active{% endif %}" onclick="toggleAccordion(event, this)">
+                            <i class="fa-solid fa-globe"></i>
+                            <span>{% trans "Configurar Site" %}</span>
+                            <i class="fa-solid fa-chevron-down accordion-icon"></i>
+                        </a>
+                        <ul class="submenu {% if current_app == 'landings' and current_url|slice:':9' == 'dashboard' %}show{% endif %}">
+                            <li>
+                                <a href="{% url 'landings:dashboard_config_basic' %}" class="submenu-link {% if current_url == 'dashboard_config_basic' %}active{% endif %}">
+                                    <i class="fa-solid fa-info-circle"></i>
+                                    <span>{% trans "Dados Básicos" %}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'landings:dashboard_config_theme' %}" class="submenu-link {% if current_url == 'dashboard_config_theme' %}active{% endif %}">
+                                    <i class="fa-solid fa-palette"></i>
+                                    <span>{% trans "Temas e Layout" %}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'landings:dashboard_config_domain' %}" class="submenu-link {% if current_url == 'dashboard_config_domain' or current_url == 'dashboard_advanced_config' %}active{% endif %}">
+                                    <i class="fa-solid fa-link"></i>
+                                    <span>{% trans "Domínio" %}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     {% endwith %}
                 {% endif %}
 

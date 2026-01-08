@@ -1,65 +1,151 @@
-{% load static i18n %}
+{% load static i18n property_tags %}
 
 {# Card de imóvel - Componente reutilizável #}
 <div class="card property-card h-100 shadow-sm">
     <div class="position-relative">
-        {% if property.main_image %}
-        <img src="{{ property.main_image.url }}"
-             class="card-img-top"
-             alt="{{ property.title }}"
-             style="height: 250px; object-fit: cover;">
-        {% else %}
-        <div class="bg-secondary d-flex align-items-center justify-content-center"
-             style="height: 250px;">
-            <i class="bi bi-house-fill text-white" style="font-size: 4rem;"></i>
-        </div>
-        {% endif %}
+        {# Swiper para galeria de imagens #}
+        <a href="{% url 'landings:property_detail' property.pk %}" class="text-decoration-none">
+            <div class="swiper property-swiper" style="height: 250px;">
+                <div class="swiper-wrapper">
+                    {# Verifica se há imagens válidas #}
+                    {% if property.main_image and property.main_image.url and 'placeholder' not in property.main_image.name|default:'' %}
+                        {# Imagem principal válida #}
+                        <div class="swiper-slide">
+                            <img src="{{ property.main_image.url }}"
+                                 class="w-100 h-100"
+                                 alt="{{ property.title }}"
+                                 style="object-fit: cover;">
+                        </div>
+                    {% endif %}
 
-        {# Badge de destaque #}
-        {% if property.is_featured %}
-        <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">
-            <i class="bi bi-star-fill"></i> {% trans "Destaque" %}
-        </span>
-        {% endif %}
+                    {# Imagens adicionais #}
+                    {% for image in property.images.all %}
+                        {% if image.image and image.image.url %}
+                        <div class="swiper-slide">
+                            <img src="{{ image.image.url }}"
+                                 class="w-100 h-100"
+                                 alt="{{ image.caption|default:property.title }}"
+                                 style="object-fit: cover;">
+                        </div>
+                        {% endif %}
+                    {% endfor %}
 
-        {# Badge de tipo de transação #}
-        <span class="badge position-absolute top-0 start-0 m-2
-                     {% if property.transaction_type == 'sale' %}bg-success
-                     {% elif property.transaction_type == 'rent' %}bg-info
-                     {% else %}bg-primary{% endif %}">
-            {% if property.transaction_type == 'sale' %}
-                {% trans "Venda" %}
-            {% elif property.transaction_type == 'rent' %}
-                {% trans "Aluguel" %}
-            {% else %}
-                {% trans "Venda/Aluguel" %}
+                    {# Se não houver nenhuma imagem válida, mostra a imagem padrão #}
+                    {% if not property.main_image or not property.main_image.url or 'placeholder' in property.main_image.name|default:'' %}
+                        {% if not property.images.all %}
+                        <div class="swiper-slide">
+                            <img src="{% static 'imgs/imagem_indisponivel.png' %}"
+                                 class="w-100 h-100"
+                                 alt="{{ property.title }}"
+                                 style="object-fit: cover;">
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {# Paginação do Swiper #}
+                <div class="swiper-pagination"></div>
+                {# Navegação do Swiper #}
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </a>
+
+        {# Badges no lado esquerdo #}
+        <div class="property-badges position-absolute top-0 start-0 m-2" style="z-index: 10;">
+            {# Badge de tipo de transação #}
+            <span class="property-badge property-badge-transaction" style="height: 24px; min-height: 24px; max-height: 24px; line-height: 1;">
+                {% if property.transaction_type == 'sale' %}
+                    <i class="fa-solid fa-tag"></i> {% trans "Venda" %}
+                {% elif property.transaction_type == 'rent' %}
+                    <i class="fa-solid fa-calendar-check"></i> {% trans "Aluguel" %}
+                {% else %}
+                    <i class="fa-solid fa-arrows-rotate"></i> {% trans "Venda/Aluguel" %}
+                {% endif %}
+            </span>
+
+            {# Badge de destaque #}
+            {% if property.is_featured %}
+            <span class="property-badge property-badge-featured" style="height: 24px; min-height: 24px; max-height: 24px; line-height: 1;">
+                <i class="fa-solid fa-star"></i> {% trans "Destaque" %}
+            </span>
             {% endif %}
-        </span>
+        </div>
     </div>
 
     <div class="card-body">
-        <h5 class="card-title">{{ property.title|truncatewords:8 }}</h5>
+        <h5 class="card-title">
+            <a href="{% url 'landings:property_detail' property.pk %}" class="text-decoration-none text-dark">
+                {{ property.title|truncatewords:8 }}
+            </a>
+        </h5>
         <p class="card-text text-muted small">
-            <i class="bi bi-geo-alt"></i> {{ property.neighborhood }}, {{ property.city }}/{{ property.state }}
+            <i class="fa-solid fa-location-dot"></i> {{ property.neighborhood }}, {{ property.city }}/{{ property.state }}
         </p>
 
         {# Características #}
         <div class="d-flex gap-3 mb-3 text-muted small">
             {% if property.bedrooms > 0 %}
-            <span><i class="bi bi-door-closed"></i> {{ property.bedrooms }}</span>
+            <span><i class="fa-solid fa-bed"></i> {{ property.bedrooms }}</span>
             {% endif %}
             {% if property.bathrooms > 0 %}
-            <span><i class="bi bi-droplet"></i> {{ property.bathrooms }}</span>
+            <span><i class="fa-solid fa-droplet"></i> {{ property.bathrooms }}</span>
             {% endif %}
             {% if property.garage_spaces > 0 %}
-            <span><i class="bi bi-car-front"></i> {{ property.garage_spaces }}</span>
+            <span><i class="fa-solid fa-car"></i> {{ property.garage_spaces }}</span>
             {% endif %}
-            <span><i class="bi bi-rulers"></i> {{ property.area }} m²</span>
+            <span><i class="fa-solid fa-ruler-combined"></i> {{ property.area }} m²</span>
         </div>
 
         {# Preço #}
         <div class="mb-3">
-            <h4 class="text-primary mb-0">{{ property.get_price_display }}</h4>
+            {% if property.has_promotion %}
+                {% if property.transaction_type == 'sale' and property.original_sale_price %}
+                    <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center gap-1 fw-normal" style="font-size: 0.85rem; line-height: 1.2;">
+                            <span class="text-muted">De</span>
+                            <span class="text-decoration-line-through text-danger">{{ property.original_sale_price|format_price }}</span>
+                            <span class="text-muted">Por</span>
+                        </div>
+                        <h4 class="text-primary mb-0 fw-bold" style="font-size: 1.5rem;">{{ property.get_price_display }}</h4>
+                    </div>
+                {% elif property.transaction_type == 'rent' and property.original_rent_price %}
+                    <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center gap-1 fw-normal" style="font-size: 0.85rem; line-height: 1.2;">
+                            <span class="text-muted">De</span>
+                            <span class="text-decoration-line-through text-danger">{{ property.original_rent_price|format_price }}/mês</span>
+                            <span class="text-muted">Por</span>
+                        </div>
+                        <h4 class="text-primary mb-0 fw-bold" style="font-size: 1.5rem;">{{ property.get_price_display }}</h4>
+                    </div>
+                {% elif property.transaction_type == 'both' %}
+                    <div class="d-flex flex-column">
+                        {% if property.original_sale_price and property.sale_price and property.original_sale_price > property.sale_price %}
+                            <div class="mb-1">
+                                <div class="d-flex align-items-center gap-1 fw-normal" style="font-size: 0.75rem; line-height: 1.2;">
+                                    <span class="text-muted">Venda: De</span>
+                                    <span class="text-decoration-line-through text-danger">{{ property.original_sale_price|format_price }}</span>
+                                    <span class="text-muted">Por</span>
+                                </div>
+                                <span class="text-primary fw-bold" style="font-size: 1.1rem;">Venda: {{ property.sale_price|format_price }}</span>
+                            </div>
+                        {% endif %}
+                        {% if property.original_rent_price and property.rent_price and property.original_rent_price > property.rent_price %}
+                            <div>
+                                <div class="d-flex align-items-center gap-1 fw-normal" style="font-size: 0.75rem; line-height: 1.2;">
+                                    <span class="text-muted">Aluguel: De</span>
+                                    <span class="text-decoration-line-through text-danger">{{ property.original_rent_price|format_price }}/mês</span>
+                                    <span class="text-muted">Por</span>
+                                </div>
+                                <span class="text-primary fw-bold" style="font-size: 1.1rem;">Aluguel: {{ property.rent_price|format_price }}/mês</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <h4 class="text-primary mb-0 fw-bold">{{ property.get_price_display }}</h4>
+                {% endif %}
+            {% else %}
+                <h4 class="text-primary mb-0 fw-bold">{{ property.get_price_display }}</h4>
+            {% endif %}
         </div>
 
         {# Descrição curta #}
@@ -67,21 +153,10 @@
     </div>
 
     <div class="card-footer bg-transparent">
-        {# Botão de contato via WhatsApp #}
-        {% if landing_page.whatsapp %}
-        <a href="https://wa.me/{{ landing_page.whatsapp }}?text=Olá! Tenho interesse no imóvel: {{ property.title }}"
-           class="btn btn-success w-100"
-           target="_blank">
-            <i class="bi bi-whatsapp"></i> {% trans "Tenho Interesse" %}
-        </a>
-        {% else %}
-        <a href="mailto:{{ landing_page.email }}?subject=Interesse em {{ property.title }}"
+        {# Botão de visualizar imóvel #}
+        <a href="{% url 'landings:property_detail' property.pk %}"
            class="btn btn-primary w-100">
-            <i class="bi bi-envelope"></i> {% trans "Solicitar Informações" %}
+            <i class="fa-solid fa-eye"></i> {% trans "Visualizar Imóvel" %}
         </a>
-        {% endif %}
     </div>
 </div>
-
-
-

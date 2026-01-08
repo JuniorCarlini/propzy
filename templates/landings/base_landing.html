@@ -7,15 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     {# SEO Meta Tags #}
-    <title>{% block title %}{{ landing_page.meta_title|default:landing_page.business_name }}{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}{{ landing_page.meta_description|default:landing_page.business_description }}{% endblock %}">
+    <title>{% block title %}{{ site.meta_title|default:site.business_name }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ site.meta_description|default:site.business_description }}{% endblock %}">
 
     {# Open Graph / Facebook #}
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{{ landing_page.business_name }}">
-    <meta property="og:description" content="{{ landing_page.business_description }}">
-    {% if landing_page.logo %}
-    <meta property="og:image" content="{{ landing_page.logo.url }}">
+    <meta property="og:title" content="{{ site.business_name }}">
+    <meta property="og:description" content="{{ site.business_description }}">
+    {% if site.logo %}
+    <meta property="og:image" content="{{ site.logo.url }}">
     {% endif %}
 
     {# Favicon #}
@@ -27,8 +27,14 @@
     {# Bootstrap Icons #}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    {# Font Awesome #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     {# HTMX #}
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    {# Swiper CSS #}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
     {# CSS customizado do tema #}
     {% block extra_css %}{% endblock %}
@@ -36,8 +42,23 @@
     {# Cores personalizadas inline #}
     <style>
         :root {
-            --primary-color: {{ landing_page.primary_color|default:"#007bff" }};
-            --secondary-color: {{ landing_page.secondary_color|default:"#6c757d" }};
+            {% if site.design %}
+            --primary-color: {{ site.design.primary_color|default:"#006DFF" }};
+            --secondary-color: {{ site.design.secondary_color|default:"#6c757d" }};
+            --tertiary-color: {{ site.design.tertiary_color|default:"#9333ea" }};
+            --quaternary-color: {{ site.design.quaternary_color|default:"#f59e0b" }};
+            --success-color: {{ site.design.success_color|default:"#10b981" }};
+            --danger-color: {{ site.design.danger_color|default:"#ef4444" }};
+            --warning-color: {{ site.design.warning_color|default:"#f59e0b" }};
+            --info-color: {{ site.design.info_color|default:"#3b82f6" }};
+            --text-primary-color: {{ site.design.text_primary_color|default:"#13112F" }};
+            --text-secondary-color: {{ site.design.text_secondary_color|default:"#585F76" }};
+            --background-color: {{ site.design.background_color|default:"#EBECF4" }};
+            --border-color: {{ site.design.border_color|default:"#d8dae8" }};
+            {% else %}
+            --primary-color: #006DFF;
+            --secondary-color: #6c757d;
+            {% endif %}
         }
 
         .btn-primary {
@@ -58,6 +79,136 @@
         .bg-primary {
             background-color: var(--primary-color) !important;
         }
+
+        /* Estilos do Swiper para cards de imóveis */
+        .property-swiper {
+            border-radius: 0.1rem 0.1rem 0 0;
+            overflow: hidden;
+        }
+
+        .property-swiper .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .property-swiper .swiper-pagination {
+            bottom: 10px;
+        }
+
+        .property-swiper .swiper-pagination-bullet {
+            background: rgba(255, 255, 255, 0.8);
+            opacity: 1;
+        }
+
+        .property-swiper .swiper-pagination-bullet-active {
+            background: var(--primary-color);
+        }
+
+        .property-swiper .swiper-button-next,
+        .property-swiper .swiper-button-prev {
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.3);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .property-swiper .swiper-button-next:after,
+        .property-swiper .swiper-button-prev:after {
+            font-size: 14px;
+        }
+
+        .property-swiper .swiper-button-next:hover,
+        .property-swiper .swiper-button-prev:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Esconde navegação se houver apenas uma imagem */
+        .property-swiper:has(.swiper-slide:only-child) .swiper-button-next,
+        .property-swiper:has(.swiper-slide:only-child) .swiper-button-prev,
+        .property-swiper:has(.swiper-slide:only-child) .swiper-pagination {
+            display: none;
+        }
+
+        /* Badges modernos e clean dos imóveis */
+        .property-badges {
+            display: flex;
+            flex-direction: row;
+            gap: 0.4rem;
+            align-items: center;
+        }
+
+        .property-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.65rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            border: none;
+            height: 24px;
+            min-height: 24px;
+            max-height: 24px;
+            line-height: 1;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .property-badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .property-badge-transaction {
+            background: rgba(108, 117, 125, 0.75);
+            color: #ffffff;
+        }
+
+        .property-badge-featured {
+            background: rgba(255, 193, 7, 0.8);
+            color: #1a1a1a;
+        }
+
+        .property-badge i {
+            font-size: 0.65rem;
+        }
+
+        /* Botão Visualizar Imóvel estilizado */
+        .property-card .card-footer .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.65rem 1.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .property-card .card-footer .btn-primary:hover {
+            background-color: #e55a2b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .property-card .card-footer .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .property-card .card-footer .btn-primary i {
+            margin-right: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .property-card .card-footer .btn-primary:hover i {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
@@ -70,38 +221,38 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5>{{ landing_page.business_name }}</h5>
-                    <p class="small">{{ landing_page.business_description|truncatewords:20 }}</p>
+                    <h5>{{ site.business_name }}</h5>
+                    <p class="small">{{ site.business_description|truncatewords:20 }}</p>
                 </div>
                 <div class="col-md-3">
                     <h6>{% trans "Contato" %}</h6>
                     <ul class="list-unstyled small">
-                        {% if landing_page.email %}
-                        <li><i class="bi bi-envelope"></i> {{ landing_page.email }}</li>
+                        {% if site.email %}
+                        <li><i class="bi bi-envelope"></i> {{ site.email }}</li>
                         {% endif %}
-                        {% if landing_page.phone %}
-                        <li><i class="bi bi-telephone"></i> {{ landing_page.phone }}</li>
+                        {% if site.phone %}
+                        <li><i class="bi bi-telephone"></i> {{ site.phone }}</li>
                         {% endif %}
-                        {% if landing_page.address %}
-                        <li><i class="bi bi-geo-alt"></i> {{ landing_page.city }}/{{ landing_page.state }}</li>
+                        {% if site.address %}
+                        <li><i class="bi bi-geo-alt"></i> {{ site.city }}/{{ site.state }}</li>
                         {% endif %}
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h6>{% trans "Redes Sociais" %}</h6>
                     <div class="d-flex gap-3">
-                        {% if landing_page.facebook_url %}
-                        <a href="{{ landing_page.facebook_url }}" target="_blank" class="text-white">
+                        {% if site.facebook_url %}
+                        <a href="{{ site.facebook_url }}" target="_blank" class="text-white">
                             <i class="bi bi-facebook fs-4"></i>
                         </a>
                         {% endif %}
-                        {% if landing_page.instagram_url %}
-                        <a href="{{ landing_page.instagram_url }}" target="_blank" class="text-white">
+                        {% if site.instagram_url %}
+                        <a href="{{ site.instagram_url }}" target="_blank" class="text-white">
                             <i class="bi bi-instagram fs-4"></i>
                         </a>
                         {% endif %}
-                        {% if landing_page.linkedin_url %}
-                        <a href="{{ landing_page.linkedin_url }}" target="_blank" class="text-white">
+                        {% if site.linkedin_url %}
+                        <a href="{{ site.linkedin_url }}" target="_blank" class="text-white">
                             <i class="bi bi-linkedin fs-4"></i>
                         </a>
                         {% endif %}
@@ -111,7 +262,7 @@
             <hr class="my-3">
             <div class="text-center small">
                 <p class="mb-0">
-                    &copy; {{ now|date:"Y" }} {{ landing_page.business_name }}.
+                    &copy; {{ now|date:"Y" }} {{ site.business_name }}.
                     {% trans "Todos os direitos reservados." %}
                     <span class="text-muted">| Powered by Propzy</span>
                 </p>
@@ -123,10 +274,63 @@
     {# Bootstrap JS Bundle #}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+    {# Swiper JS #}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    {# Inicialização do Swiper para cards de imóveis #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializa todos os swipers de propriedades
+            const propertySwipers = document.querySelectorAll('.property-swiper');
+            propertySwipers.forEach(function(swiperEl) {
+                const slides = swiperEl.querySelectorAll('.swiper-slide');
+                const hasMultipleSlides = slides.length > 1;
+
+                // Só inicializa se houver pelo menos um slide
+                if (slides.length > 0) {
+                    const swiperConfig = {
+                        slidesPerView: 1,
+                        spaceBetween: 0,
+                        pagination: {
+                            el: swiperEl.querySelector('.swiper-pagination'),
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: swiperEl.querySelector('.swiper-button-next'),
+                            prevEl: swiperEl.querySelector('.swiper-button-prev'),
+                        },
+                    };
+
+                    // Só adiciona loop e autoplay se houver múltiplas imagens
+                    if (hasMultipleSlides) {
+                        swiperConfig.loop = true;
+                        swiperConfig.autoplay = {
+                            delay: 3000,
+                            disableOnInteraction: false,
+                        };
+                    }
+
+                    new Swiper(swiperEl, swiperConfig);
+
+                    // Esconde navegação se houver apenas uma imagem
+                    if (!hasMultipleSlides) {
+                        const pagination = swiperEl.querySelector('.swiper-pagination');
+                        const nextBtn = swiperEl.querySelector('.swiper-button-next');
+                        const prevBtn = swiperEl.querySelector('.swiper-button-prev');
+                        if (pagination) pagination.style.display = 'none';
+                        if (nextBtn) nextBtn.style.display = 'none';
+                        if (prevBtn) prevBtn.style.display = 'none';
+                    }
+                }
+            });
+        });
+    </script>
+
     {# JavaScript customizado do tema #}
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+
 
 
 

@@ -8,7 +8,21 @@
         </div>
         <div class="modal-body text-center">
             <p>{% trans modal_message|default:"Tem certeza que deseja desativar este item?" %}</p>
-            <p><strong>{% if object.name %}{{ object.name }}{% elif object.get_display_name %}{{ object.get_display_name }}{% elif object.common_name_pt %}{{ object.common_name_pt }}{% elif object.get_full_name %}{{ object.get_full_name }}{% elif object.email %}{{ object.email }}{% else %}{{ object }}{% endif %}</strong></p>
+            {% if object.title %}
+            <p><strong>{{ object.title }}</strong></p>
+            {% elif object.name %}
+            <p><strong>{{ object.name }}</strong></p>
+            {% elif object.get_display_name %}
+            <p><strong>{{ object.get_display_name }}</strong></p>
+            {% elif object.common_name_pt %}
+            <p><strong>{{ object.common_name_pt }}</strong></p>
+            {% elif object.get_full_name %}
+            <p><strong>{{ object.get_full_name }}</strong></p>
+            {% elif object.email %}
+            <p><strong>{{ object.email }}</strong></p>
+            {% else %}
+            <p><strong>{{ object }}</strong></p>
+            {% endif %}
         </div>
         <div class="modal-actions">
             <button type="button" id="btn-deactivate-modal-cancel" class="btn-modal-cancel">

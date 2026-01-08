@@ -1,24 +1,35 @@
 {
   "name": "Default Theme",
   "slug": "default",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Propzy Team",
-  "description": "Tema padrão básico. Usado como fallback quando nenhum tema está selecionado.",
+  "description": "Tema moderno com design escuro e acentos laranja. Layout profissional com hero section, filtros integrados e seções modulares.",
   "screenshot": "preview.jpg",
   "category": "modern",
   "tags": [
     "default",
-    "básico",
-    "simples"
+    "moderno",
+    "escuro",
+    "profissional",
+    "filtros"
   ],
   "colors": {
-    "primary": "#007bff",
-    "secondary": "#6c757d"
+    "primary": "#FF6B35",
+    "secondary": "#1a1a1a"
   },
   "features": [
     "whatsapp_integration",
     "property_gallery",
-    "responsive_design"
+    "responsive_design",
+    "transparent_header",
+    "hero_section",
+    "property_filters",
+    "about_section",
+    "services_section",
+    "modern_footer"
   ],
   "premium": false
 }
+
+
+

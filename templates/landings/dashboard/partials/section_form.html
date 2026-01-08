@@ -1,0 +1,405 @@
+{% load i18n landings_tags %}
+
+<div class="section-config-header">
+    <div class="section-config-title">
+        <div class="section-config-title-icon">
+            <i class="fa-solid
+                {% if section_key == 'hero' %}fa-image
+                {% elif section_key == 'about' %}fa-user
+                {% elif section_key == 'services' %}fa-briefcase
+                {% elif section_key == 'properties' %}fa-home
+                {% elif section_key == 'contact' %}fa-envelope
+                {% endif %}"></i>
+        </div>
+        <div class="section-config-title-text">
+            <h2>
+                {% if section_key == 'hero' %}{% trans "Banner Principal" %}
+                {% elif section_key == 'about' %}{% trans "Sobre" %}
+                {% elif section_key == 'services' %}{% trans "Serviços" %}
+                {% elif section_key == 'properties' %}{% trans "Imóveis" %}
+                {% elif section_key == 'contact' %}{% trans "Contato" %}
+                {% endif %}
+            </h2>
+            <p>{% trans "Configure o conteúdo e aparência desta seção" %}</p>
+        </div>
+    </div>
+</div>
+
+
+<form method="post"
+      action="{% url 'landings:dashboard_config_theme' %}"
+      enctype="multipart/form-data"
+      hx-post="{% url 'landings:dashboard_config_theme' %}"
+      hx-target="#section-config-content"
+      hx-swap="innerHTML"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+      class="section-form">
+    {% csrf_token %}
+    <input type="hidden" name="save_section" value="1">
+    <input type="hidden" name="section_key" value="{{ section_key }}">
+
+    {% if section_key == 'hero' %}
+        <!-- Campos do Hero -->
+        <div class="form-group">
+            <label for="{{ form.hero_title.id_for_label }}">{% trans "Título Principal" %}</label>
+            {{ form.hero_title }}
+            {% if form.hero_title.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.hero_title.help_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.hero_subtitle.id_for_label }}">{% trans "Subtítulo" %}</label>
+            {{ form.hero_subtitle }}
+            {% if form.hero_subtitle.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.hero_subtitle.help_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.hero_background_image.id_for_label }}">{% trans "Imagem de Fundo" %}</label>
+            {% if form.hero_background_image.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.hero_background_image.help_text }}</span>
+            </div>
+            {% endif %}
+            <div class="image-upload-wrapper {% if section_image_url or site.hero_image %}has-image{% endif %}" id="hero_background_image-wrapper">
+                <div class="image-upload-container">
+                    <div class="image-preview-container">
+                        {% if section_image_url %}
+                        <img src="{{ section_image_url }}" id="hero_background_image-preview" alt="Preview">
+                        {% elif site.hero_image %}
+                        <img src="{{ site.hero_image.url }}" id="hero_background_image-preview" alt="Preview">
+                        {% else %}
+                        <div class="image-preview-placeholder">
+                            <i class="fa-solid fa-image"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="image-upload-controls">
+                        <div class="image-upload-input-wrapper">
+                            {{ form.hero_background_image }}
+                            <label for="{{ form.hero_background_image.id_for_label }}" class="image-upload-button">
+                                <i class="fa-solid fa-upload"></i>
+                                <span>{% trans "Escolher Imagem" %}</span>
+                            </label>
+                        </div>
+                        <div class="image-upload-actions">
+                            <button type="button" class="btn-image-action btn-image-confirm" onclick="confirmImageUpload('hero_background_image')">
+                                <i class="fa-solid fa-check"></i>
+                                <span>{% trans "Confirmar" %}</span>
+                            </button>
+                            <button type="button" class="btn-image-action btn-image-cancel" onclick="cancelImageUpload('hero_background_image')">
+                                <i class="fa-solid fa-times"></i>
+                                <span>{% trans "Cancelar" %}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Alinhamento do Conteúdo" %}</label>
+            {% if form.hero_text_position.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.hero_text_position.help_text }}</span>
+            </div>
+            {% endif %}
+            <div class="alignment-buttons">
+                <button type="button"
+                        class="alignment-btn {% if form.hero_text_position.value == 'left' %}active{% endif %}"
+                        data-value="left"
+                        onclick="selectAlignment(this, '{{ form.hero_text_position.id_for_label }}')">
+                    <i class="fa-solid fa-align-left"></i>
+                    <span>{% trans "Esquerda" %}</span>
+                </button>
+                <button type="button"
+                        class="alignment-btn {% if form.hero_text_position.value == 'center' %}active{% endif %}"
+                        data-value="center"
+                        onclick="selectAlignment(this, '{{ form.hero_text_position.id_for_label }}')">
+                    <i class="fa-solid fa-align-center"></i>
+                    <span>{% trans "Centro" %}</span>
+                </button>
+                <button type="button"
+                        class="alignment-btn {% if form.hero_text_position.value == 'right' %}active{% endif %}"
+                        data-value="right"
+                        onclick="selectAlignment(this, '{{ form.hero_text_position.id_for_label }}')">
+                    <i class="fa-solid fa-align-right"></i>
+                    <span>{% trans "Direita" %}</span>
+                </button>
+            </div>
+            {{ form.hero_text_position }}
+        </div>
+
+        <div class="button-config-wrapper">
+            <div class="button-config-header">
+                <label for="{{ form.hero_show_cta.id_for_label }}">{% trans "Botão de Ação" %}</label>
+                <label class="toggle-switch">
+                    {{ form.hero_show_cta }}
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="button-config-content {% if not form.hero_show_cta.value %}disabled{% endif %}" id="hero_cta_content">
+                <div class="button-config-field">
+                    <label for="{{ form.hero_cta_text.id_for_label }}">{% trans "Texto do Botão" %}</label>
+                    {{ form.hero_cta_text }}
+                </div>
+                {% if form.hero_cta_url %}
+                <div class="button-config-field">
+                    <label for="{{ form.hero_cta_url.id_for_label }}">{% trans "URL do Botão" %}</label>
+                    {{ form.hero_cta_url }}
+                    {% if form.hero_cta_url.help_text %}
+                    <div class="help-text">
+                        <i class="fa-solid fa-info-circle"></i>
+                        <span>{{ form.hero_cta_url.help_text }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label>{% trans "Alinhamento do Botão" %}</label>
+                    <div class="alignment-buttons">
+                        <button type="button"
+                                class="alignment-btn {% if form.hero_text_position.value == 'left' %}active{% endif %}"
+                                data-value="left"
+                                onclick="selectAlignment(this, '{{ form.hero_text_position.id_for_label }}')">
+                            <i class="fa-solid fa-align-left"></i>
+                            <span>{% trans "Esquerda" %}</span>
+                        </button>
+                        <button type="button"
+                                class="alignment-btn {% if form.hero_text_position.value == 'center' %}active{% endif %}"
+                                data-value="center"
+                                onclick="selectAlignment(this, '{{ form.hero_text_position.id_for_label }}')">
+                            <i class="fa-solid fa-align-center"></i>
+                            <span>{% trans "Centro" %}</span>
+                        </button>
+                        <button type="button"
+                                class="alignment-btn {% if form.hero_text_position.value == 'right' %}active{% endif %}"
+                                data-value="right"
+                                onclick="selectAlignment(this, '{{ form.hero_text_position.id_for_label }}')">
+                            <i class="fa-solid fa-align-right"></i>
+                            <span>{% trans "Direita" %}</span>
+                        </button>
+                    </div>
+                    {{ form.hero_text_position }}
+                </div>
+            </div>
+        </div>
+
+    {% elif section_key == 'about' %}
+        <!-- Campos do Sobre -->
+        <div class="form-group">
+            <label for="{{ form.about_title.id_for_label }}">{% trans "Título da Seção" %}</label>
+            {{ form.about_title }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.about_description.id_for_label }}">{% trans "Descrição" %}</label>
+            {{ form.about_description }}
+            {% if form.about_description.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.about_description.help_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.about_image.id_for_label }}">{% trans "Foto/Imagem" %}</label>
+            {% if form.about_image.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.about_image.help_text }}</span>
+            </div>
+            {% endif %}
+            <div class="image-upload-wrapper {% if section_image_url or site.hero_image %}has-image{% endif %}" id="about_image-wrapper">
+                <div class="image-upload-container">
+                    <div class="image-preview-container">
+                        {% if section_image_url %}
+                        <img src="{{ section_image_url }}" id="about_image-preview" alt="Preview">
+                        {% elif site.hero_image %}
+                        <img src="{{ site.hero_image.url }}" id="about_image-preview" alt="Preview">
+                        {% else %}
+                        <div class="image-preview-placeholder">
+                            <i class="fa-solid fa-image"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="image-upload-controls">
+                        <div class="image-upload-input-wrapper">
+                            {{ form.about_image }}
+                            <label for="{{ form.about_image.id_for_label }}" class="image-upload-button">
+                                <i class="fa-solid fa-upload"></i>
+                                <span>{% trans "Escolher Imagem" %}</span>
+                            </label>
+                        </div>
+                        <div class="image-upload-actions">
+                            <button type="button" class="btn-image-action btn-image-confirm" onclick="confirmImageUpload('about_image')">
+                                <i class="fa-solid fa-check"></i>
+                                <span>{% trans "Confirmar" %}</span>
+                            </button>
+                            <button type="button" class="btn-image-action btn-image-cancel" onclick="cancelImageUpload('about_image')">
+                                <i class="fa-solid fa-times"></i>
+                                <span>{% trans "Cancelar" %}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Posição da Imagem" %}</label>
+            {% if form.about_image_position.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.about_image_position.help_text }}</span>
+            </div>
+            {% endif %}
+            <div class="position-buttons">
+                <button type="button"
+                        class="position-btn {% if form.about_image_position.value == 'left' %}active{% endif %}"
+                        data-value="left"
+                        onclick="selectPosition(this, '{{ form.about_image_position.id_for_label }}')">
+                    <i class="fa-solid fa-align-left"></i>
+                    <span>{% trans "Esquerda" %}</span>
+                </button>
+                <button type="button"
+                        class="position-btn {% if form.about_image_position.value == 'right' %}active{% endif %}"
+                        data-value="right"
+                        onclick="selectPosition(this, '{{ form.about_image_position.id_for_label }}')">
+                    <i class="fa-solid fa-align-right"></i>
+                    <span>{% trans "Direita" %}</span>
+                </button>
+            </div>
+            {{ form.about_image_position }}
+        </div>
+
+    {% elif section_key == 'services' %}
+        <!-- Campos de Serviços -->
+        <div class="form-group">
+            <label for="{{ form.services_title.id_for_label }}">{% trans "Título da Seção" %}</label>
+            {{ form.services_title }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.services_subtitle.id_for_label }}">{% trans "Subtítulo" %}</label>
+            {{ form.services_subtitle }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.services_items.id_for_label }}">{% trans "Itens de Serviços" %}</label>
+            {{ form.services_items }}
+            {% if form.services_items.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.services_items.help_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+    {% elif section_key == 'contact' %}
+        <!-- Campos de Contato -->
+        <div class="form-group">
+            <label for="{{ form.contact_title.id_for_label }}">{% trans "Título da Seção" %}</label>
+            {{ form.contact_title }}
+        </div>
+
+        <div class="form-group checkbox-group">
+            {{ form.contact_show_form }}
+            <label for="{{ form.contact_show_form.id_for_label }}">{% trans "Mostrar formulário de contato" %}</label>
+        </div>
+
+        <div class="form-group checkbox-group">
+            {{ form.contact_show_map }}
+            <label for="{{ form.contact_show_map.id_for_label }}">{% trans "Mostrar mapa" %}</label>
+        </div>
+
+    {% elif section_key == 'properties' %}
+        <!-- Campos de Imóveis -->
+        <div class="form-group">
+            <label for="{{ form.properties_title.id_for_label }}">{% trans "Título da Seção" %}</label>
+            {{ form.properties_title }}
+            {% if form.properties_title.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.properties_title.help_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.properties_subtitle.id_for_label }}">{% trans "Subtítulo (opcional)" %}</label>
+            {{ form.properties_subtitle }}
+            {% if form.properties_subtitle.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.properties_subtitle.help_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.properties_filter_transaction.id_for_label }}">{% trans "Filtrar por Finalidade" %}</label>
+            {{ form.properties_filter_transaction }}
+            {% if form.properties_filter_transaction.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.properties_filter_transaction.help_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.properties_filter_type.id_for_label }}">{% trans "Filtrar por Tipo" %}</label>
+            {{ form.properties_filter_type }}
+            {% if form.properties_filter_type.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.properties_filter_type.help_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.properties_filter_city.id_for_label }}">{% trans "Filtrar por Cidade" %}</label>
+            {{ form.properties_filter_city }}
+            {% if form.properties_filter_city.help_text %}
+            <div class="help-text">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>{{ form.properties_filter_city.help_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group checkbox-group">
+            {{ form.properties_show_featured_only }}
+            <label for="{{ form.properties_show_featured_only.id_for_label }}">{% trans "Mostrar apenas imóveis em destaque" %}</label>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.properties_limit.id_for_label }}">{% trans "Limite de imóveis" %}</label>
+            {{ form.properties_limit }}
+            {% if form.properties_limit.help_text %}
+            <div class="help-text">{{ form.properties_limit.help_text }}</div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn-save">
+            <i class="fa-solid fa-save"></i>
+            {% trans "Salvar Configurações" %}
+        </button>
+    </div>
+</form>
+

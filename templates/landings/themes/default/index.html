@@ -1,58 +1,909 @@
 {% extends "landings/base_landing.html" %}
-{% load static i18n %}
+{% load static i18n landings_tags %}
+
+{% block extra_css %}
+<!-- Google Fonts - Poppins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Variáveis de cores */
+    :root {
+        --primary-orange: #FF6B35;
+        --dark-bg: #1a1a1a;
+        --dark-gray: #2d2d2d;
+        --light-gray: #f5f5f5;
+        --text-white: #ffffff;
+        --text-gray: #cccccc;
+    }
+
+    /* Reset e base */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--text-white);
+        overflow-x: hidden;
+    }
+
+    /* Header transparente fixo */
+    .navbar-transparent {
+        background-color: rgba(26, 26, 26, 0.85) !important;
+        backdrop-filter: blur(10px);
+        padding: 1rem 0;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-transparent.scrolled {
+        background-color: rgba(26, 26, 26, 0.95) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        color: var(--text-white) !important;
+    }
+
+    .navbar-brand .logo-icon {
+        width: 40px;
+        height: 40px;
+        background-color: var(--primary-orange);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .navbar-brand .brand-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .navbar-brand .brand-subtitle {
+        font-size: 0.75rem;
+        color: var(--text-gray);
+        margin: 0;
+        line-height: 1;
+    }
+
+    .navbar-nav .nav-link {
+        color: var(--text-white) !important;
+        font-weight: 500;
+        margin: 0 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: var(--primary-orange) !important;
+    }
+
+    .contact-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .whatsapp-link {
+        color: var(--text-white);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+    }
+
+    .whatsapp-link:hover {
+        color: #25d366;
+    }
+
+    .social-icons {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .social-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--dark-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-orange);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .social-icon:hover {
+        background-color: var(--primary-orange);
+        color: var(--text-white);
+        transform: translateY(-2px);
+    }
+
+    /* Hero Section */
+    .hero-section {
+        min-height: 90vh;
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding-top: 120px;
+        padding-bottom: 50px;
+        background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-gray) 100%);
+        overflow: hidden;
+    }
+
+    .hero-section .container {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .hero-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        z-index: 0;
+    }
+
+    .hero-background::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800"><rect fill="%23333" width="400" height="800"/><rect fill="%23444" x="0" y="0" width="400" height="200"/><rect fill="%23444" x="0" y="400" width="400" height="200"/></svg>') no-repeat center;
+        background-size: cover;
+        opacity: 0.5;
+    }
+
+    .hero-background::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        width: 50%;
+    }
+
+    .hero-content-left {
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    .hero-content-center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-content-right {
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    @media (max-width: 768px) {
+        .hero-content {
+            width: 100%;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 0;
+        color: var(--text-white);
+    }
+
+    .hero-title .highlight {
+        color: var(--primary-orange);
+    }
+
+    /* Barra de Filtros */
+    .filter-bar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-top: 3rem;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .filter-form {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 160px;
+        max-width: 220px;
+    }
+
+    .filter-group select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #2c3e50;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: 400;
+    }
+
+    .filter-group select option[disabled][selected] {
+        color: #adb5bd;
+        font-weight: 500;
+    }
+
+    .filter-group select:invalid {
+        color: #adb5bd;
+    }
+
+    .filter-group select:valid {
+        color: #2c3e50;
+    }
+
+    .filter-group select:focus {
+        outline: none;
+        border-color: var(--primary-orange);
+        background-color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    }
+
+    .filter-submit-btn {
+        padding: 0.75rem 2rem;
+        background-color: var(--primary-orange);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+    }
+
+    .filter-submit-btn:hover {
+        background-color: #e55a2b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    }
+
+    /* Seção Imóveis */
+    .properties-section {
+        padding: 80px 0;
+        background-color: #ffffff;
+    }
+
+    .properties-section h2 {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    /* Ajustes para cards de imóveis no tema */
+    .properties-section .card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        background-color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .properties-section .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .properties-section .card-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .properties-section .text-primary {
+        color: var(--primary-orange) !important;
+    }
+
+    .properties-section .btn-primary {
+        background-color: var(--primary-orange);
+        border-color: var(--primary-orange);
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .properties-section .btn-primary:hover {
+        background-color: #e55a2b;
+        border-color: #e55a2b;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    }
+
+    /* Seção Sobre Mim */
+    .about-section {
+        padding: 120px 0;
+        background-color: var(--text-white);
+        color: var(--dark-bg);
+    }
+
+    .about-content {
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+    }
+
+    .about-image {
+        flex: 0 0 400px;
+    }
+
+    .about-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .about-text {
+        flex: 1;
+    }
+
+    .section-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary-orange);
+        margin-bottom: 1rem;
+    }
+
+    .about-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.8rem;
+        color: var(--primary-orange);
+        margin-bottom: 0.5rem;
+    }
+
+    .about-title {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        color: var(--dark-gray);
+        letter-spacing: 2px;
+        margin-bottom: 2rem;
+    }
+
+    .about-description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #495057;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Seção Serviços */
+    .services-section {
+        padding: 120px 0;
+        background-color: var(--dark-gray);
+    }
+
+    .services-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--text-white);
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 3rem;
+    }
+
+    .service-card {
+        text-align: center;
+        padding: 2rem;
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .service-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: var(--primary-orange);
+    }
+
+    .service-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin-bottom: 1rem;
+    }
+
+    .service-description {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--text-gray);
+    }
+
+    /* Footer */
+    .footer-section {
+        background-color: var(--dark-bg);
+        padding: 4rem 0 2rem;
+        color: var(--text-white);
+    }
+
+    .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 3rem;
+        margin-bottom: 3rem;
+        align-items: start;
+    }
+
+    @media (max-width: 768px) {
+        .footer-content {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+    }
+
+    .footer-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .footer-logo {
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary-orange);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .footer-brand-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.3rem;
+        color: var(--text-white);
+        margin: 0;
+    }
+
+    .footer-brand-subtitle {
+        font-size: 0.85rem;
+        color: var(--text-gray);
+        margin: 0;
+    }
+
+    .footer-section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-white);
+        margin-bottom: 1.5rem;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-links a {
+        color: var(--text-gray);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: var(--primary-orange);
+    }
+
+    .footer-contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        color: var(--text-gray);
+    }
+
+    .footer-contact-item i {
+        color: var(--primary-orange);
+        margin-top: 0.25rem;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 2rem;
+        margin-top: 2rem;
+        text-align: center;
+        color: var(--text-gray);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .footer-bottom p {
+        margin: 0;
+        word-wrap: break-word;
+    }
+
+    /* WhatsApp Float Button */
+    .whatsapp-float {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        bottom: 30px;
+        right: 30px;
+        background-color: #25d366;
+        color: var(--text-white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+        z-index: 1000;
+        text-decoration: none;
+        transition: box-shadow 0.3s ease;
+        animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
+    }
+
+    .whatsapp-float:hover {
+        animation-play-state: running;
+        box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6),
+                    0 0 0 8px rgba(37, 211, 102, 0.3);
+    }
+
+    /* Animação de flutuação */
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    /* Animação de pulso */
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4),
+                        0 0 0 0 rgba(37, 211, 102, 0.7);
+        }
+        50% {
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4),
+                        0 0 0 10px rgba(37, 211, 102, 0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .filter-bar {
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .filter-group {
+            min-width: 100%;
+        }
+
+        .filter-submit-btn {
+            width: 100%;
+        }
+
+        .about-content {
+            flex-direction: column;
+        }
+
+        .about-image {
+            flex: 1;
+            width: 100%;
+        }
+
+        .services-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="text-center mb-5">
-        {% if landing_page.logo %}
-        <img src="{{ landing_page.logo.url }}" alt="{{ landing_page.business_name }}" class="mb-4" style="max-height: 100px;">
-        {% endif %}
-        <h1 class="display-4">{{ landing_page.business_name }}</h1>
-        <p class="lead">{{ landing_page.business_description }}</p>
-    </div>
+{% include "landings/themes/default/_includes/header.html" %}
 
-    {% if featured_properties %}
-    <section class="mb-5">
-        <h2 class="mb-4">{% trans "Imóveis em Destaque" %}</h2>
-        <div class="row g-4">
-            {% for property in featured_properties %}
-            <div class="col-lg-4 col-md-6">
-                {% include "landings/_components/property_card.html" with property=property %}
+<!-- Hero Section -->
+{% section_enabled site 'hero' as hero_enabled %}
+{% if hero_enabled %}
+{% section_config site 'hero' as hero_config %}
+<section class="hero-section" id="inicio" style="{% if hero_config|get_item:'background_image' %}background-image: url('{{ hero_config|get_item:"background_image" }}');{% endif %}">
+    <div class="hero-background"></div>
+    <div class="container">
+        {% with text_position=hero_config|get_item:'text_position'|default:'left' %}
+        <div class="hero-content hero-content-{{ text_position }}" style="text-align: {{ text_position }};">
+            <h1 class="hero-title">
+                {{ hero_config|get_item:'title'|default:site.business_name }}
+            </h1>
+            {% if hero_config|get_item:'subtitle' %}
+            <p class="hero-subtitle" style="font-size: 1.2rem; margin-top: 1rem; opacity: 0.9;">
+                {{ hero_config|get_item:'subtitle' }}
+            </p>
+            {% endif %}
+            {% if hero_config|get_item:'show_cta' %}
+            <div class="hero-actions" style="margin-top: 2rem;">
+                <a href="#imoveis" class="btn btn-primary btn-lg">
+                    {{ hero_config|get_item:'cta_text'|default:"Ver Imóveis" }}
+                </a>
+                {% if site.whatsapp %}
+                <a href="https://wa.me/{{ site.whatsapp }}" class="btn btn-success btn-lg" target="_blank">
+                    <i class="fa-brands fa-whatsapp"></i> {% trans "Fale Conosco" %}
+                </a>
+                {% endif %}
             </div>
-            {% endfor %}
+            {% endif %}
         </div>
-    </section>
-    {% endif %}
+        {% endwith %}
 
-    <section>
-        <h2 class="mb-4">{% trans "Todos os Imóveis" %}</h2>
+        <!-- Barra de Filtros -->
+        <div class="filter-bar">
+            <form method="get" action="#imoveis" class="filter-form" id="propertyFilterForm">
+                <div class="filter-group">
+                    <select name="transaction_type" id="transaction_type">
+                        <option value="" disabled selected>{% trans "Finalidade" %}</option>
+                        <option value="sale">{% trans "Venda" %}</option>
+                        <option value="rent">{% trans "Aluguel" %}</option>
+                        <option value="both">{% trans "Venda/Aluguel" %}</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select name="property_type" id="property_type">
+                        <option value="" disabled selected>{% trans "Tipo do imóvel" %}</option>
+                        <option value="house">{% trans "Casa" %}</option>
+                        <option value="apartment">{% trans "Apartamento" %}</option>
+                        <option value="commercial">{% trans "Comercial" %}</option>
+                        <option value="land">{% trans "Terreno" %}</option>
+                        <option value="farm">{% trans "Fazenda" %}</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select name="city" id="city">
+                        <option value="" disabled selected>{% trans "Cidade" %}</option>
+                        {% regroup properties by city as cities_list %}
+                        {% for city in cities_list %}
+                        <option value="{{ city.grouper }}">{{ city.grouper }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="filter-submit-btn">
+                    {% trans "Encontre seu imóvel" %}
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Seção Imóveis -->
+{% section_enabled site 'properties' as properties_enabled %}
+{% if properties_enabled %}
+{% section_config site 'properties' as properties_config %}
+<section id="imoveis" class="properties-section">
+    <div class="container">
+        <h2>{{ properties_config.title|default:_("Imóveis Disponíveis") }}</h2>
+        {% if properties_config.subtitle %}
+        <p class="lead">{{ properties_config.subtitle }}</p>
+        {% endif %}
+        {% if properties %}
         <div class="row g-4">
             {% for property in properties %}
             <div class="col-lg-4 col-md-6">
-                {% include "landings/_components/property_card.html" with property=property %}
-            </div>
-            {% empty %}
-            <div class="col-12 text-center py-5">
-                <p class="text-muted">{% trans "Nenhum imóvel disponível." %}</p>
+                {% include "landings/_components/property_card.html" with property=property landing_page=site %}
             </div>
             {% endfor %}
         </div>
-    </section>
-</div>
-
-{% include "landings/_components/contact_section.html" %}
-
-{% if landing_page.whatsapp %}
-<a href="https://wa.me/{{ landing_page.whatsapp }}"
-   style="position: fixed; width: 60px; height: 60px; bottom: 30px; right: 30px;
-          background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center;
-          font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.3); z-index: 1000;
-          display: flex; align-items: center; justify-content: center;"
-   target="_blank">
-    <i class="bi bi-whatsapp"></i>
-</a>
+        {% else %}
+        <div class="text-center py-5">
+            <p class="text-muted" style="font-size: 1.2rem;">{% trans "Nenhum imóvel disponível no momento." %}</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
 {% endif %}
+
+<!-- Seção Sobre Mim -->
+{% section_enabled site 'about' as about_enabled %}
+{% if about_enabled %}
+{% section_config site 'about' as about_config %}
+<section class="about-section" id="sobre">
+    <div class="container">
+        <div class="about-content" style="flex-direction: {% if about_config|get_item:'image_position' == 'right' %}row-reverse{% else %}row{% endif %};">
+            <div class="about-image">
+                {% if about_config|get_item:'image' %}
+                <img src="{{ about_config|get_item:'image' }}" alt="{{ site.business_name }}">
+                {% elif site.hero_image %}
+                <img src="{{ site.hero_image.url }}" alt="{{ site.business_name }}">
+                {% else %}
+                <div style="width: 100%; height: 500px; background: linear-gradient(135deg, var(--primary-orange) 0%, #ff8c5a 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                    {% trans "Foto do Corretor" %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="about-text">
+                <h2 class="section-title">{{ about_config|get_item:'title'|default:"Sobre mim" }}</h2>
+                <h3 class="about-name">{{ site.business_name|default:"Nome do Corretor" }}</h3>
+                {% if about_config|get_item:'description' %}
+                <div class="about-description">
+                    {{ about_config|get_item:'description'|linebreaks }}
+                </div>
+                {% else %}
+                <p class="about-description">
+                    {% trans "Desde 2017, atuo no mercado imobiliário de Canoinhas e região com um propósito muito claro: transformar sonhos em realidade." %}
+                </p>
+                <p class="about-description">
+                    {% trans "Mais do que intermediar negociações, meu compromisso é oferecer um atendimento estratégico, próximo e personalizado. Acredito que cada imóvel carrega uma história, e meu papel é ajudar meus clientes a fazerem as melhores escolhas - com segurança, clareza e confiança." %}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Seção Serviços -->
+{% section_enabled site 'services' as services_enabled %}
+{% if services_enabled %}
+{% section_config site 'services' as services_config %}
+<section class="services-section" id="servicos">
+    <div class="container">
+        <h2 class="services-title">{{ services_config|get_item:'title'|default:"O que oferecemos" }}</h2>
+        {% if services_config|get_item:'subtitle' %}
+        <p style="text-align: center; color: var(--text-gray); font-size: 1.1rem; margin-bottom: 3rem;">
+            {{ services_config|get_item:'subtitle' }}
+        </p>
+        {% endif %}
+        <div class="services-grid">
+            {% if services_config|get_item:'items' %}
+                {% for item in services_config|get_item:'items' %}
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <h3 class="service-title">{{ item }}</h3>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="bi bi-person-check"></i>
+                </div>
+                <h3 class="service-title">{% trans "Atendimento Personalizado" %}</h3>
+                <p class="service-description">
+                    {% trans "Estou aqui para transformar o processo de compra, venda e locação em uma jornada segura e satisfatória, priorizando o que realmente importa para meus clientes." %}
+                </p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <h3 class="service-title">{% trans "Avaliação Imobiliária" %}</h3>
+                <p class="service-description">
+                    {% trans "Ofereço serviços de avaliação imobiliária, produzindo laudos técnicos para imóveis urbanos e rurais, adequados a diferentes necessidades." %}
+                </p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <h3 class="service-title">{% trans "Regularização Jurídica" %}</h3>
+                <p class="service-description">
+                    {% trans "Trabalho com regularização de documentação imobiliária – um processo complexo e fundamental para garantir a segurança jurídica de um imóvel." %}
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% include "landings/themes/default/_includes/footer.html" %}
 {% endblock %}
 
+{# Sobrescreve o bloco footer para não mostrar o footer padrão do base #}
+{% block footer %}
+{% endblock %}
 
+{% block extra_js %}
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar-transparent');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
 
+    // Smooth scroll para links de navegação
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Filtro de imóveis (pode ser expandido com HTMX)
+    document.getElementById('propertyFilterForm')?.addEventListener('submit', function(e) {
+        // Implementação básica - pode ser melhorada com HTMX para filtros dinâmicos
+        const params = new URLSearchParams();
+        const transactionType = document.getElementById('transaction_type').value;
+        const propertyType = document.getElementById('property_type').value;
+        const city = document.getElementById('city').value;
+
+        if (transactionType) params.append('transaction_type', transactionType);
+        if (propertyType) params.append('property_type', propertyType);
+        if (city) params.append('city', city);
+
+        if (params.toString()) {
+            window.location.href = '#imoveis?' + params.toString();
+        }
+    });
+</script>
+{% endblock %}

@@ -130,3 +130,14 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"✅ {installed_count} tema(s) instalado(s) com sucesso!\n"))
         else:
             self.stdout.write(self.style.WARNING("⚠️  Nenhum tema foi instalado\n"))
+
+
+
+
+
+
+
+
+
+
+

@@ -115,3 +115,14 @@ echo ""
 echo -e "${GREEN}🎉 Sistema pronto para gerar SSL automaticamente!${NC}"
 echo ""
 
+
+
+
+
+
+
+
+
+
+
+

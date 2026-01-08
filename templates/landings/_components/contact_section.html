@@ -12,13 +12,13 @@
 
                 <div class="row g-4">
                     {# WhatsApp #}
-                    {% if landing_page.whatsapp %}
+                    {% if site.whatsapp %}
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body text-center py-4">
                                 <i class="bi bi-whatsapp text-success fs-1 mb-3"></i>
                                 <h5 class="card-title">WhatsApp</h5>
-                                <a href="https://wa.me/{{ landing_page.whatsapp }}"
+                                <a href="https://wa.me/{{ site.whatsapp }}"
                                    class="btn btn-success mt-2"
                                    target="_blank">
                                     {% trans "Chamar" %}
@@ -29,14 +29,14 @@
                     {% endif %}
 
                     {# Telefone #}
-                    {% if landing_page.phone %}
+                    {% if site.phone %}
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body text-center py-4">
                                 <i class="bi bi-telephone text-primary fs-1 mb-3"></i>
                                 <h5 class="card-title">{% trans "Telefone" %}</h5>
-                                <p class="mb-2">{{ landing_page.phone }}</p>
-                                <a href="tel:{{ landing_page.phone }}" class="btn btn-primary mt-2">
+                                <p class="mb-2">{{ site.phone }}</p>
+                                <a href="tel:{{ site.phone }}" class="btn btn-primary mt-2">
                                     {% trans "Ligar" %}
                                 </a>
                             </div>
@@ -45,14 +45,14 @@
                     {% endif %}
 
                     {# E-mail #}
-                    {% if landing_page.email %}
+                    {% if site.email %}
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body text-center py-4">
                                 <i class="bi bi-envelope text-info fs-1 mb-3"></i>
                                 <h5 class="card-title">E-mail</h5>
-                                <p class="small mb-2">{{ landing_page.email }}</p>
-                                <a href="mailto:{{ landing_page.email }}" class="btn btn-info mt-2">
+                                <p class="small mb-2">{{ site.email }}</p>
+                                <a href="mailto:{{ site.email }}" class="btn btn-info mt-2">
                                     {% trans "Enviar E-mail" %}
                                 </a>
                             </div>
@@ -64,6 +64,7 @@
         </div>
     </div>
 </section>
+
 
 
 

@@ -98,6 +98,12 @@ body {
     display: block;
 }
 
+/* Ajustes do Swiper no tema minimal */
+.property-card-minimal .property-swiper {
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+}
+
 .property-card-minimal .content {
     padding: 1.5rem;
 }
@@ -253,10 +259,10 @@ body {
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <a href="#" class="logo">
-                {% if landing_page.logo %}
-                <img src="{{ landing_page.logo.url }}" alt="{{ landing_page.business_name }}" style="max-height: 40px;">
+                {% if site.logo %}
+                <img src="{{ site.logo.url }}" alt="{{ site.business_name }}" style="max-height: 40px;">
                 {% else %}
-                {{ landing_page.business_name }}
+                {{ site.business_name }}
                 {% endif %}
             </a>
             <nav class="d-none d-md-block">
@@ -270,12 +276,12 @@ body {
 <!-- Hero -->
 <section class="hero-minimal">
     <div class="container">
-        <h1>{{ landing_page.business_name }}</h1>
-        <p>{{ landing_page.business_description|default:"Imóveis Selecionados" }}</p>
+        <h1>{{ site.business_name }}</h1>
+        <p>{{ site.business_description|default:"Imóveis Selecionados" }}</p>
         <div>
             <a href="#imoveis" class="btn-minimal">{% trans "Ver Imóveis" %}</a>
-            {% if landing_page.whatsapp %}
-            <a href="https://wa.me/{{ landing_page.whatsapp }}" class="btn-minimal-outline ms-3" target="_blank">
+            {% if site.whatsapp %}
+            <a href="https://wa.me/{{ site.whatsapp }}" class="btn-minimal-outline ms-3" target="_blank">
                 {% trans "Contato" %}
             </a>
             {% endif %}
@@ -292,13 +298,47 @@ body {
         <div class="grid-minimal">
             {% for property in featured_properties %}
             <div class="property-card-minimal">
-                {% if property.main_image %}
-                <img src="{{ property.main_image.url }}" alt="{{ property.title }}">
-                {% else %}
-                <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
-                    <i class="bi bi-house-fill text-white" style="font-size: 4rem;"></i>
+                {# Swiper para galeria de imagens #}
+                <div class="swiper property-swiper" style="height: 250px;">
+                    <div class="swiper-wrapper">
+                        {# Imagem principal #}
+                        {% if property.main_image and property.main_image.url and 'placeholder' not in property.main_image.name|default:'' %}
+                        <div class="swiper-slide">
+                            <img src="{{ property.main_image.url }}"
+                                 class="w-100 h-100"
+                                 alt="{{ property.title }}"
+                                 style="object-fit: cover;">
+                        </div>
+                        {% endif %}
+
+                        {# Imagens adicionais #}
+                        {% for image in property.images.all %}
+                        {% if image.image and image.image.url %}
+                        <div class="swiper-slide">
+                            <img src="{{ image.image.url }}"
+                                 class="w-100 h-100"
+                                 alt="{{ image.caption|default:property.title }}"
+                                 style="object-fit: cover;">
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+
+                        {# Se não houver nenhuma imagem, mostra a imagem padrão #}
+                        {% if not property.main_image or not property.main_image.url or 'placeholder' in property.main_image.name|default:'' %}
+                            {% if not property.images.all %}
+                            <div class="swiper-slide">
+                                <img src="{% static 'imgs/imagem_indisponivel.png' %}"
+                                     class="w-100 h-100"
+                                     alt="{{ property.title }}"
+                                     style="object-fit: cover;">
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
                 </div>
-                {% endif %}
 
                 <div class="content">
                     <h3>{{ property.title|truncatewords:6 }}</h3>
@@ -311,8 +351,8 @@ body {
                         <span>{{ property.area }} m²</span>
                     </div>
                     <div class="price">{{ property.get_price_display }}</div>
-                    {% if landing_page.whatsapp %}
-                    <a href="https://wa.me/{{ landing_page.whatsapp }}?text=Interesse: {{ property.title }}"
+                    {% if site.whatsapp %}
+                    <a href="https://wa.me/{{ site.whatsapp }}?text=Interesse: {{ property.title }}"
                        class="btn-minimal w-100 text-center"
                        target="_blank">
                         {% trans "Tenho Interesse" %}
@@ -334,13 +374,47 @@ body {
         <div class="grid-minimal">
             {% for property in properties %}
             <div class="property-card-minimal">
-                {% if property.main_image %}
-                <img src="{{ property.main_image.url }}" alt="{{ property.title }}">
-                {% else %}
-                <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
-                    <i class="bi bi-house-fill text-white" style="font-size: 4rem;"></i>
+                {# Swiper para galeria de imagens #}
+                <div class="swiper property-swiper" style="height: 250px;">
+                    <div class="swiper-wrapper">
+                        {# Imagem principal #}
+                        {% if property.main_image and property.main_image.url and 'placeholder' not in property.main_image.name|default:'' %}
+                        <div class="swiper-slide">
+                            <img src="{{ property.main_image.url }}"
+                                 class="w-100 h-100"
+                                 alt="{{ property.title }}"
+                                 style="object-fit: cover;">
+                        </div>
+                        {% endif %}
+
+                        {# Imagens adicionais #}
+                        {% for image in property.images.all %}
+                        {% if image.image and image.image.url %}
+                        <div class="swiper-slide">
+                            <img src="{{ image.image.url }}"
+                                 class="w-100 h-100"
+                                 alt="{{ image.caption|default:property.title }}"
+                                 style="object-fit: cover;">
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+
+                        {# Se não houver nenhuma imagem, mostra a imagem padrão #}
+                        {% if not property.main_image or not property.main_image.url or 'placeholder' in property.main_image.name|default:'' %}
+                            {% if not property.images.all %}
+                            <div class="swiper-slide">
+                                <img src="{% static 'imgs/imagem_indisponivel.png' %}"
+                                     class="w-100 h-100"
+                                     alt="{{ property.title }}"
+                                     style="object-fit: cover;">
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
                 </div>
-                {% endif %}
 
                 <div class="content">
                     <h3>{{ property.title|truncatewords:6 }}</h3>
@@ -353,8 +427,8 @@ body {
                         <span>{{ property.area }} m²</span>
                     </div>
                     <div class="price">{{ property.get_price_display }}</div>
-                    {% if landing_page.whatsapp %}
-                    <a href="https://wa.me/{{ landing_page.whatsapp }}?text=Interesse: {{ property.title }}"
+                    {% if site.whatsapp %}
+                    <a href="https://wa.me/{{ site.whatsapp }}?text=Interesse: {{ property.title }}"
                        class="btn-minimal w-100 text-center"
                        target="_blank">
                         {% trans "Tenho Interesse" %}
@@ -378,24 +452,24 @@ body {
         <p>{% trans "Agende uma visita e conheça nossos imóveis" %}</p>
 
         <div class="contact-methods">
-            {% if landing_page.whatsapp %}
-            <a href="https://wa.me/{{ landing_page.whatsapp }}" class="contact-item" target="_blank">
+            {% if site.whatsapp %}
+            <a href="https://wa.me/{{ site.whatsapp }}" class="contact-item" target="_blank">
                 <i class="bi bi-whatsapp fs-1"></i><br>
                 WhatsApp
             </a>
             {% endif %}
 
-            {% if landing_page.phone %}
-            <a href="tel:{{ landing_page.phone }}" class="contact-item">
+            {% if site.phone %}
+            <a href="tel:{{ site.phone }}" class="contact-item">
                 <i class="bi bi-telephone fs-1"></i><br>
-                {{ landing_page.phone }}
+                {{ site.phone }}
             </a>
             {% endif %}
 
-            {% if landing_page.email %}
-            <a href="mailto:{{ landing_page.email }}" class="contact-item">
+            {% if site.email %}
+            <a href="mailto:{{ site.email }}" class="contact-item">
                 <i class="bi bi-envelope fs-1"></i><br>
-                {{ landing_page.email }}
+                {{ site.email }}
             </a>
             {% endif %}
         </div>
@@ -403,8 +477,8 @@ body {
 </section>
 
 <!-- WhatsApp Float -->
-{% if landing_page.whatsapp %}
-<a href="https://wa.me/{{ landing_page.whatsapp }}"
+{% if site.whatsapp %}
+<a href="https://wa.me/{{ site.whatsapp }}"
    class="whatsapp-float-minimal"
    target="_blank"
    title="{% trans 'WhatsApp' %}">
@@ -429,6 +503,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 </script>
 {% endblock %}
+
+
+
+
+
+
 
 
 

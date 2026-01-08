@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div class="empty-state">
+    <div class="empty-state-icon">
+        <i class="{{ icon|default:'fa-solid fa-inbox' }}"></i>
+    </div>
+    <h3>{{ title|default:_("Nenhum item encontrado") }}</h3>
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+    {% if action_url and action_text %}
+    <a href="{% url action_url %}" class="btn-create" style="margin-top: 1rem;">
+        <i class="fa-solid fa-plus"></i>
+        {{ action_text }}
+    </a>
+    {% endif %}
+</div>
+

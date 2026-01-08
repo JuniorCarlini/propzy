@@ -64,6 +64,55 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Acordeão do menu lateral
+    function toggleAccordion(event, element) {
+        event.preventDefault();
+        const menuItem = element.closest('.menu-item-accordion');
+        const submenu = menuItem.querySelector('.submenu');
+
+        if (menuItem && submenu) {
+            const isActive = menuItem.classList.contains('active');
+
+            // Fechar outros acordeões (opcional - remover se quiser múltiplos abertos)
+            document.querySelectorAll('.menu-item-accordion').forEach(item => {
+                if (item !== menuItem) {
+                    item.classList.remove('active');
+                    const otherSubmenu = item.querySelector('.submenu');
+                    if (otherSubmenu) {
+                        otherSubmenu.classList.remove('show');
+                    }
+                }
+            });
+
+            // Toggle do acordeão atual
+            if (isActive) {
+                menuItem.classList.remove('active');
+                submenu.classList.remove('show');
+            } else {
+                menuItem.classList.add('active');
+                submenu.classList.add('show');
+            }
+        }
+    }
+
+    // Tornar função global
+    window.toggleAccordion = toggleAccordion;
+
+    // Abrir acordeão automaticamente se houver item ativo
+    document.addEventListener('DOMContentLoaded', function() {
+        const activeSubmenuLink = document.querySelector('.submenu-link.active');
+        if (activeSubmenuLink) {
+            const accordionItem = activeSubmenuLink.closest('.menu-item-accordion');
+            if (accordionItem) {
+                accordionItem.classList.add('active');
+                const submenu = accordionItem.querySelector('.submenu');
+                if (submenu) {
+                    submenu.classList.add('show');
+                }
+            }
+        }
+    });
+
     // User Menu Dropdown
     const userAvatar = document.getElementById('userAvatar');
     const userMenuDropdown = document.getElementById('userMenuDropdown');

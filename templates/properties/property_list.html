@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Imóveis" %} | Propzy{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Apenas estilos específicos para responsividade da tabela de imóveis */
+    @media (max-width: 768px) {
+        .properties-table thead th:nth-child(n+3),
+        .properties-table tbody td:nth-child(n+3) {
+            display: none;
+        }
+
+        .properties-table thead th:first-child,
+        .properties-table tbody td:first-child {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="list-container fade-in">
+    {% include "partials/onboarding_progress.html" %}
+    <div class="list-header">
+        <div class="list-header-content">
+            <h1>{% trans "Imóveis" %}</h1>
+            <p>{% trans "Gerencie seus imóveis e propriedades." %}</p>
+        </div>
+        <div class="list-actions">
+            <a href="{% url 'properties:property_create' %}" class="btn-create">
+                <i class="fa-solid fa-plus"></i>
+                {% trans "Novo Imóvel" %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="list-filters">
+        <form method="get" class="filters-form">
+            <div class="filter-group">
+                <label for="q">{% trans "Buscar" %}</label>
+                {% trans "Buscar imóveis..." as placeholder_search %}
+                <input
+                    type="text"
+                    id="q"
+                    name="q"
+                    class="filter-input"
+                    placeholder="{{ placeholder_search }}"
+                    value="{{ search_query }}"
+                    autocomplete="off"
+                >
+            </div>
+            <div class="filter-actions">
+                {% if search_query %}
+                    <a class="btn-filter btn-filter-clear" href="{% url 'properties:property_list' %}">
+                        <i class="fa-solid fa-times"></i>
+                        {% trans "Limpar filtros" %}
+                    </a>
+                {% else %}
+                    <button class="btn-filter btn-filter-primary" type="submit">
+                        <i class="fa-solid fa-search"></i>
+                        {% trans "Filtrar" %}
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    {% if page_obj %}
+    <div class="list-table-container">
+        <table class="list-table properties-table">
+            <thead>
+                <tr>
+                    <th>{% trans "Imóvel" %}</th>
+                    <th class="d-none d-md-table-cell">{% trans "Tipo" %}</th>
+                    <th class="d-none d-lg-table-cell">{% trans "Localização" %}</th>
+                    <th class="d-none d-xl-table-cell">{% trans "Preço" %}</th>
+                    <th class="d-none d-sm-table-cell" style="text-align: center;">{% trans "Status" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for property in page_obj %}
+                <tr onclick="window.location.href='{% url 'properties:property_update' property.pk %}'" style="cursor: pointer;">
+                    <td>
+                        <span class="list-item-name">{{ property.title|truncatewords:8 }}</span>
+                        <div class="list-item-secondary">
+                            {% if property.is_featured %}
+                            <span class="list-item-badge featured">
+                                <i class="fa-solid fa-star"></i>
+                                {% trans "Destaque" %}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="d-none d-md-table-cell">
+                        <span class="list-item-badges">
+                            <span class="list-item-badge">{{ property.get_property_type_display }}</span>
+                            <span class="list-item-badge">{{ property.get_transaction_type_display }}</span>
+                        </span>
+                    </td>
+                    <td class="d-none d-lg-table-cell">
+                        <span class="list-item-secondary">{{ property.city }}/{{ property.state }}</span>
+                    </td>
+                    <td class="d-none d-xl-table-cell">
+                        <span class="list-item-name">{{ property.get_price_display }}</span>
+                    </td>
+                    <td class="d-none d-sm-table-cell" style="text-align: center;">
+                        {% if property.is_active %}
+                            <span class="list-item-status-badge active">
+                                <span class="list-item-status-dot"></span>
+                                {% trans "Ativo" %}
+                            </span>
+                        {% else %}
+                            <span class="list-item-status-badge inactive">
+                                <span class="list-item-status-dot"></span>
+                                {% trans "Inativo" %}
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% include "includes/pagination.html" %}
+
+    {% else %}
+    <div class="list-table-container">
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fa-solid fa-home"></i>
+            </div>
+            <h3>{% trans "Nenhum imóvel encontrado" %}</h3>
+            {% if search_query %}
+            <p>{% trans "Tente ajustar os termos da busca" %}</p>
+            {% else %}
+            <p>{% trans "Ainda não há imóveis cadastrados" %}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,890 @@
+{% extends "base.html" %}
+{% load static i18n landings_tags %}
+
+{% block title %}{% trans "Configurar Seções do Tema" %} | Propzy{% endblock %}
+
+{% block extra_head %}
+<style>
+    .theme-sections-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .config-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .config-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
+        line-height: 0.9;
+    }
+
+    .config-header-content p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+        margin-top: 0;
+        line-height: 1;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .sections-editor {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    /* Painel lateral com lista de seções */
+    .sections-sidebar {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+        height: fit-content;
+        position: sticky;
+        top: 2rem;
+        box-shadow: var(--card-shadow);
+    }
+
+    .sections-sidebar h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem;
+        border-radius: 10px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+    }
+
+    .section-item:hover {
+        background: var(--bg-tertiary);
+    }
+
+    .section-item.active {
+        background: rgba(0, 109, 255, 0.1);
+        border-color: var(--primary-color);
+    }
+
+    .section-item-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: var(--bg-tertiary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        font-size: 1.125rem;
+        flex-shrink: 0;
+    }
+
+    .section-item.active .section-item-icon {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .section-item-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .section-item-name {
+        font-weight: 500;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        margin-bottom: 0.125rem;
+    }
+
+    .section-item-description {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        line-height: 1.3;
+    }
+
+    .section-item-toggle {
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    .section-item.dragging {
+        opacity: 0.5;
+        background: var(--bg-tertiary);
+    }
+
+    .section-item.drag-over {
+        border-top: 3px solid var(--primary-color);
+    }
+
+    .section-item-handle {
+        cursor: move;
+        color: var(--text-secondary);
+        margin-right: 0.5rem;
+        padding: 0.25rem;
+    }
+
+    .section-item-handle:hover {
+        color: var(--primary-color);
+    }
+
+    .sections-list-sortable {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .btn-reset-order {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-reset-order:hover {
+        background: var(--bg-secondary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-1px);
+    }
+
+    /* Painel principal de configuração */
+    .section-config-panel {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--card-shadow);
+    }
+
+    .section-config-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-config-title {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .section-config-title-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .section-config-title-text h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .section-config-title-text p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0.25rem 0 0 0;
+    }
+
+    /* Formulário */
+    .section-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        font-family: inherit;
+        transition: all 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 109, 255, 0.1);
+    }
+
+    .form-group .help-text {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+    }
+
+    .form-group.checkbox-group {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .form-group.checkbox-group input[type="checkbox"] {
+        width: auto;
+    }
+
+    .form-group.checkbox-group label {
+        margin-bottom: 0;
+        cursor: pointer;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .btn-save {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-save:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 109, 255, 0.2);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        opacity: 0.3;
+        margin-bottom: 1rem;
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 26px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--bg-tertiary);
+        transition: 0.3s;
+        border-radius: 26px;
+        border: 1px solid var(--border-color);
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+    }
+
+    .image-preview {
+        margin-top: 0.5rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        max-width: 200px;
+    }
+
+    /* Estilos do Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+        opacity: 1;
+    }
+
+    .modal-content {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        padding: 0;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-content {
+        transform: scale(1);
+    }
+
+    .modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-body.text-center {
+        text-align: center;
+    }
+
+    .modal-body p {
+        margin: 0 0 0.75rem 0;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .modal-body p strong {
+        color: var(--text-primary);
+        font-size: 1rem;
+        display: block;
+        margin-top: 0.5rem;
+    }
+
+    .modal-actions {
+        padding: 1.5rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+    }
+
+    .btn-modal-cancel,
+    .btn-modal-confirm {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-modal-cancel {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-modal-cancel:hover {
+        background: var(--bg-primary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-modal-confirm {
+        background: var(--color-danger);
+        color: white;
+    }
+
+    .btn-modal-confirm:hover {
+        background: var(--color-danger-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    @media (max-width: 1024px) {
+        .sections-editor {
+            grid-template-columns: 1fr;
+        }
+
+        .sections-sidebar {
+            position: static;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="theme-sections-container fade-in">
+    <div class="config-header">
+        <div class="config-header-content">
+            <h1>{% trans "Configurar Seções do Site" %}</h1>
+            <p>{% trans "Habilite e configure cada seção do seu site." %}</p>
+        </div>
+        <a href="{% url 'landings:dashboard_config' %}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            {% trans "Voltar" %}
+        </a>
+    </div>
+
+    <div class="sections-editor">
+        <!-- Sidebar com lista de seções -->
+        <div class="sections-sidebar">
+            <h3>{% trans "Seções Disponíveis" %}</h3>
+            <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                <i class="fa-solid fa-info-circle"></i>
+                {% trans "Arraste para reordenar" %}
+            </p>
+            <div id="sections-list" class="sections-list-sortable">
+            {% for section in available_sections %}
+            {% with section_config=sections_config|get_item:section.key %}
+            <div class="section-item {% if forloop.first %}active{% endif %}"
+                 id="section-item-{{ section.key }}"
+                 data-section-key="{{ section.key }}"
+                 draggable="true">
+                <div class="section-item-handle" title="{% trans 'Arraste para reordenar' %}">
+                    <i class="fa-solid fa-grip-vertical"></i>
+                </div>
+                <div class="section-item-icon" onclick="loadSectionConfig('{{ section.key }}')" style="cursor: pointer;">
+                    <i class="fa-solid {{ section.icon }}"></i>
+                </div>
+                <div class="section-item-info" onclick="loadSectionConfig('{{ section.key }}')" style="cursor: pointer;">
+                    <div class="section-item-name">{{ section.name }}</div>
+                    <div class="section-item-description">{{ section.description }}</div>
+                </div>
+                <div class="section-item-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox"
+                               {% if not section_config or section_config.enabled != False %}checked{% endif %}
+                               onchange="toggleSection('{{ section.key }}', this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+            </div>
+
+            <!-- Botão para redefinir ordem -->
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                <button type="button" onclick="showResetOrderModal()" class="btn-reset-order">
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                    {% trans "Redefinir Ordem" %}
+                </button>
+            </div>
+        </div>
+
+        <!-- Painel de configuração -->
+        <div class="section-config-panel">
+            <div id="section-config-content">
+                {% if available_sections %}
+                    {% with first_section=available_sections|first %}
+                        {% include "landings/dashboard/partials/section_form.html" with section_key=first_section.key form=form %}
+                    {% endwith %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fa-solid fa-palette"></i>
+                        </div>
+                        <p>{% trans "Nenhuma seção disponível" %}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmação para redefinir ordem -->
+<div id="reset-order-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>{% trans "Redefinir Ordem das Seções" %}</h3>
+        </div>
+        <div class="modal-body text-center">
+            <p>{% trans "Tem certeza que deseja redefinir a ordem das seções para o padrão?" %}</p>
+            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.5rem;">
+                {% trans "Esta ação irá restaurar a ordem original das seções definida pelo tema." %}
+            </p>
+        </div>
+        <div class="modal-actions">
+            <button type="button" id="btn-reset-order-modal-cancel" class="btn-modal-cancel">
+                {% trans "Cancelar" %}
+            </button>
+            <button type="button" id="btn-reset-order-modal-confirm" class="btn-modal-confirm">
+                <i class="fa-solid fa-arrow-rotate-left"></i>
+                {% trans "Redefinir" %}
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+<script>
+// Drag and Drop para reordenar seções
+document.addEventListener('DOMContentLoaded', function() {
+    const sectionsList = document.getElementById('sections-list');
+    if (!sectionsList) return;
+
+    let draggedElement = null;
+    let draggedIndex = null;
+
+    // Adiciona event listeners para cada item
+    sectionsList.querySelectorAll('.section-item').forEach((item, index) => {
+        item.addEventListener('dragstart', function(e) {
+            draggedElement = this;
+            draggedIndex = index;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        });
+
+        item.addEventListener('dragend', function(e) {
+            this.classList.remove('dragging');
+            sectionsList.querySelectorAll('.section-item').forEach(item => {
+                item.classList.remove('drag-over');
+            });
+        });
+
+        item.addEventListener('dragover', function(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+
+            const afterElement = getDragAfterElement(sectionsList, e.clientY);
+            const dragging = sectionsList.querySelector('.dragging');
+
+            if (afterElement == null) {
+                sectionsList.appendChild(dragging);
+            } else {
+                sectionsList.insertBefore(dragging, afterElement);
+            }
+
+            return false;
+        });
+
+        item.addEventListener('dragenter', function(e) {
+            if (this !== draggedElement) {
+                this.classList.add('drag-over');
+            }
+        });
+
+        item.addEventListener('dragleave', function(e) {
+            this.classList.remove('drag-over');
+        });
+
+        item.addEventListener('drop', function(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            if (draggedElement !== this) {
+                const allItems = Array.from(sectionsList.querySelectorAll('.section-item'));
+                const draggedIndex = allItems.indexOf(draggedElement);
+                const targetIndex = allItems.indexOf(this);
+
+                if (draggedIndex < targetIndex) {
+                    sectionsList.insertBefore(draggedElement, this.nextSibling);
+                } else {
+                    sectionsList.insertBefore(draggedElement, this);
+                }
+
+                // Salvar nova ordem
+                saveSectionsOrder();
+            }
+
+            this.classList.remove('drag-over');
+            return false;
+        });
+    });
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.section-item:not(.dragging)')];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function saveSectionsOrder() {
+        const items = Array.from(sectionsList.querySelectorAll('.section-item'));
+        const order = items.map(item => item.dataset.sectionKey);
+
+        const formData = new FormData();
+        formData.append('sections_order', JSON.stringify(order));
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+        fetch('{% url "landings:dashboard_theme_sections" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Feedback visual opcional
+                const savedIndicator = document.createElement('div');
+                savedIndicator.style.cssText = 'position: fixed; top: 20px; right: 20px; background: var(--color-success); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);';
+                savedIndicator.textContent = '{% trans "Ordem salva!" %}';
+                document.body.appendChild(savedIndicator);
+                setTimeout(() => savedIndicator.remove(), 2000);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao salvar ordem:', error);
+        });
+    }
+});
+
+function loadSectionConfig(sectionKey) {
+    // Atualizar item ativo na sidebar
+    document.querySelectorAll('.section-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    const activeItem = document.getElementById(`section-item-${sectionKey}`);
+    if (activeItem) {
+        activeItem.classList.add('active');
+    }
+
+    // Carregar formulário via HTMX
+    if (typeof htmx !== 'undefined') {
+        htmx.ajax('GET', `{% url 'landings:section_config_form' 'SECTION_KEY' %}`.replace('SECTION_KEY', sectionKey), {
+            target: '#section-config-content',
+            swap: 'innerHTML'
+        });
+    } else {
+        // Fallback caso HTMX não esteja carregado
+        fetch(`{% url 'landings:section_config_form' 'SECTION_KEY' %}`.replace('SECTION_KEY', sectionKey))
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('section-config-content').innerHTML = html;
+            });
+    }
+}
+
+function showResetOrderModal() {
+    const modal = document.getElementById('reset-order-modal');
+    if (modal) {
+        modal.classList.add('active');
+    }
+}
+
+function resetSectionsOrder() {
+    const formData = new FormData();
+    formData.append('sections_order', JSON.stringify([]));
+    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+    fetch('{% url "landings:dashboard_theme_sections" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Fechar modal
+            const modal = document.getElementById('reset-order-modal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+            // Recarregar a página para aplicar a ordem padrão
+            window.location.reload();
+        } else {
+            const modal = document.getElementById('reset-order-modal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+            alert('{% trans "Erro ao redefinir ordem das seções" %}');
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao redefinir ordem:', error);
+        const modal = document.getElementById('reset-order-modal');
+        if (modal) {
+            modal.classList.remove('active');
+        }
+        alert('{% trans "Erro ao redefinir ordem das seções" %}');
+    });
+}
+
+// Event listeners do modal
+document.addEventListener('DOMContentLoaded', function() {
+    const resetOrderModal = document.getElementById('reset-order-modal');
+    const btnResetOrderCancel = document.getElementById('btn-reset-order-modal-cancel');
+    const btnResetOrderConfirm = document.getElementById('btn-reset-order-modal-confirm');
+
+    if (resetOrderModal && btnResetOrderCancel && btnResetOrderConfirm) {
+        // Fechar ao clicar em cancelar
+        btnResetOrderCancel.addEventListener('click', function() {
+            resetOrderModal.classList.remove('active');
+        });
+
+        // Confirmar ao clicar em redefinir
+        btnResetOrderConfirm.addEventListener('click', function() {
+            resetSectionsOrder();
+        });
+
+        // Fechar ao clicar fora do modal
+        resetOrderModal.addEventListener('click', function(e) {
+            if (e.target === resetOrderModal) {
+                resetOrderModal.classList.remove('active');
+            }
+        });
+    }
+});
+
+function toggleSection(sectionKey, enabled) {
+    // Enviar via fetch para evitar reload da página
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const formData = new FormData();
+    formData.append('section_key', sectionKey);
+    formData.append(`${sectionKey}_enabled`, enabled ? 'on' : '');
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    fetch('{% url "landings:dashboard_theme_sections" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'HX-Request': 'true'  // Simular requisição HTMX para retornar apenas parcial
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Não precisa fazer nada, apenas salvar
+            console.log('Seção atualizada');
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao atualizar seção:', error);
+    });
+}
+</script>
+{% endblock %}
+

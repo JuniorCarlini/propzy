@@ -1,0 +1,296 @@
+{% extends "landings/themes/default/index.html" %}
+{% load static i18n %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+/* Página de listagem com fundo claro */
+body {
+    background-color: #f8f9fa !important;
+    color: #333333 !important;
+}
+
+.properties-list-header {
+    color: #333333;
+    padding: 2rem 0 2rem;
+    margin-top: 85px;
+}
+
+.properties-list-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #2c3e50;
+    line-height: 0.9;
+}
+
+.properties-list-header .lead {
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 0;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.properties-filters {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e9ecef;
+    width: 100%;
+}
+
+.properties-filters .form-label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 0.9rem;
+    margin-bottom: 0.1rem;
+}
+
+.properties-filters .form-control,
+.properties-filters .form-select {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.properties-filters .form-control:focus,
+.properties-filters .form-select:focus {
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    outline: none;
+}
+
+.properties-filters .btn-primary {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
+    border-radius: 8px;
+    padding: 0.65rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.properties-filters .btn-primary:hover {
+    background-color: #e55a2b;
+    border-color: #e55a2b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.properties-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2    rem;
+    padding: 0;
+    width: 100%;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.properties-grid .property-item {
+    width: 100%;
+    display: block;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.properties-grid .card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background-color: #ffffff !important;
+}
+
+.properties-grid .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.pagination .page-link {
+    color: #495057;
+    border-color: #dee2e6;
+    border-radius: 8px;
+    margin: 0 0.25rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+
+.pagination .page-link:hover {
+    color: var(--primary-orange);
+    background-color: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+    .properties-list-header {
+        padding: 4rem 0 2rem;
+    }
+
+    .properties-list-header h1 {
+        font-size: 2rem;
+    }
+
+    .properties-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .properties-filters {
+        padding: 1.5rem;
+    }
+
+    .properties-filters .col-md-2:last-child {
+        margin-top: 0;
+    }
+
+    .properties-filters .btn-primary {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "landings/themes/default/_includes/header.html" %}
+<!-- Header da Listagem -->
+<section class="properties-list-header">
+    <div class="container">
+        <h1>{% trans "Todos os Imóveis" %}</h1>
+        <p class="lead">{% trans "Encontre o imóvel perfeito para você" %}</p>
+    </div>
+</section>
+
+<!-- Filtros -->
+<section class="container">
+    <div class="properties-filters">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">{% trans "Buscar" %}</label>
+                <input type="text"
+                       name="q"
+                       class="form-control"
+                       placeholder="{% trans 'Título, descrição, endereço...' %}"
+                       value="{{ search_query }}">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">{% trans "Tipo" %}</label>
+                <select name="type" class="form-select">
+                    <option value="">{% trans "Todos" %}</option>
+                    <option value="house" {% if property_type_filter == 'house' %}selected{% endif %}>{% trans "Casa" %}</option>
+                    <option value="apartment" {% if property_type_filter == 'apartment' %}selected{% endif %}>{% trans "Apartamento" %}</option>
+                    <option value="commercial" {% if property_type_filter == 'commercial' %}selected{% endif %}>{% trans "Comercial" %}</option>
+                    <option value="land" {% if property_type_filter == 'land' %}selected{% endif %}>{% trans "Terreno" %}</option>
+                    <option value="farm" {% if property_type_filter == 'farm' %}selected{% endif %}>{% trans "Fazenda" %}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">{% trans "Transação" %}</label>
+                <select name="transaction" class="form-select">
+                    <option value="">{% trans "Todas" %}</option>
+                    <option value="sale" {% if transaction_filter == 'sale' %}selected{% endif %}>{% trans "Venda" %}</option>
+                    <option value="rent" {% if transaction_filter == 'rent' %}selected{% endif %}>{% trans "Aluguel" %}</option>
+                    <option value="both" {% if transaction_filter == 'both' %}selected{% endif %}>{% trans "Venda/Aluguel" %}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">{% trans "Cidade" %}</label>
+                <select name="city" class="form-select">
+                    <option value="">{% trans "Todas" %}</option>
+                    {% for city in cities %}
+                    <option value="{{ city }}" {% if city_filter == city %}selected{% endif %}>{{ city }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> {% trans "Filtrar" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Lista de Imóveis -->
+<section class="container">
+    {% if properties %}
+    <div class="properties-grid">
+        {% for property in properties %}
+        <div class="property-item">
+            {% include "landings/_components/property_card.html" with property=property landing_page=site %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    {% if properties.has_other_pages %}
+    <div class="pagination-wrapper">
+        <nav aria-label="{% trans 'Navegação de páginas' %}">
+            <ul class="pagination">
+                {% if properties.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ properties.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if property_type_filter %}&type={{ property_type_filter }}{% endif %}{% if transaction_filter %}&transaction={{ transaction_filter }}{% endif %}{% if city_filter %}&city={{ city_filter }}{% endif %}">
+                        {% trans "Anterior" %}
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in properties.paginator.page_range %}
+                    {% if properties.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% elif num > properties.number|add:'-3' and num < properties.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if property_type_filter %}&type={{ property_type_filter }}{% endif %}{% if transaction_filter %}&transaction={{ transaction_filter }}{% endif %}{% if city_filter %}&city={{ city_filter }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if properties.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ properties.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if property_type_filter %}&type={{ property_type_filter }}{% endif %}{% if transaction_filter %}&transaction={{ transaction_filter }}{% endif %}{% if city_filter %}&city={{ city_filter }}{% endif %}">
+                        {% trans "Próxima" %}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-house-x-fill text-muted" style="font-size: 4rem;"></i>
+        <h3 class="mt-3">{% trans "Nenhum imóvel encontrado" %}</h3>
+        <p class="text-muted">{% trans "Tente ajustar os filtros de busca." %}</p>
+        <a href="{% url 'landings:properties_list' %}" class="btn btn-primary">
+            {% trans "Ver Todos os Imóveis" %}
+        </a>
+    </div>
+    {% endif %}
+</section>
+
+{% include "landings/themes/default/_includes/footer.html" %}
+{% endblock %}
+

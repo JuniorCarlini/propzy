@@ -58,11 +58,14 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",  # Agendamento de tarefas periódicas do Celery
 ]
 
-# Apps internos do projeto propzy
+# Apps internos do projeto propzy (REORGANIZADOS - LIMPO)
 APP_APPS = [
-    "apps.accounts",  # Gestão de usuários customizados, grupos e permissões
-    "apps.main",  # Dashboard e páginas principais
+    "apps.core",  # Núcleo do sistema - User model e utilidades base
+    "apps.administration",  # Painel administrativo - gestão de usuários/grupos
+    "apps.themes",  # Sistema de temas
     "apps.landings",  # Landing Pages Multi-tenant
+    "apps.properties",  # Módulo de imóveis
+    "apps.infrastructure",  # Serviços de infraestrutura (SSL, DNS, Tasks)
 ]
 
 INSTALLED_APPS = BASE_APPS + THIRD_PARTY_APPS + APP_APPS
@@ -102,6 +105,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",  # Necessário para allauth e crispy-forms
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.core.context_processors.onboarding_progress",  # Progresso de onboarding
             ],
         },
     },
@@ -121,8 +125,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 # ============================================================================
 
 # CUSTOMIZADO: Usa modelo de usuário customizado que autentica via e-mail (sem username)
-# O app_label é 'accounts' (definido no AppConfig.label), não 'apps.accounts'
-AUTH_USER_MODEL = "accounts.User"
+# ATUALIZADO: Model migrado para app core
+AUTH_USER_MODEL = "core.User"
 
 # Backends de autenticação (permite login via Django padrão + allauth)
 AUTHENTICATION_BACKENDS = [
@@ -134,12 +138,12 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 
 # Redirecionamentos após login/logout
-LOGIN_REDIRECT_URL = "main:index"
+LOGIN_REDIRECT_URL = "administration:dashboard"  # ATUALIZADO: redireciona para novo dashboard
 LOGOUT_REDIRECT_URL = "account_login"
 LOGIN_URL = "account_login"
 
 # Configurações do django-allauth (login apenas por e-mail, sem cadastro público)
-ACCOUNT_ADAPTER = "apps.accounts.adapter.AccountAdapter"  # CUSTOMIZADO: Adapter que desabilita signup
+ACCOUNT_ADAPTER = "apps.core.adapter.AccountAdapter"  # ATUALIZADO: movido para core
 ACCOUNT_EMAIL_VERIFICATION = "none"  # Não requer verificação de e-mail (usuários criados por admin)
 ACCOUNT_LOGIN_METHODS = {"email"}  # CUSTOMIZADO: Login apenas por e-mail (sem username)
 ACCOUNT_RATE_LIMITS = {
@@ -151,9 +155,10 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # CUSTOMIZADO: Não usa campo username
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[propzy] "
 ACCOUNT_FORMS = {
     # CUSTOMIZADO: Formulários personalizados com crispy-forms e Bootstrap
-    "login": "apps.accounts.forms.LoginForm",
-    "reset_password": "apps.accounts.forms.ResetPasswordForm",
-    "reset_password_from_key": "apps.accounts.forms.ResetPasswordKeyForm",
+    # ATUALIZADO: movido para core
+    "login": "apps.core.forms.LoginForm",
+    "reset_password": "apps.core.forms.ResetPasswordForm",
+    "reset_password_from_key": "apps.core.forms.ResetPasswordKeyForm",
 }
 
 # Configuração do crispy-forms para usar Bootstrap 5

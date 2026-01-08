@@ -1,0 +1,498 @@
+{% extends "landings/themes/default/index.html" %}
+{% load static i18n property_tags %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+/* Página de detalhes com fundo claro */
+body {
+    background-color: #f8f9fa !important;
+    color: #333333 !important;
+}
+
+.property-detail-header {
+    color: #333333;
+    padding: 2rem 0 2rem;
+    margin-top: 85px;
+}
+
+.property-detail-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: #2c3e50;
+    line-height: 0.9;
+}
+
+.property-detail-header .location {
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 0;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.property-gallery {
+    margin-bottom: 2rem;
+}
+
+.property-gallery .swiper {
+    height: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.property-gallery .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.property-specs-card {
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.property-info {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e9ecef;
+}
+.property-description-card {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e9ecef;
+}
+
+.property-description-text {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.3;
+}
+
+.property-specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.property-spec-item {
+    text-align: center;
+    padding: 1rem 0.75rem;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.property-spec-item:hover {
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.property-spec-item i {
+    font-size: 1.5rem;
+    color: var(--primary-orange);
+    margin-bottom: 0.35rem;
+}
+
+.property-spec-item strong {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+}
+
+.property-spec-item .small {
+    color: #6c757d;
+    font-size: 0.875rem;
+    line-height: 1.3;
+}
+
+.property-price-card {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e9ecef;
+}
+
+.property-price {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--primary-orange);
+    margin-bottom: 0;
+    margin-top: 0.25rem;
+
+}
+
+.property-description {
+    line-height: 1.7;
+    font-size: 1rem;
+    color: #495057;
+}
+
+.property-info h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    line-height: 1.3;
+}
+
+.property-info h5 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.property-info .list-unstyled li {
+    padding: 0.5rem 0;
+    color: #495057;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.property-info .list-unstyled li:last-child {
+    border-bottom: none;
+}
+
+.property-info .btn-success,
+.property-info .btn-primary {
+    border-radius: 8px;
+    padding: 0.65rem 1.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.property-info .btn-success {
+    background-color: #25d366;
+    border-color: #25d366;
+}
+
+.property-info .btn-success:hover {
+    background-color: #20ba5a;
+    border-color: #20ba5a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.property-info .btn-primary {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+
+.property-info .btn-primary:hover {
+    background-color: #e55a2b;
+    border-color: #e55a2b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.related-properties {
+    padding-top: 2rem;
+    margin-bottom: 2rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.related-properties h2 {
+    margin-bottom: 2rem;
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+    .property-detail-header {
+        padding: 4rem 0 2rem;
+    }
+
+    .property-detail-header h1 {
+        font-size: 2rem;
+    }
+
+    .property-gallery .swiper {
+        height: 300px;
+    }
+
+    .property-specs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .property-info {
+        padding: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% include "landings/themes/default/_includes/header.html" %}
+<!-- Header do Imóvel -->
+<section class="property-detail-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1>{{ property.title }}</h1>
+                <div class="location">
+                    <i class="fa-solid fa-location-dot"></i> {{ property.neighborhood }}, {{ property.city }}/{{ property.state }}
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a href="{% url 'landings:properties_list' %}" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> {% trans "Voltar para Imóveis" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <!-- Galeria de Imagens -->
+        <div class="col-12 col-lg-8 order-1">
+            <div class="property-gallery">
+                <div class="swiper property-detail-swiper">
+                    <div class="swiper-wrapper">
+                        {# Imagem principal #}
+                        {% if property.main_image and property.main_image.url and 'placeholder' not in property.main_image.name|default:'' %}
+                        <div class="swiper-slide">
+                            <img src="{{ property.main_image.url }}"
+                                 alt="{{ property.title }}">
+                        </div>
+                        {% endif %}
+
+                        {# Imagens adicionais #}
+                        {% for image in images %}
+                        {% if image.image and image.image.url %}
+                        <div class="swiper-slide">
+                            <img src="{{ image.image.url }}"
+                                 alt="{{ image.caption|default:property.title }}">
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+
+                        {# Se não houver nenhuma imagem, mostra a imagem padrão #}
+                        {% if not property.main_image or not property.main_image.url or 'placeholder' in property.main_image.name|default:'' %}
+                            {% if not images %}
+                            <div class="swiper-slide">
+                                <img src="{% static 'imgs/imagem_indisponivel.png' %}"
+                                     alt="{{ property.title }}">
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar com Preço e Informações -->
+        <div class="col-12 col-lg-4 order-2">
+            <div class="property-info">
+                <!-- Preço -->
+                <div class="property-price mb-3">
+                    {% if property.has_promotion %}
+                        {% if property.transaction_type == 'sale' and property.original_sale_price %}
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center gap-1 fw-normal" style="font-size: 0.9rem; line-height: 0.18;">
+                                    <span class="text-muted">De</span>
+                                    <span class="text-decoration-line-through text-danger">{{ property.original_sale_price|format_price }}</span>
+                                    <span class="text-muted">Por</span>
+                                </div>
+                                <span style="font-size: 1.75rem;">{{ property.get_price_display }}</span>
+                            </div>
+                        {% elif property.transaction_type == 'rent' and property.original_rent_price %}
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center gap-1" style="font-size: 1rem;">
+                                    <span class="text-muted">De</span>
+                                    <span class="text-decoration-line-through text-danger">{{ property.original_rent_price|format_price }}/mês</span>
+                                    <span class="text-muted">Por</span>
+                                </div>
+                                <span style="font-size: 1.75rem;">{{ property.get_price_display }}</span>
+                            </div>
+                        {% elif property.transaction_type == 'both' %}
+                            <div>
+                                {% if property.original_sale_price and property.sale_price and property.original_sale_price > property.sale_price %}
+                                    <div class="mb-2 d-flex flex-column">
+                                        <div class="d-flex align-items-center gap-1" style="font-size: 0.9rem;">
+                                            <span class="text-muted">Venda: De</span>
+                                            <span class="text-decoration-line-through text-danger">{{ property.original_sale_price|format_price }}</span>
+                                            <span class="text-muted">Por</span>
+                                        </div>
+                                        <span style="font-size: 1.25rem;">Venda: {{ property.sale_price|format_price }}</span>
+                                    </div>
+                                {% endif %}
+                                {% if property.original_rent_price and property.rent_price and property.original_rent_price > property.rent_price %}
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex align-items-center gap-1" style="font-size: 0.9rem;">
+                                            <span class="text-muted">Aluguel: De</span>
+                                            <span class="text-decoration-line-through text-danger">{{ property.original_rent_price|format_price }}/mês</span>
+                                            <span class="text-muted">Por</span>
+                                        </div>
+                                        <span style="font-size: 1.25rem;">Aluguel: {{ property.rent_price|format_price }}/mês</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            {{ property.get_price_display }}
+                        {% endif %}
+                    {% else %}
+                        {{ property.get_price_display }}
+                    {% endif %}
+                </div>
+
+                <!-- Informações Adicionais -->
+                <div class="mb-3">
+                    <h5>{% trans "Informações" %}</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>{% trans "Tipo:" %}</strong> {{ property.get_property_type_display }}</li>
+                        <li><strong>{% trans "Transação:" %}</strong> {{ property.get_transaction_type_display }}</li>
+                        <li><strong>{% trans "Categoria:" %}</strong> {{ property.get_category_display }}</li>
+                        <li><strong>{% trans "Endereço:" %}</strong> {{ property.address }}</li>
+                        {% if property.zipcode %}
+                        <li><strong>{% trans "CEP:" %}</strong> {{ property.zipcode }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Botão de Contato -->
+                {% if site.whatsapp %}
+                <a href="https://wa.me/{{ site.whatsapp }}?text=Olá! Tenho interesse no imóvel: {{ property.title }}"
+                   class="btn btn-success w-100"
+                   target="_blank">
+                    <i class="fa-brands fa-whatsapp"></i> {% trans "Falar no WhatsApp" %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Especificações do Imóvel -->
+        <div class="col-12 order-3">
+            <div class="property-specs-card">
+                <div class="property-specs">
+                    {% if property.bedrooms > 0 %}
+                    <div class="property-spec-item">
+                        <i class="fa-solid fa-bed"></i>
+                        <div>
+                            <strong>{{ property.bedrooms }}</strong>
+                            <div class="small">{% trans "Quartos" %}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if property.bathrooms > 0 %}
+                    <div class="property-spec-item">
+                        <i class="fa-solid fa-droplet"></i>
+                        <div>
+                            <strong>{{ property.bathrooms }}</strong>
+                            <div class="small">{% trans "Banheiros" %}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if property.garage_spaces > 0 %}
+                    <div class="property-spec-item">
+                        <i class="fa-solid fa-car"></i>
+                        <div>
+                            <strong>{{ property.garage_spaces }}</strong>
+                            <div class="small">{% trans "Vagas" %}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="property-spec-item">
+                        <i class="fa-solid fa-ruler-combined"></i>
+                        <div>
+                            <strong>{{ property.area }}</strong>
+                            <div class="small">m²</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações do Imóvel -->
+        <div class="col-12 order-4">
+            <h2 class="property-description-text">{% trans "Sobre o Imóvel" %}</h2>
+
+            <div class="property-description-card">
+                <div class="property-description">
+                    {{ property.description|linebreaks }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Imóveis Relacionados -->
+    {% if related_properties %}
+    <div class="related-properties">
+        <h2>{% trans "Imóveis Similares" %}</h2>
+        <div class="row g-4">
+            {% for related_property in related_properties %}
+            <div class="col-md-6 col-lg-3">
+                {% include "landings/_components/property_card.html" with property=related_property landing_page=site %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% include "landings/themes/default/_includes/footer.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializa o Swiper da galeria principal
+    const detailSwiper = document.querySelector('.property-detail-swiper');
+    if (detailSwiper) {
+        const slides = detailSwiper.querySelectorAll('.swiper-slide');
+        const hasMultipleSlides = slides.length > 1;
+
+        if (slides.length > 0) {
+            new Swiper(detailSwiper, {
+                slidesPerView: 1,
+                spaceBetween: 0,
+                loop: hasMultipleSlides,
+                pagination: {
+                    el: detailSwiper.querySelector('.swiper-pagination'),
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: detailSwiper.querySelector('.swiper-button-next'),
+                    prevEl: detailSwiper.querySelector('.swiper-button-prev'),
+                },
+                autoplay: hasMultipleSlides ? {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                } : false,
+            });
+        }
+    }
+});
+</script>
+{% endblock %}
+

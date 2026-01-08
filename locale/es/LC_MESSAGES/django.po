@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 03:13+0000\n"
+"POT-Creation-Date: 2026-01-04 23:11-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,206 +19,851 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
 "1 : 2;\n"
 
-#: apps/accounts/admin.py:23
-msgid "Informações pessoais"
-msgstr "Información personal"
-
-#: apps/accounts/admin.py:27 apps/accounts/forms.py:272
-#: templates/accounts/group_list.html:401
-msgid "Permissões"
-msgstr "Permisos"
-
-#: apps/accounts/admin.py:30
-msgid "Datas importantes"
-msgstr "Fechas importantes"
-
-#: apps/accounts/forms.py:73 apps/accounts/forms.py:88
-#: apps/accounts/forms.py:161 apps/accounts/forms.py:241
-msgid "E-mail"
-msgstr "Correo electrónico"
-
-#: apps/accounts/forms.py:74 apps/accounts/forms.py:179
-msgid "Senha"
-msgstr "Contraseña"
-
-#: apps/accounts/forms.py:77
-msgid "Lembrar acesso"
-msgstr "Recordar acceso"
-
-#: apps/accounts/forms.py:100
-msgid "Nova senha"
-msgstr "Nueva contraseña"
-
-#: apps/accounts/forms.py:101
-msgid "Confirme a nova senha"
-msgstr "Confirme la nueva contraseña"
-
-#: apps/accounts/forms.py:110 apps/accounts/forms.py:199
-#: templates/accounts/user_list.html:442
+#: apps/administration/forms.py:30 apps/administration/forms.py:119
+#: templates/administration/dashboard.html:26
+#: templates/administration/user_list.html:442
 msgid "Grupos"
 msgstr "Grupos"
 
-#: apps/accounts/forms.py:162 apps/accounts/forms.py:242
-#: apps/accounts/models.py:49
+#: apps/administration/forms.py:81 apps/administration/forms.py:161
+#: apps/core/forms.py:52
+msgid "E-mail"
+msgstr "Correo electrónico"
+
+#: apps/administration/forms.py:82 apps/administration/forms.py:162
+#: apps/core/forms.py:53 apps/core/models.py:56
 msgid "Nome completo"
 msgstr "Nombre completo"
 
-#: apps/accounts/forms.py:164 apps/accounts/forms.py:244
-#: apps/accounts/models.py:53 templates/accounts/user_list.html:441
+#: apps/administration/forms.py:84 apps/administration/forms.py:164
+#: apps/core/forms.py:54 apps/core/models.py:60 apps/landings/models.py:88
+#: templates/administration/user_list.html:441
+#: templates/landings/_components/contact_section.html:37
 msgid "Telefone"
 msgstr "Teléfono"
 
-#: apps/accounts/forms.py:173 apps/accounts/forms.py:253
-#: apps/accounts/models.py:50
+#: apps/administration/forms.py:93 apps/administration/forms.py:173
+#: apps/core/forms.py:55 apps/core/models.py:57 apps/landings/admin.py:69
+#: apps/landings/models.py:94 apps/properties/forms.py:90
+#: apps/properties/models.py:46 templates/properties/property_detail.html:262
 msgid "Endereço"
 msgstr "Dirección"
 
-#: apps/accounts/forms.py:174 apps/accounts/forms.py:254
-#: apps/accounts/models.py:51
+#: apps/administration/forms.py:94 apps/administration/forms.py:174
+#: apps/core/forms.py:56 apps/core/models.py:58 apps/landings/models.py:95
+#: apps/properties/forms.py:92 apps/properties/models.py:48
+#: templates/landings/themes/modern/index.html:223
 msgid "Cidade"
 msgstr "Ciudad"
 
-#: apps/accounts/forms.py:175 apps/accounts/forms.py:255
-#: apps/accounts/models.py:52
+#: apps/administration/forms.py:95 apps/administration/forms.py:175
+#: apps/core/forms.py:57 apps/core/models.py:59 apps/landings/models.py:96
+#: apps/properties/forms.py:93 apps/properties/models.py:49
 msgid "Estado"
 msgstr "Estado"
 
-#: apps/accounts/forms.py:177 apps/accounts/forms.py:257
-#: templates/accounts/user_list.html:469
+#: apps/administration/forms.py:97 apps/administration/forms.py:177
+#: apps/landings/models.py:40 apps/properties/forms.py:97
+#: apps/properties/models.py:57 apps/themes/models.py:50
+#: templates/administration/user_list.html:469
+#: templates/properties/property_detail.html:211
+#: templates/properties/property_list.html:534
 msgid "Ativo"
 msgstr "Activo"
 
-#: apps/accounts/forms.py:181
+#: apps/administration/forms.py:99
+msgid "Senha"
+msgstr "Contraseña"
+
+#: apps/administration/forms.py:101
 msgid "Confirme a senha"
 msgstr "Confirme la contraseña"
 
-#: apps/accounts/forms.py:273
+#: apps/administration/forms.py:192 apps/core/admin.py:24
+#: templates/administration/group_list.html:401
+msgid "Permissões"
+msgstr "Permisos"
+
+#: apps/administration/forms.py:193
 msgid "Selecione apenas as ações disponíveis para os usuários do sistema."
 msgstr ""
 "Seleccione solo las acciones disponibles para los usuarios del "
 "sistema.Seleccione solo las acciones disponibles para los usuarios del "
 "sistema."
 
-#: apps/accounts/forms.py:294
+#: apps/administration/forms.py:214
 msgid "Nome do grupo"
 msgstr "Nombre del grupo"
 
-#: apps/accounts/forms.py:311
+#: apps/administration/forms.py:231
 msgid "Permissões disponíveis"
 msgstr "Permisos disponibles"
 
-#: apps/accounts/models.py:56
+#: apps/administration/views.py:79
+msgid "Usuário criado com sucesso."
+msgstr "Usuario creado con éxito."
+
+#: apps/administration/views.py:84 templates/administration/user_list.html:396
+msgid "Criar usuário"
+msgstr "Crear usuario"
+
+#: apps/administration/views.py:95
+msgid "Usuário atualizado com sucesso."
+msgstr "Usuario actualizado con éxito."
+
+#: apps/administration/views.py:105
+msgid "Editar usuário"
+msgstr "Editar usuario"
+
+#: apps/administration/views.py:116
+msgid "Você não pode remover a si mesmo."
+msgstr "No puede eliminarse a sí mismo."
+
+#: apps/administration/views.py:120
+msgid "Usuário removido com sucesso."
+msgstr "Usuario eliminado con éxito."
+
+#: apps/administration/views.py:158
+msgid "Grupo criado com sucesso."
+msgstr "Grupo creado con éxito."
+
+#: apps/administration/views.py:163
+#: templates/administration/group_list.html:357
+msgid "Criar grupo"
+msgstr "Crear grupo"
+
+#: apps/administration/views.py:174
+msgid "Grupo atualizado com sucesso."
+msgstr "Grupo actualizado con éxito."
+
+#: apps/administration/views.py:184
+msgid "Editar grupo"
+msgstr "Editar grupo"
+
+#: apps/administration/views.py:195
+msgid "Grupo removido com sucesso."
+msgstr "Grupo eliminado con éxito."
+
+#: apps/core/admin.py:22 templates/core/profile.html:227
+#, fuzzy
+#| msgid "Informações pessoais"
+msgid "Informações Pessoais"
+msgstr "Información personal"
+
+#: apps/core/admin.py:35
+#, fuzzy
+#| msgid "Preferência de tema"
+msgid "Preferências"
+msgstr "Preferencia de tema"
+
+#: apps/core/admin.py:36
+#, fuzzy
+#| msgid "Datas importantes"
+msgid "Datas Importantes"
+msgstr "Fechas importantes"
+
+#: apps/core/forms.py:58
+#, fuzzy
+#| msgid "Preferência de tema"
+msgid "Preferência de Tema"
+msgstr "Preferencia de tema"
+
+#: apps/core/forms.py:73
+msgid "O e-mail não pode ser alterado."
+msgstr ""
+
+#: apps/core/forms.py:95
+#, fuzzy
+#| msgid "Senha atualizada"
+msgid "Senha atual"
+msgstr "Contraseña actualizada"
+
+#: apps/core/forms.py:96
+msgid "Nova senha"
+msgstr "Nueva contraseña"
+
+#: apps/core/forms.py:97
+#, fuzzy
+#| msgid "Confirme a nova senha"
+msgid "Confirmar nova senha"
+msgstr "Confirme la nueva contraseña"
+
+#: apps/core/models.py:63
 msgid "Claro"
 msgstr "Claro"
 
-#: apps/accounts/models.py:56
+#: apps/core/models.py:63
 msgid "Escuro"
 msgstr "Escuro"
 
-#: apps/accounts/models.py:58
+#: apps/core/models.py:65
 msgid "Preferência de tema"
 msgstr "Preferencia de tema"
 
-#: apps/accounts/models.py:69 templates/accounts/user_list.html:439
+#: apps/core/models.py:76 templates/administration/user_list.html:439
 #: templates/base.html:62
 msgid "Usuário"
 msgstr "Usuario"
 
-#: apps/accounts/models.py:70 templates/accounts/user_list.html:4
-#: templates/accounts/user_list.html:389 templates/base.html:122
+#: apps/core/models.py:77 templates/administration/user_list.html:4
+#: templates/administration/user_list.html:389 templates/base.html:122
 msgid "Usuários"
 msgstr "Usuarios"
 
-#: apps/accounts/permissions.py:13
-msgid "Gestão de usuários"
-msgstr "Gestión de usuarios"
+#: apps/core/permissions.py:21
+msgid "Sistema Core"
+msgstr ""
 
-#: apps/accounts/permissions.py:14
+#: apps/core/permissions.py:22
+msgid "Administração"
+msgstr ""
+
+#: apps/core/permissions.py:23 apps/landings/apps.py:11
+#: apps/landings/models.py:127 templates/administration/dashboard.html:35
+msgid "Landing Pages"
+msgstr ""
+
+#: apps/core/permissions.py:24 apps/properties/models.py:68
+#: templates/administration/dashboard.html:44 templates/base.html:137
+#: templates/landings/themes/classic/index.html:193
+#: templates/landings/themes/minimal/index.html:263
+#: templates/properties/property_list.html:4
+#: templates/properties/property_list.html:420
+msgid "Imóveis"
+msgstr ""
+
+#: apps/core/permissions.py:25 apps/themes/models.py:64
+msgid "Temas"
+msgstr ""
+
+#: apps/core/permissions.py:26
 msgid "Controle de acesso"
 msgstr "Control de acceso"
 
-#: apps/accounts/permissions.py:15
-msgid "Aplicativo principal"
-msgstr "Aplicación principal"
-
-#: apps/accounts/permissions.py:19
+#: apps/core/permissions.py:31
 #, python-format
 msgid "Adicionar %(object)s"
 msgstr "Agregar %(object)s"
 
-#: apps/accounts/permissions.py:20
+#: apps/core/permissions.py:32
 #, python-format
 msgid "Editar %(object)s"
 msgstr "Editar %(object)s"
 
-#: apps/accounts/permissions.py:21
+#: apps/core/permissions.py:33
 #, python-format
 msgid "Excluir %(object)s"
 msgstr "Eliminar %(object)s"
 
-#: apps/accounts/permissions.py:22
+#: apps/core/permissions.py:34
 #, python-format
 msgid "Visualizar %(object)s"
 msgstr "Visualizar %(object)s"
 
-#: apps/accounts/permissions.py:59
+#: apps/core/permissions.py:68
 #, python-format
 msgid "%(action)s %(object)s"
 msgstr "%(action)s %(object)s"
 
-#: apps/accounts/views.py:49
-msgid "Usuário criado com sucesso."
-msgstr "Usuario creado con éxito."
-
-#: apps/accounts/views.py:54 templates/accounts/user_list.html:396
-msgid "Criar usuário"
-msgstr "Crear usuario"
-
-#: apps/accounts/views.py:66
-msgid "Usuário atualizado com sucesso."
-msgstr "Usuario actualizado con éxito."
-
-#: apps/accounts/views.py:76
-msgid "Editar usuário"
-msgstr "Editar usuario"
-
-#: apps/accounts/views.py:88
-msgid "Você não pode remover a si mesmo."
-msgstr "No puede eliminarse a sí mismo."
-
-#: apps/accounts/views.py:92
-msgid "Usuário removido com sucesso."
-msgstr "Usuario eliminado con éxito."
-
-#: apps/accounts/views.py:132
-msgid "Grupo criado com sucesso."
-msgstr "Grupo creado con éxito."
-
-#: apps/accounts/views.py:137 templates/accounts/group_list.html:357
-msgid "Criar grupo"
-msgstr "Crear grupo"
-
-#: apps/accounts/views.py:149
-msgid "Grupo atualizado com sucesso."
+#: apps/core/views.py:50
+#, fuzzy
+#| msgid "Grupo atualizado com sucesso."
+msgid "Perfil atualizado com sucesso."
 msgstr "Grupo actualizado con éxito."
 
-#: apps/accounts/views.py:159
-msgid "Editar grupo"
-msgstr "Editar grupo"
+#: apps/core/views.py:71
+#, fuzzy
+#| msgid "Senha alterada com sucesso"
+msgid "Senha alterada com sucesso."
+msgstr "Contraseña cambiada con éxito"
 
-#: apps/accounts/views.py:171
-msgid "Grupo removido com sucesso."
-msgstr "Grupo eliminado con éxito."
+#: apps/landings/admin.py:38 apps/landings/models.py:20
+msgid "Proprietário"
+msgstr ""
 
-#: config/settings.py:242
+#: apps/landings/admin.py:44
+msgid "Domínios"
+msgstr ""
+
+#: apps/landings/admin.py:47
+msgid "Configure o subdomínio e/ou domínio personalizado"
+msgstr ""
+
+#: apps/landings/admin.py:51
+msgid "Tema e Aparência"
+msgstr ""
+
+#: apps/landings/admin.py:57
+msgid "Dados do Negócio"
+msgstr ""
+
+#: apps/landings/admin.py:63 templates/base_authentication.html:56
+#: templates/landings/base_landing.html:77
+#: templates/landings/themes/classic/index.html:196
+#: templates/landings/themes/classic/index.html:214
+#: templates/landings/themes/minimal/index.html:264
+#: templates/landings/themes/minimal/index.html:279
+msgid "Contato"
+msgstr "Contacto"
+
+#: apps/landings/admin.py:75 templates/landings/base_landing.html:91
+msgid "Redes Sociais"
+msgstr ""
+
+#: apps/landings/admin.py:81
+msgid "SEO"
+msgstr ""
+
+#: apps/landings/admin.py:88 templates/administration/user_list.html:443
+#: templates/landings/dashboard/home.html:18
+#: templates/properties/property_list.html:466
+msgid "Status"
+msgstr "Estado"
+
+#: apps/landings/admin.py:100 apps/landings/models.py:25
+msgid "Subdomínio"
+msgstr ""
+
+#: apps/landings/admin.py:109 apps/landings/models.py:28
+msgid "Domínio Personalizado"
+msgstr ""
+
+#: apps/landings/forms.py:44
+msgid "Meta Título (SEO)"
+msgstr ""
+
+#: apps/landings/forms.py:45
+msgid "Meta Descrição (SEO)"
+msgstr ""
+
+#: apps/landings/forms.py:46 apps/landings/models.py:105
+msgid "Cor Primária"
+msgstr ""
+
+#: apps/landings/forms.py:47 apps/landings/models.py:108
+msgid "Cor Secundária"
+msgstr ""
+
+#: apps/landings/forms.py:50
+msgid "Título que aparece nos resultados de busca (máximo 60 caracteres)"
+msgstr ""
+
+#: apps/landings/forms.py:51
+msgid "Descrição que aparece nos resultados de busca (máximo 160 caracteres)"
+msgstr ""
+
+#: apps/landings/forms.py:52
+msgid "Cor principal do tema (formato: #RRGGBB)"
+msgstr ""
+
+#: apps/landings/forms.py:53
+msgid "Cor secundária do tema (formato: #RRGGBB)"
+msgstr ""
+
+#: apps/landings/forms.py:62
+msgid "A cor deve estar no formato hexadecimal (ex: #007bff)"
+msgstr ""
+
+#: apps/landings/forms.py:68
+msgid "A cor deve estar no formato hexadecimal (ex: #6c757d)"
+msgstr ""
+
+#: apps/landings/models.py:25
+msgid "Ex: fulano → fulano.propzy.com.br"
+msgstr ""
+
+#: apps/landings/models.py:33
+msgid "Ex: www.imobiliariafulano.com.br"
+msgstr ""
+
+#: apps/landings/models.py:38
+msgid "Sem SSL"
+msgstr ""
+
+#: apps/landings/models.py:39
+msgid "Gerando..."
+msgstr ""
+
+#: apps/landings/models.py:41 apps/landings/models.py:58
+msgid "Erro"
+msgstr ""
+
+#: apps/landings/models.py:44
+#, fuzzy
+#| msgid "Status"
+msgid "Status SSL"
+msgstr "Estado"
+
+#: apps/landings/models.py:48
+msgid "Status do certificado SSL do domínio personalizado"
+msgstr ""
+
+#: apps/landings/models.py:51
+msgid "Erro SSL"
+msgstr ""
+
+#: apps/landings/models.py:51
+msgid "Mensagem de erro se falhar geração do SSL"
+msgstr ""
+
+#: apps/landings/models.py:56
+msgid "Pendente"
+msgstr ""
+
+#: apps/landings/models.py:57
+msgid "Configurado"
+msgstr ""
+
+#: apps/landings/models.py:61
+#, fuzzy
+#| msgid "Status"
+msgid "Status DNS"
+msgstr "Estado"
+
+#: apps/landings/models.py:65
+msgid "Status da configuração DNS do domínio personalizado"
+msgstr ""
+
+#: apps/landings/models.py:68
+msgid "Erro DNS"
+msgstr ""
+
+#: apps/landings/models.py:68
+msgid "Mensagem de erro se DNS não estiver configurado"
+msgstr ""
+
+#: apps/landings/models.py:76 apps/themes/models.py:63
+msgid "Tema"
+msgstr ""
+
+#: apps/landings/models.py:77
+msgid "Selecione o tema/layout da landing page"
+msgstr ""
+
+#: apps/landings/models.py:81
+#, fuzzy
+#| msgid "Nome do grupo"
+msgid "Nome do Negócio"
+msgstr "Nombre del grupo"
+
+#: apps/landings/models.py:82 apps/properties/forms.py:81
+#: apps/properties/models.py:31 apps/themes/models.py:26
+#: templates/properties/property_detail.html:286
+msgid "Descrição"
+msgstr ""
+
+#: apps/landings/models.py:83
+msgid "Logo"
+msgstr ""
+
+#: apps/landings/models.py:84
+msgid "Imagem Principal/Banner"
+msgstr ""
+
+#: apps/landings/models.py:87
+#, fuzzy
+#| msgid "E-mail enviado"
+msgid "E-mail de Contato"
+msgstr "Correo electrónico enviado"
+
+#: apps/landings/models.py:90 templates/landings/themes/minimal/index.html:410
+msgid "WhatsApp"
+msgstr ""
+
+#: apps/landings/models.py:90
+msgid "Formato: 5569999999999 (DDI+DDD+número)"
+msgstr ""
+
+#: apps/landings/models.py:99
+msgid "Facebook"
+msgstr ""
+
+#: apps/landings/models.py:100
+msgid "Instagram"
+msgstr ""
+
+#: apps/landings/models.py:101
+msgid "LinkedIn"
+msgstr ""
+
+#: apps/landings/models.py:105 apps/landings/models.py:108
+msgid "Formato: #RRGGBB"
+msgstr ""
+
+#: apps/landings/models.py:112
+msgid "Meta Título"
+msgstr ""
+
+#: apps/landings/models.py:112 apps/landings/models.py:114
+msgid "Para SEO (Google)"
+msgstr ""
+
+#: apps/landings/models.py:114
+msgid "Meta Descrição"
+msgstr ""
+
+#: apps/landings/models.py:118
+#, fuzzy
+#| msgid "Ativar"
+msgid "Ativa"
+msgstr "Activar"
+
+#: apps/landings/models.py:119 templates/landings/dashboard/config.html:40
+#: templates/landings/dashboard/home.html:20
+msgid "Publicada"
+msgstr ""
+
+#: apps/landings/models.py:119
+msgid "Visível publicamente"
+msgstr ""
+
+#: apps/landings/models.py:122 apps/properties/models.py:63
+#: apps/properties/models.py:99 apps/themes/models.py:59
+msgid "Criado em"
+msgstr ""
+
+#: apps/landings/models.py:123 apps/properties/models.py:64
+#: apps/themes/models.py:60
+#, fuzzy
+#| msgid "Atualizar senha"
+msgid "Atualizado em"
+msgstr "Actualizar contraseña"
+
+#: apps/landings/models.py:126 apps/properties/admin.py:41
+#: apps/properties/models.py:26 templates/base.html:143
+msgid "Landing Page"
+msgstr ""
+
+#: apps/landings/views.py:35
+msgid "Landing page não encontrada"
+msgstr ""
+
+#: apps/landings/views.py:99
+msgid "Landing page criada com sucesso! Configure os dados abaixo."
+msgstr ""
+
+#: apps/landings/views.py:126
+msgid "Crie sua landing page primeiro para visualizar o tema."
+msgstr ""
+
+#: apps/landings/views.py:156
+msgid "Crie sua landing page primeiro."
+msgstr ""
+
+#: apps/landings/views.py:163
+msgid "Configurações avançadas salvas com sucesso."
+msgstr ""
+
+#: apps/properties/admin.py:47 apps/themes/admin.py:22
+#, fuzzy
+#| msgid "Informações pessoais"
+msgid "Informações Básicas"
+msgstr "Información personal"
+
+#: apps/properties/admin.py:53
+msgid "Valores"
+msgstr ""
+
+#: apps/properties/admin.py:59
+msgid "Características"
+msgstr ""
+
+#: apps/properties/admin.py:65
+msgid "Localização"
+msgstr ""
+
+#: apps/properties/admin.py:71 apps/themes/admin.py:34
+msgid "Configurações"
+msgstr ""
+
+#: apps/properties/forms.py:80 apps/properties/models.py:30
+msgid "Título"
+msgstr ""
+
+#: apps/properties/forms.py:82 templates/landings/themes/modern/index.html:205
+msgid "Tipo de Imóvel"
+msgstr ""
+
+#: apps/properties/forms.py:83
+msgid "Tipo de Transação"
+msgstr ""
+
+#: apps/properties/forms.py:84 apps/properties/models.py:36
+msgid "Preço de Venda"
+msgstr ""
+
+#: apps/properties/forms.py:85 apps/properties/models.py:37
+msgid "Preço de Aluguel"
+msgstr ""
+
+#: apps/properties/forms.py:86 apps/properties/models.py:40
+#: templates/properties/property_detail.html:231
+msgid "Quartos"
+msgstr ""
+
+#: apps/properties/forms.py:87 apps/properties/models.py:41
+#: templates/properties/property_detail.html:238
+msgid "Banheiros"
+msgstr ""
+
+#: apps/properties/forms.py:88
+msgid "Vagas de Garagem"
+msgstr ""
+
+#: apps/properties/forms.py:89 apps/properties/models.py:43
+msgid "Área (m²)"
+msgstr ""
+
+#: apps/properties/forms.py:91 apps/properties/models.py:47
+#: templates/properties/property_detail.html:269
+msgid "Bairro"
+msgstr ""
+
+#: apps/properties/forms.py:94 apps/properties/models.py:50
+#: templates/properties/property_detail.html:278
+msgid "CEP"
+msgstr ""
+
+#: apps/properties/forms.py:95 apps/properties/models.py:53
+msgid "Imagem Principal"
+msgstr ""
+
+#: apps/properties/forms.py:96 apps/properties/models.py:56
+#: templates/landings/_components/property_card.html:21
+#: templates/properties/property_detail.html:205
+#: templates/properties/property_list.html:471
+msgid "Destaque"
+msgstr ""
+
+#: apps/properties/forms.py:98
+msgid "Ordem de Exibição"
+msgstr ""
+
+#: apps/properties/forms.py:116
+msgid "Preço de venda é obrigatório para imóveis à venda."
+msgstr ""
+
+#: apps/properties/forms.py:119
+msgid "Preço de aluguel é obrigatório para imóveis para alugar."
+msgstr ""
+
+#: apps/properties/forms.py:122
+msgid "Informe pelo menos um preço (venda ou aluguel)."
+msgstr ""
+
+#: apps/properties/forms.py:156 apps/properties/models.py:96
+msgid "Imagem"
+msgstr ""
+
+#: apps/properties/forms.py:157 apps/properties/models.py:97
+msgid "Legenda"
+msgstr ""
+
+#: apps/properties/forms.py:158 apps/properties/models.py:60
+#: apps/properties/models.py:98 apps/themes/models.py:54
+msgid "Ordem"
+msgstr ""
+
+#: apps/properties/models.py:12 templates/landings/themes/modern/index.html:208
+msgid "Casa"
+msgstr ""
+
+#: apps/properties/models.py:13 templates/landings/themes/modern/index.html:209
+msgid "Apartamento"
+msgstr ""
+
+#: apps/properties/models.py:14 templates/landings/themes/modern/index.html:210
+msgid "Comercial"
+msgstr ""
+
+#: apps/properties/models.py:15 templates/landings/themes/modern/index.html:211
+msgid "Terreno"
+msgstr ""
+
+#: apps/properties/models.py:16
+msgid "Fazenda"
+msgstr ""
+
+#: apps/properties/models.py:20
+#: templates/landings/_components/property_card.html:31
+#: templates/landings/themes/modern/index.html:218
+msgid "Venda"
+msgstr ""
+
+#: apps/properties/models.py:21
+#: templates/landings/_components/property_card.html:33
+#: templates/landings/themes/modern/index.html:219
+msgid "Aluguel"
+msgstr ""
+
+#: apps/properties/models.py:22
+#: templates/landings/_components/property_card.html:35
+#: templates/landings/themes/modern/index.html:217
+msgid "Venda/Aluguel"
+msgstr ""
+
+#: apps/properties/models.py:32 templates/properties/property_list.html:448
+msgid "Tipo"
+msgstr ""
+
+#: apps/properties/models.py:33 templates/landings/themes/modern/index.html:215
+#: templates/properties/property_list.html:457
+msgid "Transação"
+msgstr ""
+
+#: apps/properties/models.py:42 templates/properties/property_detail.html:245
+msgid "Vagas"
+msgstr ""
+
+#: apps/properties/models.py:67 apps/properties/models.py:95
+msgid "Imóvel"
+msgstr ""
+
+#: apps/properties/models.py:89
+msgid "Consulte-nos"
+msgstr ""
+
+#: apps/properties/models.py:102
+msgid "Imagem do Imóvel"
+msgstr ""
+
+#: apps/properties/models.py:103
+msgid "Imagens dos Imóveis"
+msgstr ""
+
+#: apps/properties/views.py:28 apps/properties/views.py:82
+#: apps/properties/views.py:112 apps/properties/views.py:143
+#: apps/properties/views.py:173
+msgid "Crie sua landing page primeiro para gerenciar imóveis."
+msgstr ""
+
+#: apps/properties/views.py:91
+#, fuzzy
+#| msgid "Grupo criado com sucesso."
+msgid "Imóvel criado com sucesso."
+msgstr "Grupo creado con éxito."
+
+#: apps/properties/views.py:98
+msgid "Criar Imóvel"
+msgstr ""
+
+#: apps/properties/views.py:121
+#, fuzzy
+#| msgid "Grupo atualizado com sucesso."
+msgid "Imóvel atualizado com sucesso."
+msgstr "Grupo actualizado con éxito."
+
+#: apps/properties/views.py:128
+msgid "Editar Imóvel"
+msgstr ""
+
+#: apps/properties/views.py:152
+#, fuzzy
+#| msgid "Grupo atualizado com sucesso."
+msgid "Imóvel ativado com sucesso."
+msgstr "Grupo actualizado con éxito."
+
+#: apps/properties/views.py:154
+#, fuzzy
+#| msgid "Usuário atualizado com sucesso."
+msgid "Imóvel desativado com sucesso."
+msgstr "Usuario actualizado con éxito."
+
+#: apps/themes/admin.py:28
+msgid "Aparência"
+msgstr ""
+
+#: apps/themes/models.py:20
+msgid "Nome"
+msgstr ""
+
+#: apps/themes/models.py:22
+msgid "Slug"
+msgstr ""
+
+#: apps/themes/models.py:22
+msgid "Nome da pasta do tema. Ex: modern, classic"
+msgstr ""
+
+#: apps/themes/models.py:27
+msgid "Autor"
+msgstr ""
+
+#: apps/themes/models.py:28
+msgid "Versão"
+msgstr ""
+
+#: apps/themes/models.py:32
+msgid "Moderno"
+msgstr ""
+
+#: apps/themes/models.py:33
+msgid "Clássico"
+msgstr ""
+
+#: apps/themes/models.py:34
+msgid "Minimalista"
+msgstr ""
+
+#: apps/themes/models.py:35
+msgid "Luxuoso"
+msgstr ""
+
+#: apps/themes/models.py:36
+msgid "Corporativo"
+msgstr ""
+
+#: apps/themes/models.py:38
+msgid "Categoria"
+msgstr ""
+
+#: apps/themes/models.py:42
+msgid "Screenshot"
+msgstr ""
+
+#: apps/themes/models.py:42
+#, fuzzy
+#| msgid "Preferência de tema"
+msgid "Preview do tema"
+msgstr "Preferencia de tema"
+
+#: apps/themes/models.py:46
+msgid "Cor Primária Padrão"
+msgstr ""
+
+#: apps/themes/models.py:47
+msgid "Cor Secundária Padrão"
+msgstr ""
+
+#: apps/themes/models.py:50
+msgid "Se desativado, não aparece para seleção"
+msgstr ""
+
+#: apps/themes/models.py:51
+msgid "Premium"
+msgstr ""
+
+#: apps/themes/models.py:51
+msgid "Requer plano premium"
+msgstr ""
+
+#: apps/themes/models.py:57
+msgid "Recursos"
+msgstr ""
+
+#: apps/themes/models.py:57
+msgid "Lista de recursos do tema"
+msgstr ""
+
+#: config/settings.py:252
 msgid "Português"
 msgstr ""
 
-#: config/settings.py:243
+#: config/settings.py:253
 msgid "English"
 msgstr ""
 
-#: config/settings.py:244
+#: config/settings.py:254
 msgid "Español"
 msgstr ""
 
@@ -317,166 +962,216 @@ msgstr "Inscripciones cerradas"
 msgid "Criar conta não está disponível"
 msgstr "Crear cuenta no está disponible"
 
-#: templates/accounts/group_confirm_delete.html:1
-#: templates/accounts/group_confirm_delete.html:6
+#: templates/administration/dashboard.html:4
+msgid "Dashboard Administrativo"
+msgstr ""
+
+#: templates/administration/dashboard.html:10
+msgid "Painel Administrativo"
+msgstr ""
+
+#: templates/administration/dashboard.html:17
+#, fuzzy
+#| msgid "Usuários"
+msgid "Usuários Ativos"
+msgstr "Usuarios"
+
+#: templates/administration/dashboard.html:54
+msgid "Ações Rápidas"
+msgstr ""
+
+#: templates/administration/dashboard.html:59
+msgid "Criar Usuário"
+msgstr "Crear Usuario"
+
+#: templates/administration/dashboard.html:67
+msgid "Gerenciar Usuários"
+msgstr "Gestionar Usuarios"
+
+#: templates/administration/dashboard.html:75
+msgid "Gerenciar Grupos"
+msgstr "Gestionar Grupos"
+
+#: templates/administration/group_confirm_delete.html:1
+#: templates/administration/group_confirm_delete.html:6
 msgid "Excluir grupo"
 msgstr "Eliminar grupo"
 
-#: templates/accounts/group_confirm_delete.html:8
+#: templates/administration/group_confirm_delete.html:8
 #, python-format
 msgid ""
 "Você tem certeza que deseja remover o\n"
 "      grupo %(name)s?"
 msgstr ""
 
-#: templates/accounts/group_confirm_delete.html:13
-#: templates/accounts/group_form.html:356
-#: templates/accounts/user_confirm_delete.html:14
-#: templates/accounts/user_form.html:398
+#: templates/administration/group_confirm_delete.html:13
+#: templates/administration/group_form.html:356
+#: templates/administration/user_confirm_delete.html:14
+#: templates/administration/user_form.html:398
+#: templates/core/profile_password.html:220
+#: templates/landings/dashboard/advanced_config.html:268
+#: templates/properties/property_detail.html:187
+#: templates/properties/property_form.html:379
 msgid "Voltar"
 msgstr "Volver"
 
-#: templates/accounts/group_confirm_delete.html:23
-#: templates/accounts/user_confirm_delete.html:24
+#: templates/administration/group_confirm_delete.html:23
+#: templates/administration/user_confirm_delete.html:24
 msgid "Esta ação não pode ser desfeita."
 msgstr "Esta acción no puede ser deshecha."
 
-#: templates/accounts/group_confirm_delete.html:28
-#: templates/accounts/group_form.html:435
-#: templates/accounts/user_confirm_delete.html:29
-#: templates/accounts/user_form.html:534
+#: templates/administration/group_confirm_delete.html:28
+#: templates/administration/group_form.html:435
+#: templates/administration/user_confirm_delete.html:29
+#: templates/administration/user_form.html:534
+#: templates/core/profile_password.html:260
 #: templates/includes/modal_activate.html:15
 #: templates/includes/modal_deactivate.html:15
+#: templates/landings/dashboard/advanced_config.html:351
+#: templates/properties/property_form.html:490
 msgid "Cancelar"
 msgstr "Cancelar"
 
-#: templates/accounts/group_confirm_delete.html:31
-#: templates/accounts/user_confirm_delete.html:32
+#: templates/administration/group_confirm_delete.html:31
+#: templates/administration/user_confirm_delete.html:32
 msgid "Confirmar exclusão"
 msgstr "Confirmar eliminación"
 
-#: templates/accounts/group_form.html:352
+#: templates/administration/group_form.html:352
 msgid "Defina o nome do grupo e selecione as permissões disponíveis."
 msgstr "Defina el nombre del grupo y seleccione los permisos disponibles."
 
-#: templates/accounts/group_form.html:438 templates/accounts/user_form.html:537
+#: templates/administration/group_form.html:438
+#: templates/administration/user_form.html:537
+#: templates/landings/dashboard/advanced_config.html:355
+#: templates/properties/property_form.html:493
 msgid "Salvar"
 msgstr "Guardar"
 
-#: templates/accounts/group_list.html:4 templates/accounts/group_list.html:350
+#: templates/administration/group_list.html:4
+#: templates/administration/group_list.html:350
 msgid "Grupos e permissões"
 msgstr "Grupos y permisos"
 
-#: templates/accounts/group_list.html:351
+#: templates/administration/group_list.html:351
 msgid "Organize as permissões de acesso por perfis."
 msgstr "Organice los permisos de acceso por perfiles."
 
-#: templates/accounts/group_list.html:367 templates/accounts/user_list.html:406
+#: templates/administration/group_list.html:367
+#: templates/administration/user_list.html:406
+#: templates/properties/property_list.html:435
 msgid "Buscar"
 msgstr "Buscar"
 
-#: templates/accounts/group_list.html:368
+#: templates/administration/group_list.html:368
 msgid "Buscar grupos..."
 msgstr "Buscar grupos..."
 
-#: templates/accounts/group_list.html:383 templates/accounts/user_list.html:422
+#: templates/administration/group_list.html:383
+#: templates/administration/user_list.html:422
+#: templates/properties/property_list.html:478
 msgid "Limpar filtros"
 msgstr "Limpiar filtros"
 
-#: templates/accounts/group_list.html:388 templates/accounts/user_list.html:427
+#: templates/administration/group_list.html:388
+#: templates/administration/user_list.html:427
+#: templates/properties/property_list.html:483
 msgid "Filtrar"
 msgstr "Filtrar"
 
-#: templates/accounts/group_list.html:400
+#: templates/administration/group_list.html:400
 msgid "Grupo"
 msgstr "Grupo"
 
-#: templates/accounts/group_list.html:418
+#: templates/administration/group_list.html:418
 msgid "Sem permissões"
 msgstr "Sin permisos"
 
-#: templates/accounts/group_list.html:456 templates/accounts/user_list.html:513
+#: templates/administration/group_list.html:456
+#: templates/administration/user_list.html:513
+#: templates/properties/property_list.html:580
 msgid "de"
 msgstr "de"
 
-#: templates/accounts/group_list.html:493
+#: templates/administration/group_list.html:493
 msgid "Nenhum grupo encontrado"
 msgstr "Ningún grupo encontrado"
 
-#: templates/accounts/group_list.html:495 templates/accounts/user_list.html:552
+#: templates/administration/group_list.html:495
+#: templates/administration/user_list.html:552
 msgid "Tente ajustar os termos da busca"
 msgstr "Intente ajustar los términos de búsqueda"
 
-#: templates/accounts/group_list.html:497
+#: templates/administration/group_list.html:497
 msgid "Ainda não há grupos cadastrados no sistema"
 msgstr "Aún no hay grupos registrados en el sistema"
 
-#: templates/accounts/user_confirm_delete.html:7
+#: templates/administration/user_confirm_delete.html:7
 msgid "Excluir usuário"
 msgstr "Eliminar usuario"
 
-#: templates/accounts/user_confirm_delete.html:9
+#: templates/administration/user_confirm_delete.html:9
 #, python-format
 msgid ""
 "Você tem certeza que deseja remover\n"
 "      %(email)s?"
 msgstr ""
 
-#: templates/accounts/user_form.html:394
+#: templates/administration/user_form.html:394
 msgid "Preencha os dados do usuário e defina os grupos de acesso."
 msgstr "Complete los datos del usuario y defina los grupos de acceso."
 
-#: templates/accounts/user_form.html:524
+#: templates/administration/user_form.html:524
 #: templates/includes/modal_deactivate.html:19
+#: templates/properties/property_form.html:480
 msgid "Desativar"
 msgstr "Desactivar"
 
-#: templates/accounts/user_form.html:529
+#: templates/administration/user_form.html:529
 #: templates/includes/modal_activate.html:19
+#: templates/properties/property_form.html:485
 msgid "Ativar"
 msgstr "Activar"
 
-#: templates/accounts/user_form.html:545
+#: templates/administration/user_form.html:545
 msgid "Ativar Usuário"
 msgstr "Activar Usuario"
 
-#: templates/accounts/user_form.html:546
+#: templates/administration/user_form.html:546
 msgid "Tem certeza que deseja ativar este usuário?"
 msgstr "¿Está seguro de que desea activar este usuario?"
 
-#: templates/accounts/user_form.html:550
+#: templates/administration/user_form.html:550
 msgid "Desativar Usuário"
 msgstr "Desactivar Usuario"
 
-#: templates/accounts/user_form.html:551
+#: templates/administration/user_form.html:551
 msgid "Tem certeza que deseja desativar este usuário?"
 msgstr "¿Está seguro de que desea desactivar este usuario?"
 
-#: templates/accounts/user_list.html:390
+#: templates/administration/user_list.html:390
 msgid "Gerencie as contas internas, grupos e permissões."
 msgstr "Gestione las cuentas internas, grupos y permisos."
 
-#: templates/accounts/user_list.html:407
+#: templates/administration/user_list.html:407
 msgid "Buscar usuários..."
 msgstr "Buscar usuarios..."
 
-#: templates/accounts/user_list.html:440
+#: templates/administration/user_list.html:440
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: templates/accounts/user_list.html:443
-msgid "Status"
-msgstr "Estado"
-
-#: templates/accounts/user_list.html:474
+#: templates/administration/user_list.html:474
+#: templates/properties/property_detail.html:216
+#: templates/properties/property_list.html:539
 msgid "Inativo"
 msgstr "Inactivo"
 
-#: templates/accounts/user_list.html:550
+#: templates/administration/user_list.html:550
 msgid "Nenhum usuário encontrado"
 msgstr "Ningún usuario encontrado"
 
-#: templates/accounts/user_list.html:554
+#: templates/administration/user_list.html:554
 msgid "Ainda não há usuários cadastrados no sistema"
 msgstr "Aún no hay usuarios registrados en el sistema"
 
@@ -504,7 +1199,7 @@ msgstr "Modo oscuro"
 msgid "Sair"
 msgstr "Salir"
 
-#: templates/base.html:115 templates/main/index.html:4
+#: templates/base.html:115
 msgid "Página Inicial"
 msgstr "Página Principal"
 
@@ -512,13 +1207,14 @@ msgstr "Página Principal"
 msgid "Grupos/Permissões"
 msgstr "Grupos/Permisos"
 
-#: templates/base.html:183
+#: templates/base.html:149 templates/core/profile.html:4
+#: templates/core/profile.html:219
+msgid "Meu Perfil"
+msgstr ""
+
+#: templates/base.html:201
 msgid "Fechar"
 msgstr "Cerrar"
-
-#: templates/base_authentication.html:56
-msgid "Contato"
-msgstr "Contacto"
 
 #: templates/base_authentication.html:112
 msgid "Sistema de gestão para organizações não governamentais."
@@ -532,69 +1228,467 @@ msgstr ""
 "Gestione proyectos, miembros, socios y recursos financieros de forma "
 "eficiente y organizada."
 
-#: templates/main/index.html:207
-msgid "Bem-vindo ao propzy"
-msgstr "Bienvenido a propzy"
+#: templates/core/profile.html:220
+#, fuzzy
+#| msgid "Gerencie as contas internas, grupos e permissões."
+msgid "Gerencie suas informações pessoais e preferências."
+msgstr "Gestione las cuentas internas, grupos y permisos."
 
-#: templates/main/index.html:208
-msgid ""
-"Gerencie projetos, membros, parceiros e recursos financeiros de forma "
-"eficiente."
+#: templates/core/profile.html:266
+#, fuzzy
+#| msgid "Enviar instruções"
+msgid "Salvar Alterações"
+msgstr "Enviar instrucciones"
+
+#: templates/core/profile.html:275
+msgid "Segurança"
 msgstr ""
-"Gestione proyectos, miembros, socios y recursos financieros de forma "
-"eficiente."
 
-#: templates/main/index.html:219
-msgid "Usuários Cadastrados"
-msgstr "Usuarios Registrados"
+#: templates/core/profile.html:278 templates/core/profile_password.html:216
+msgid "Altere sua senha para manter sua conta segura."
+msgstr ""
 
-#: templates/main/index.html:231
-msgid "Grupos Cadastrados"
-msgstr "Grupos Registrados"
+#: templates/core/profile.html:282 templates/core/profile_password.html:4
+#: templates/core/profile_password.html:215
+#: templates/core/profile_password.html:264
+#, fuzzy
+#| msgid "Nova senha"
+msgid "Alterar Senha"
+msgstr "Nueva contraseña"
 
-#: templates/main/index.html:242
-msgid "Projetos"
-msgstr "Proyectos"
+#: templates/landings/_components/contact_section.html:8
+#: templates/landings/themes/minimal/index.html:377
+#, fuzzy
+#| msgid "Contato"
+msgid "Entre em Contato"
+msgstr "Contacto"
 
-#: templates/main/index.html:250
-msgid "Sistema de Gestão para ONGs"
-msgstr "Sistema de Gestión para ONGs"
+#: templates/landings/_components/contact_section.html:10
+msgid "Ficou interessado? Entre em contato conosco e agende uma visita!"
+msgstr ""
 
-#: templates/main/index.html:252
+#: templates/landings/_components/contact_section.html:24
+msgid "Chamar"
+msgstr ""
+
+#: templates/landings/_components/contact_section.html:40
+msgid "Ligar"
+msgstr ""
+
+#: templates/landings/_components/contact_section.html:56
+#, fuzzy
+#| msgid "E-mail"
+msgid "Enviar E-mail"
+msgstr "Correo electrónico"
+
+#: templates/landings/_components/property_card.html:75
+#: templates/landings/themes/minimal/index.html:318
+#: templates/landings/themes/minimal/index.html:360
+msgid "Tenho Interesse"
+msgstr ""
+
+#: templates/landings/_components/property_card.html:80
+msgid "Solicitar Informações"
+msgstr ""
+
+#: templates/landings/base_landing.html:115
+msgid "Todos os direitos reservados."
+msgstr ""
+
+#: templates/landings/dashboard/advanced_config.html:4
+#: templates/landings/dashboard/advanced_config.html:263
+msgid "Configurações Avançadas"
+msgstr ""
+
+#: templates/landings/dashboard/advanced_config.html:264
+msgid "Configure SEO, cores e outras opções avançadas da sua landing page."
+msgstr ""
+
+#: templates/landings/dashboard/advanced_config.html:275
+msgid "SEO (Otimização para Busca)"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:4
+#: templates/landings/dashboard/config.html:10
+msgid "Configurar Landing Page"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:14
 msgid ""
-"Utilize o menu lateral para navegar pelas funcionalidades do sistema. "
-"Gerencie usuários, grupos de permissões, projetos e muito mais."
-msgstr "Utilice el menú lateral para navegar por las funcionalidades del sistema. Gestione usuarios, grupos de permisos, proyectos y mucho más."
-"permisos, proyectos y mucho más."
+"Configure os dados da sua landing page através do painel administrativo em"
+msgstr ""
 
-#: templates/main/index.html:263
-msgid "Criar Usuário"
-msgstr "Crear Usuario"
+#: templates/landings/dashboard/config.html:16
+msgid "Admin > Landing Pages"
+msgstr ""
 
-#: templates/main/index.html:264
-msgid "Adicione um novo usuário ao sistema"
-msgstr "Agregue un nuevo usuario al sistema"
+#: templates/landings/dashboard/config.html:23
+msgid "Dados Atuais"
+msgstr ""
 
-#: templates/main/index.html:273
-msgid "Criar Grupo"
-msgstr "Crear Grupo"
+#: templates/landings/dashboard/config.html:28
+#: templates/landings/dashboard/home.html:55
+#, fuzzy
+#| msgid "Nome do grupo"
+msgid "Nome do Negócio:"
+msgstr "Nombre del grupo"
 
-#: templates/main/index.html:274
-msgid "Defina um novo grupo de permissões"
-msgstr "Defina un nuevo grupo de permisos"
+#: templates/landings/dashboard/config.html:29
+#, fuzzy
+#| msgid "E-mail"
+msgid "E-mail:"
+msgstr "Correo electrónico"
 
-#: templates/main/index.html:283
-msgid "Gerenciar Usuários"
-msgstr "Gestionar Usuarios"
+#: templates/landings/dashboard/config.html:30
+#, fuzzy
+#| msgid "Telefone"
+msgid "Telefone:"
+msgstr "Teléfono"
 
-#: templates/main/index.html:284
-msgid "Visualize e edite usuários cadastrados"
-msgstr "Visualice y edite usuarios registrados"
+#: templates/landings/dashboard/config.html:31
+msgid "WhatsApp:"
+msgstr ""
 
-#: templates/main/index.html:293
-msgid "Gerenciar Grupos"
-msgstr "Gestionar Grupos"
+#: templates/landings/dashboard/config.html:34
+#: templates/landings/dashboard/home.html:56
+msgid "Subdomínio:"
+msgstr ""
 
-#: templates/main/index.html:294
-msgid "Visualize e edite grupos de permissões"
-msgstr "Visualice y edite grupos de permisos"
+#: templates/landings/dashboard/config.html:35
+#: templates/landings/dashboard/home.html:58
+msgid "Domínio Personalizado:"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:36
+#: templates/landings/dashboard/home.html:60
+msgid "Tema:"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:38
+#, fuzzy
+#| msgid "Status"
+msgid "Status:"
+msgstr "Estado"
+
+#: templates/landings/dashboard/config.html:42
+#: templates/landings/dashboard/home.html:22
+msgid "Rascunho"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:50
+msgid "Editar no Admin"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:55
+#: templates/landings/dashboard/home.html:44
+msgid "Ver Landing Page"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:65
+#, fuzzy
+#| msgid "Permissões disponíveis"
+msgid "Temas Disponíveis"
+msgstr "Permisos disponibles"
+
+#: templates/landings/dashboard/config.html:84
+msgid "Atual"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:92
+msgid "Categoria:"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:100
+msgid "Preview"
+msgstr ""
+
+#: templates/landings/dashboard/config.html:107
+msgid "Nenhum tema disponível. Execute: python manage.py install_themes"
+msgstr ""
+
+#: templates/landings/dashboard/home.html:4
+#: templates/landings/dashboard/home.html:10
+msgid "Minha Landing Page"
+msgstr ""
+
+#: templates/landings/dashboard/home.html:32
+msgid "Imóveis Ativos"
+msgstr ""
+
+#: templates/landings/dashboard/home.html:42
+msgid "Seu Link"
+msgstr ""
+
+#: templates/landings/dashboard/home.html:54
+#, fuzzy
+#| msgid "Informações pessoais"
+msgid "Informações"
+msgstr "Información personal"
+
+#: templates/landings/dashboard/home.html:63
+msgid "Configurar"
+msgstr ""
+
+#: templates/landings/dashboard/home.html:71
+msgid "Crie sua Landing Page!"
+msgstr ""
+
+#: templates/landings/dashboard/home.html:72
+msgid ""
+"Você ainda não tem uma landing page. Crie agora e comece a divulgar seus "
+"imóveis online."
+msgstr ""
+
+#: templates/landings/dashboard/home.html:74
+msgid "Criar Landing Page"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:187
+msgid "Início"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:190
+msgid "Destaques"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:210
+#: templates/landings/themes/minimal/index.html:276
+#: templates/landings/themes/modern/index.html:159
+msgid "Ver Imóveis"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:225
+#: templates/landings/themes/default/index.html:16
+#: templates/landings/themes/modern/index.html:178
+msgid "Imóveis em Destaque"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:256
+msgid "Sobre Nós"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:278
+msgid "Nosso Portfólio"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:290
+#: templates/landings/themes/modern/index.html:247
+msgid "Nenhum imóvel disponível no momento."
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:300
+msgid "Pronto para Encontrar Seu Imóvel?"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:301
+msgid "Entre em contato e agende uma visita"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:304
+msgid "Falar no WhatsApp"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:309
+msgid "Ligar Agora"
+msgstr ""
+
+#: templates/landings/themes/classic/index.html:320
+#: templates/landings/themes/modern/index.html:262
+msgid "Fale conosco no WhatsApp"
+msgstr ""
+
+#: templates/landings/themes/default/index.html:28
+#: templates/landings/themes/minimal/index.html:332
+#: templates/landings/themes/modern/index.html:197
+msgid "Todos os Imóveis"
+msgstr ""
+
+#: templates/landings/themes/default/index.html:36
+#: templates/landings/themes/minimal/index.html:367
+#, fuzzy
+#| msgid "Permissões disponíveis"
+msgid "Nenhum imóvel disponível."
+msgstr "Permisos disponibles"
+
+#: templates/landings/themes/minimal/index.html:290
+msgid "Em Destaque"
+msgstr ""
+
+#: templates/landings/themes/minimal/index.html:378
+msgid "Agende uma visita e conheça nossos imóveis"
+msgstr ""
+
+#: templates/landings/themes/modern/index.html:165
+msgid "Fale Conosco"
+msgstr ""
+
+#: templates/landings/themes/modern/index.html:179
+msgid "Confira nossas melhores oportunidades"
+msgstr ""
+
+#: templates/landings/themes/modern/index.html:198
+msgid "Encontre o imóvel ideal para você"
+msgstr ""
+
+#: templates/landings/themes/modern/index.html:207
+#: templates/properties/property_list.html:450
+msgid "Todos os tipos"
+msgstr ""
+
+#: templates/landings/themes/modern/index.html:225
+msgid "Todas as cidades"
+msgstr ""
+
+#: templates/properties/property_detail.html:191
+#, fuzzy
+#| msgid "Editar grupo"
+msgid "Editar"
+msgstr "Editar grupo"
+
+#: templates/properties/property_detail.html:252
+msgid "Área"
+msgstr ""
+
+#: templates/properties/property_detail.html:273
+#, fuzzy
+#| msgid "Cidade"
+msgid "Cidade/Estado"
+msgstr "Ciudad"
+
+#: templates/properties/property_form.html:375
+msgid "Preencha os dados do imóvel."
+msgstr ""
+
+#: templates/properties/property_form.html:501
+#, fuzzy
+#| msgid "Ativar"
+msgid "Ativar Imóvel"
+msgstr "Activar"
+
+#: templates/properties/property_form.html:502
+#, fuzzy
+#| msgid "Tem certeza que deseja ativar este usuário?"
+msgid "Tem certeza que deseja ativar este imóvel?"
+msgstr "¿Está seguro de que desea activar este usuario?"
+
+#: templates/properties/property_form.html:506
+#, fuzzy
+#| msgid "Desativar"
+msgid "Desativar Imóvel"
+msgstr "Desactivar"
+
+#: templates/properties/property_form.html:507
+#, fuzzy
+#| msgid "Tem certeza que deseja desativar este usuário?"
+msgid "Tem certeza que deseja desativar este imóvel?"
+msgstr "¿Está seguro de que desea desactivar este usuario?"
+
+#: templates/properties/property_list.html:421
+msgid "Gerencie seus imóveis e propriedades."
+msgstr ""
+
+#: templates/properties/property_list.html:426
+msgid "Novo Imóvel"
+msgstr ""
+
+#: templates/properties/property_list.html:436
+#, fuzzy
+#| msgid "Buscar usuários..."
+msgid "Buscar imóveis..."
+msgstr "Buscar usuarios..."
+
+#: templates/properties/property_list.html:459
+msgid "Todas"
+msgstr ""
+
+#: templates/properties/property_list.html:468
+msgid "Todos"
+msgstr ""
+
+#: templates/properties/property_list.html:469
+#, fuzzy
+#| msgid "Ativo"
+msgid "Ativos"
+msgstr "Activo"
+
+#: templates/properties/property_list.html:470
+#, fuzzy
+#| msgid "Inativo"
+msgid "Inativos"
+msgstr "Inactivo"
+
+#: templates/properties/property_list.html:616
+#, fuzzy
+#| msgid "Nenhum grupo encontrado"
+msgid "Nenhum imóvel encontrado"
+msgstr "Ningún grupo encontrado"
+
+#: templates/properties/property_list.html:618
+#, fuzzy
+#| msgid "Tente ajustar os termos da busca"
+msgid "Tente ajustar os termos da busca ou filtros"
+msgstr "Intente ajustar los términos de búsqueda"
+
+#: templates/properties/property_list.html:620
+#, fuzzy
+#| msgid "Ainda não há usuários cadastrados no sistema"
+msgid "Ainda não há imóveis cadastrados"
+msgstr "Aún no hay usuarios registrados en el sistema"
+
+#: templates/properties/property_list.html:623
+msgid "Criar primeiro imóvel"
+msgstr ""
+
+#~ msgid "Lembrar acesso"
+#~ msgstr "Recordar acceso"
+
+#~ msgid "Gestão de usuários"
+#~ msgstr "Gestión de usuarios"
+
+#~ msgid "Aplicativo principal"
+#~ msgstr "Aplicación principal"
+
+#~ msgid "Bem-vindo ao propzy"
+#~ msgstr "Bienvenido a propzy"
+
+#~ msgid ""
+#~ "Gerencie projetos, membros, parceiros e recursos financeiros de forma "
+#~ "eficiente."
+#~ msgstr ""
+#~ "Gestione proyectos, miembros, socios y recursos financieros de forma "
+#~ "eficiente."
+
+#~ msgid "Usuários Cadastrados"
+#~ msgstr "Usuarios Registrados"
+
+#~ msgid "Grupos Cadastrados"
+#~ msgstr "Grupos Registrados"
+
+#~ msgid "Projetos"
+#~ msgstr "Proyectos"
+
+#~ msgid "Sistema de Gestão para ONGs"
+#~ msgstr "Sistema de Gestión para ONGs"
+
+#~ msgid ""
+#~ "Utilize o menu lateral para navegar pelas funcionalidades do sistema. "
+#~ "Gerencie usuários, grupos de permissões, projetos e muito mais."
+#~ msgstr ""
+#~ "Utilice el menú lateral para navegar por las funcionalidades del sistema. "
+#~ "Gestione usuarios, grupos de permisos, proyectos y mucho más.permisos, "
+#~ "proyectos y mucho más."
+
+#~ msgid "Adicione um novo usuário ao sistema"
+#~ msgstr "Agregue un nuevo usuario al sistema"
+
+#~ msgid "Criar Grupo"
+#~ msgstr "Crear Grupo"
+
+#~ msgid "Defina um novo grupo de permissões"
+#~ msgstr "Defina un nuevo grupo de permisos"
+
+#~ msgid "Visualize e edite usuários cadastrados"
+#~ msgstr "Visualice y edite usuarios registrados"
+
+#~ msgid "Visualize e edite grupos de permissões"
+#~ msgstr "Visualice y edite grupos de permisos"

@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if property.is_active %}{% trans "Desativar Imóvel" %}{% else %}{% trans "Ativar Imóvel" %}{% endif %} | Propzy{% endblock %}
+
+{% block extra_head %}
+<style>
+    .properties-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .properties-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .properties-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
+        line-height: 0.9;
+    }
+
+    .properties-header-content p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+        margin-top: 0;
+        line-height: 1;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .properties-form-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--card-shadow);
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .btn-cancel {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-cancel:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-submit {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: white;
+        background: var(--primary-color);
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-submit:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 109, 255, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="properties-container fade-in">
+    <div class="properties-header">
+        <div class="properties-header-content">
+            <h1>{% if property.is_active %}{% trans "Desativar Imóvel" %}{% else %}{% trans "Ativar Imóvel" %}{% endif %}</h1>
+            <p>{% trans "Confirme a ação abaixo." %}</p>
+        </div>
+        <a href="{% url 'properties:property_list' %}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            {% trans "Voltar" %}
+        </a>
+    </div>
+
+    <div class="properties-form-card">
+        <form method="post">
+            {% csrf_token %}
+            <p>{% trans "Tem certeza que deseja" %} {% if property.is_active %}{% trans "desativar" %}{% else %}{% trans "ativar" %}{% endif %} {% trans "o imóvel" %} <strong>{{ property.title }}</strong>?</p>
+            <div class="form-actions">
+                <a href="{% url 'properties:property_list' %}" class="btn-cancel">
+                    {% trans "Cancelar" %}
+                </a>
+                <button type="submit" class="btn-submit">
+                    {% if property.is_active %}
+                        <i class="fa-solid fa-ban"></i>
+                        {% trans "Desativar" %}
+                    {% else %}
+                        <i class="fa-solid fa-check"></i>
+                        {% trans "Ativar" %}
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,948 @@
+{% load i18n %}
+{% load static %}
+
+<style>
+/* Mensagem de conclusão */
+.onboarding-completion-container {
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.5s ease;
+}
+
+.onboarding-completion-card {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+    border: 2px solid rgba(34, 197, 94, 0.3);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.onboarding-completion-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+    animation: pulse 3s ease-in-out infinite;
+}
+
+.completion-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+    position: relative;
+    z-index: 1;
+    animation: scaleIn 0.5s ease 0.2s both;
+}
+
+.completion-icon-wrapper i {
+    font-size: 2.5rem;
+    color: white;
+    animation: checkmark 0.6s ease 0.4s both;
+}
+
+.completion-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem 0;
+    position: relative;
+    z-index: 1;
+}
+
+.completion-message {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem 0;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+}
+
+.completion-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.completion-stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #22c55e;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.completion-actions {
+    position: relative;
+    z-index: 1;
+}
+
+.completion-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+}
+
+.completion-close-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.completion-close-btn i {
+    font-size: 1rem;
+}
+
+/* Estado oculto da mensagem de conclusão */
+.onboarding-completion-container[data-dismissed="true"] {
+    display: none !important;
+}
+
+.btn-view-site {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.btn-view-site:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+    color: white;
+}
+
+/* Animações */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes checkmark {
+    0% {
+        transform: scale(0) rotate(-45deg);
+    }
+    50% {
+        transform: scale(1.2) rotate(0deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Dark mode para mensagem de conclusão */
+[data-theme="dark"] .onboarding-completion-card,
+body[data-theme="dark"] .onboarding-completion-card {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
+    border-color: rgba(34, 197, 94, 0.4);
+}
+
+@media (max-width: 768px) {
+    .onboarding-completion-card {
+        padding: 1.5rem;
+    }
+
+    .completion-icon-wrapper {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 1rem;
+    }
+
+    .completion-icon-wrapper i {
+        font-size: 2rem;
+    }
+
+    .completion-title {
+        font-size: 1.25rem;
+    }
+
+    .completion-message {
+        font-size: 0.875rem;
+    }
+
+    .completion-stats {
+        gap: 1.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .btn-view-site {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.8125rem;
+    }
+}
+</style>
+
+<script>
+// Função auxiliar para obter cookie (sempre disponível)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Função para fechar mensagem de conclusão (sempre disponível)
+function dismissCompletionMessage(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const container = document.getElementById('onboarding-completion-container');
+    if (!container) {
+        return false;
+    }
+
+    // Esconder imediatamente para melhor UX
+    container.style.display = 'none';
+    container.setAttribute('data-dismissed', 'true');
+
+    // Obter CSRF token do Django
+    let csrfToken = getCookie('csrftoken') ||
+                    document.querySelector('[name=csrfmiddlewaretoken]')?.value ||
+                    document.querySelector('input[name="csrfmiddlewaretoken"]')?.value ||
+                    '';
+
+    // Se ainda não encontrou, tentar buscar dentro do container
+    if (!csrfToken && container) {
+        const csrfInput = container.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfInput) {
+            csrfToken = csrfInput.value;
+        }
+    }
+
+    // Tentar buscar em qualquer lugar da página
+    if (!csrfToken) {
+        const allCsrfInputs = document.querySelectorAll('input[name="csrfmiddlewaretoken"]');
+        if (allCsrfInputs.length > 0) {
+            csrfToken = allCsrfInputs[0].value;
+        }
+    }
+
+    if (!csrfToken) {
+        // Mesmo sem token, esconder a mensagem (melhor UX)
+        return false;
+    }
+
+    // Enviar requisição para o servidor salvar no banco de dados
+    fetch('{% url "core:dismiss_onboarding_completion" %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({}),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro na resposta do servidor: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (!data.success) {
+            // Se der erro, mostrar novamente
+            container.style.display = '';
+            container.setAttribute('data-dismissed', 'false');
+        }
+    })
+    .catch(error => {
+        // Se der erro, mostrar novamente
+        container.style.display = '';
+        container.setAttribute('data-dismissed', 'false');
+    });
+
+    return false;
+}
+</script>
+
+{% if onboarding_progress and onboarding_progress.all_completed and onboarding_status and not onboarding_status.completion_message_dismissed %}
+<!-- Mensagem de conclusão -->
+<div id="onboarding-completion-container" class="onboarding-completion-container" data-dismissed="false">
+    {% csrf_token %}
+    <div class="onboarding-completion-card">
+        <button class="completion-close-btn" onclick="return dismissCompletionMessage(event);" aria-label="{% trans 'Fechar' %}" type="button">
+            <i class="fa-solid fa-times"></i>
+        </button>
+        <div class="completion-icon-wrapper">
+            <i class="fa-solid fa-check-circle"></i>
+        </div>
+        <h2 class="completion-title">{% trans "🎉 Parabéns! Seu cadastro está completo!" %}</h2>
+        <p class="completion-message">
+            {% trans "Você completou todas as etapas de configuração. Seu site está pronto e no ar!" %}
+        </p>
+        <div class="completion-stats">
+            <div class="completion-stat-item">
+                <div class="stat-value">{{ onboarding_progress.completed_count }}/{{ onboarding_progress.total_count }}</div>
+                <div class="stat-label">{% trans "Etapas concluídas" %}</div>
+            </div>
+            <div class="completion-stat-item">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">{% trans "Progresso" %}</div>
+            </div>
+        </div>
+        {% if site %}
+        <div class="completion-actions">
+            <a href="https://{{ site.get_full_subdomain }}" target="_blank" class="btn-view-site">
+                <i class="fa-solid fa-external-link"></i>
+                {% trans "Ver meu site" %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% elif onboarding_progress and not onboarding_progress.all_completed %}
+<div id="onboarding-progress-container" class="onboarding-progress-wrapper" data-collapsed="false">
+    <!-- Barra compacta (sempre visível) -->
+    <div class="onboarding-progress-bar" onclick="toggleOnboardingProgress()">
+        <div class="onboarding-bar-content">
+            <div class="onboarding-bar-left">
+                <i class="fa-solid fa-rocket" style="color: var(--primary-color); font-size: 1rem;"></i>
+                <div class="onboarding-bar-text">
+                    <span class="onboarding-bar-title">{% trans "Complete seu cadastro" %}</span>
+                    <span class="onboarding-bar-subtitle">{{ onboarding_progress.completed_count }}/{{ onboarding_progress.total_count }} {% trans "etapas concluídas" %}</span>
+                </div>
+            </div>
+            <div class="onboarding-bar-right">
+                <div class="onboarding-progress-circle">
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                        <circle cx="20" cy="20" r="18" stroke="rgba(59, 130, 246, 0.2)" stroke-width="3" fill="none"/>
+                        <circle cx="20" cy="20" r="18" stroke="var(--primary-color)" stroke-width="3" fill="none"
+                                class="onboarding-progress-ring"
+                                data-percentage="{{ onboarding_progress.percentage }}"
+                                transform="rotate(-90 20 20)"/>
+                    </svg>
+                    <span class="onboarding-percentage">{{ onboarding_progress.percentage }}%</span>
+                </div>
+                <button class="onboarding-toggle-btn" onclick="event.stopPropagation(); toggleOnboardingProgress();" aria-label="{% trans 'Expandir/Recolher' %}">
+                    <i class="fa-solid fa-chevron-down" id="onboarding-chevron"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo expandido (oculto por padrão no mobile) -->
+    <div class="onboarding-progress-content" id="onboarding-content">
+        <div class="onboarding-content-header">
+            <h3>{% trans "Etapas para completar seu cadastro" %}</h3>
+            <button class="onboarding-close-btn" onclick="closeOnboardingProgress()" aria-label="{% trans 'Fechar' %}">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+
+        <div class="onboarding-steps-grid">
+            {% for step in onboarding_progress.steps %}
+            <a href="{% url step.url_name %}" class="onboarding-step-card {% if step.completed %}completed{% endif %}"
+               {% if step.completed %}onclick="event.preventDefault(); return false;"{% endif %}>
+                <div class="onboarding-step-icon">
+                    {% if step.completed %}
+                    <i class="fa-solid fa-check"></i>
+                    {% else %}
+                    <i class="fa-solid {{ step.icon }}"></i>
+                    {% endif %}
+                </div>
+                <div class="onboarding-step-info">
+                    <div class="onboarding-step-title">{{ step.title }}</div>
+                    <div class="onboarding-step-desc">{{ step.description }}</div>
+                </div>
+                {% if not step.completed %}
+                <i class="fa-solid fa-arrow-right onboarding-step-arrow"></i>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+.onboarding-progress-wrapper {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+/* Barra compacta */
+.onboarding-progress-bar {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Quando expandido, remove borda arredondada superior */
+.onboarding-progress-wrapper[data-collapsed="false"] .onboarding-progress-bar {
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+}
+
+.onboarding-progress-bar:hover {
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+
+.onboarding-bar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.onboarding-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.onboarding-bar-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.onboarding-bar-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.onboarding-bar-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.onboarding-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.onboarding-progress-circle {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.onboarding-progress-circle svg {
+    transform: rotate(-90deg);
+}
+
+.onboarding-progress-circle circle[stroke="var(--primary-color)"] {
+    stroke: var(--primary-color);
+}
+
+.onboarding-percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.onboarding-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.onboarding-progress-wrapper[data-collapsed="false"] .onboarding-toggle-btn i {
+    transform: rotate(180deg);
+}
+
+.onboarding-toggle-btn:hover {
+    color: var(--primary-color);
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 4px;
+}
+
+/* Conteúdo expandido */
+.onboarding-progress-content {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 0;
+    margin-top: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+}
+
+.onboarding-progress-wrapper[data-collapsed="false"] .onboarding-progress-content {
+    max-height: 1000px;
+    padding: 1.25rem 1.5rem;
+    opacity: 1;
+}
+
+.onboarding-progress-wrapper[data-collapsed="true"] .onboarding-progress-content {
+    max-height: 0;
+    padding: 0;
+    opacity: 0;
+    border: none;
+    margin-top: 0;
+}
+
+.onboarding-content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+.onboarding-content-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .onboarding-progress-bar {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+        border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .onboarding-progress-content {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
+        border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .onboarding-step-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .onboarding-step-card:not(.completed):hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(59, 130, 246, 0.5);
+    }
+
+    .onboarding-step-card.completed {
+        background: rgba(34, 197, 94, 0.15);
+        border-color: rgba(34, 197, 94, 0.4);
+    }
+}
+
+/* Ajustes para tema escuro do sistema */
+[data-theme="dark"] .onboarding-progress-bar,
+body[data-theme="dark"] .onboarding-progress-bar {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+[data-theme="dark"] .onboarding-progress-content,
+body[data-theme="dark"] .onboarding-progress-content {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+[data-theme="dark"] .onboarding-step-card,
+body[data-theme="dark"] .onboarding-step-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .onboarding-step-card:not(.completed):hover,
+body[data-theme="dark"] .onboarding-step-card:not(.completed):hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+[data-theme="dark"] .onboarding-step-card.completed,
+body[data-theme="dark"] .onboarding-step-card.completed {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.4);
+}
+
+.onboarding-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.onboarding-close-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Grid de etapas */
+.onboarding-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.onboarding-step-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.onboarding-step-card:not(.completed):hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+.onboarding-step-card.completed {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+    cursor: default;
+}
+
+.onboarding-step-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 8px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.onboarding-step-card.completed .onboarding-step-icon {
+    background: rgba(34, 197, 94, 0.2);
+}
+
+.onboarding-step-icon i {
+    font-size: 1.125rem;
+    color: var(--primary-color);
+    transition: all 0.2s ease;
+}
+
+.onboarding-step-card.completed .onboarding-step-icon i {
+    color: #22c55e;
+}
+
+.onboarding-step-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.onboarding-step-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.onboarding-step-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.onboarding-step-arrow {
+    color: var(--primary-color);
+    font-size: 0.875rem;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.onboarding-step-card:not(.completed):hover .onboarding-step-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+}
+
+/* Mobile: sempre começa colapsado */
+@media (max-width: 768px) {
+    .onboarding-progress-wrapper {
+        margin-bottom: 1rem;
+    }
+
+    .onboarding-progress-bar {
+        padding: 0.75rem;
+    }
+
+    .onboarding-bar-title {
+        font-size: 0.8125rem;
+    }
+
+    .onboarding-bar-subtitle {
+        font-size: 0.6875rem;
+    }
+
+    .onboarding-progress-circle {
+        width: 36px;
+        height: 36px;
+    }
+
+    .onboarding-progress-circle svg {
+        width: 36px;
+        height: 36px;
+    }
+
+    .onboarding-percentage {
+        font-size: 0.5625rem;
+    }
+
+    .onboarding-steps-grid {
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+    }
+
+    .onboarding-step-card {
+        padding: 0.875rem;
+    }
+
+    .onboarding-progress-content {
+        padding: 1rem;
+    }
+
+    .onboarding-progress-wrapper[data-collapsed="false"] .onboarding-progress-content {
+        padding: 1rem;
+    }
+}
+
+/* Estado oculto */
+.onboarding-progress-wrapper[data-hidden="true"] {
+    display: none !important;
+    max-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+</style>
+
+<script>
+function toggleOnboardingProgress() {
+    const container = document.getElementById('onboarding-progress-container');
+    const isCollapsed = container.getAttribute('data-collapsed') === 'true';
+    container.setAttribute('data-collapsed', isCollapsed ? 'false' : 'true');
+}
+
+function closeOnboardingProgress() {
+    const container = document.getElementById('onboarding-progress-container');
+    if (!container) return;
+
+    // Recolher primeiro
+    container.setAttribute('data-collapsed', 'true');
+
+    // Depois esconder completamente
+    setTimeout(function() {
+        container.setAttribute('data-hidden', 'true');
+        // Salvar timestamp no localStorage
+        localStorage.setItem('onboarding_progress_closed_at', Date.now().toString());
+    }, 300); // Aguardar animação de recolhimento
+}
+
+// Verificar se foi fechado anteriormente e se já passou 1 minuto
+function checkOnboardingStatus() {
+    const container = document.getElementById('onboarding-progress-container');
+    if (!container) return;
+
+    const closedAt = localStorage.getItem('onboarding_progress_closed_at');
+
+    if (closedAt) {
+        const closedTime = parseInt(closedAt);
+        const now = Date.now();
+        const oneMinute = 60 * 1000; // 1 minuto em milissegundos
+
+        // Se passou mais de 1 minuto, mostrar novamente
+        if (now - closedTime >= oneMinute) {
+            localStorage.removeItem('onboarding_progress_closed_at');
+            container.setAttribute('data-hidden', 'false');
+            // No mobile, começa colapsado
+            if (window.innerWidth <= 768) {
+                container.setAttribute('data-collapsed', 'true');
+            } else {
+                container.setAttribute('data-collapsed', 'false');
+            }
+        } else {
+            // Ainda está dentro do período de 1 minuto, manter oculto
+            container.setAttribute('data-hidden', 'true');
+            // Calcular tempo restante e agendar para mostrar novamente
+            const timeRemaining = oneMinute - (now - closedTime);
+            setTimeout(function() {
+                container.setAttribute('data-hidden', 'false');
+                localStorage.removeItem('onboarding_progress_closed_at');
+                // No mobile, começa colapsado
+                if (window.innerWidth <= 768) {
+                    container.setAttribute('data-collapsed', 'true');
+                } else {
+                    container.setAttribute('data-collapsed', 'false');
+                }
+            }, timeRemaining);
+        }
+    } else {
+        // Não foi fechado, mostrar normalmente
+        container.setAttribute('data-hidden', 'false');
+        // No mobile, começa colapsado
+        if (window.innerWidth <= 768) {
+            container.setAttribute('data-collapsed', 'true');
+        } else {
+            container.setAttribute('data-collapsed', 'false');
+        }
+    }
+}
+
+// Calcular e atualizar círculo de progresso
+function updateProgressCircle() {
+    const progressRing = document.querySelector('.onboarding-progress-ring');
+    if (!progressRing) return;
+
+    const percentage = parseFloat(progressRing.getAttribute('data-percentage')) || 0;
+    const radius = 18;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (percentage / 100) * circumference;
+
+    progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
+    progressRing.style.strokeDashoffset = offset;
+}
+
+// Inicializar quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    checkOnboardingStatus();
+    updateProgressCircle();
+
+    // Adicionar event listener alternativo para o botão de fechar mensagem de conclusão
+    // Usar setTimeout para garantir que o elemento esteja no DOM
+    setTimeout(function() {
+        const completionCloseBtn = document.querySelector('.completion-close-btn');
+        if (completionCloseBtn) {
+            // Remover listeners anteriores se houver
+            const newBtn = completionCloseBtn.cloneNode(true);
+            completionCloseBtn.parentNode.replaceChild(newBtn, completionCloseBtn);
+
+            // Adicionar novo listener
+            newBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (typeof dismissCompletionMessage === 'function') {
+                    dismissCompletionMessage(e);
+                } else {
+                    // Fallback: esconder diretamente
+                    const container = document.getElementById('onboarding-completion-container');
+                    if (container) {
+                        container.style.display = 'none';
+                        container.setAttribute('data-dismissed', 'true');
+                    }
+                }
+                return false;
+            });
+        }
+    }, 100);
+});
+</script>
+{% endif %}

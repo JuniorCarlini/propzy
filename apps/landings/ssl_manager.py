@@ -244,3 +244,14 @@ class SSLManager:
 
 # Instância global
 ssl_manager = SSLManager()
+
+
+
+
+
+
+
+
+
+
+

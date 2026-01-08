@@ -1,119 +1,695 @@
 {% extends "base.html" %}
 {% load static i18n %}
 
-{% block title %}{% trans "Configurar Landing Page" %}{% endblock %}
+{% block title %}{% trans "Configurar Site" %} | Propzy{% endblock %}
+
+{% block extra_head %}
+<style>
+    .config-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .config-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .config-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
+        line-height: 0.9;
+    }
+
+    .config-header-content p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+        margin-top: 0;
+        line-height: 1;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .info-alert {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+    }
+
+    .info-alert i {
+        color: #3b82f6;
+        font-size: 1.125rem;
+    }
+
+    .info-alert a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .info-alert a:hover {
+        text-decoration: underline;
+    }
+
+    .config-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 1.5rem;
+    }
+
+    .config-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .config-card-header h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .info-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value {
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .info-value a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .info-value a:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .status-badge.published {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+
+    .status-badge.draft {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+
+    .status-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+
+    .status-badge.published .status-badge-dot {
+        background: #10b981;
+    }
+
+    .status-badge.draft .status-badge-dot {
+        background: #f59e0b;
+    }
+
+    .config-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
+    }
+
+    .btn-action-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-action-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 109, 255, 0.2);
+    }
+
+    .btn-action-secondary {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-action-secondary:hover {
+        background: var(--bg-secondary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .themes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .theme-card {
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+    .theme-card.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .theme-card.disabled:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .theme-card.active {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 109, 255, 0.1);
+    }
+
+    .theme-card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: var(--bg-tertiary);
+    }
+
+    .theme-card-placeholder {
+        width: 100%;
+        height: 200px;
+        background: var(--bg-tertiary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        font-size: 3rem;
+    }
+
+    .theme-card-body {
+        padding: 1.5rem;
+    }
+
+    .theme-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+    }
+
+    .theme-card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .theme-card-badges {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .theme-badge {
+        padding: 0.25rem 0.625rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .theme-badge.current {
+        background: rgba(0, 109, 255, 0.1);
+        color: var(--primary-color);
+    }
+
+    .theme-badge.premium {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+
+    .theme-card-description {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.75rem;
+        line-height: 1.5;
+    }
+
+    .theme-card-meta {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+    }
+
+    .theme-card-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-theme {
+        flex: 1;
+        padding: 0.625rem 1rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-theme-preview {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-theme-preview:hover {
+        background: var(--bg-secondary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-theme-apply {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+    }
+
+    .btn-theme-apply:hover {
+        background: var(--primary-hover);
+        color: white;
+    }
+
+    .btn-theme-soon {
+        background: var(--bg-tertiary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+        cursor: not-allowed;
+    }
+
+    .form-fields-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 109, 255, 0.1);
+    }
+
+    .form-group .help-text {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.375rem;
+    }
+
+    .form-group .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0.375rem 0 0 0;
+    }
+
+    .form-group .errorlist li {
+        font-size: 0.75rem;
+        color: var(--color-danger);
+        margin-top: 0.25rem;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .alert {
+        padding: 1rem 1.25rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        border: 1px solid;
+    }
+
+    .alert-danger {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--color-danger);
+        color: var(--color-danger);
+    }
+
+    .empty-themes {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-themes-icon {
+        font-size: 3rem;
+        opacity: 0.5;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .config-header {
+            flex-direction: column;
+        }
+
+        .btn-back {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .config-card {
+            padding: 1.5rem;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .themes-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .config-actions {
+            width: 100%;
+        }
+
+        .btn-action {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .form-fields-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="mb-4">{% trans "Configurar Landing Page" %}</h1>
+<div class="config-container fade-in">
+    <div class="config-header">
+        <div class="config-header-content">
+            <h1>{% trans "Configurar Site" %}</h1>
+            <p>{% trans "Gerencie as configurações e temas do seu site." %}</p>
+        </div>
+        <a href="{% url 'landings:dashboard_home' %}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+            {% trans "Voltar" %}
+        </a>
+    </div>
 
-            <div class="alert alert-info">
-                <i class="bi bi-info-circle"></i>
-                {% trans "Configure os dados da sua landing page através do painel administrativo em" %}
-                <a href="/admin/landings/landingpage/{{ landing_page.id }}/change/" target="_blank">
-                    {% trans "Admin > Landing Pages" %}
+    {% if site %}
+    <div class="info-alert">
+        <i class="fa-solid fa-info-circle"></i>
+        <div>
+            {% trans "Novos temas em breve" %}
+        </div>
+    </div>
+
+    <!-- Dados do Site -->
+    <div class="config-card">
+        <div class="config-card-header">
+            <h2>{% trans "Dados do Site" %}</h2>
+            <div class="config-actions">
+                {% if site.is_published %}
+                <a href="{{ site.get_primary_url }}" class="btn-action btn-action-primary" target="_blank">
+                    <i class="fa-solid fa-external-link"></i>
+                    {% trans "Ver Site" %}
                 </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="save_site_data" value="1">
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-fields-grid">
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                            {% if field.field.required %}<span style="color: var(--color-danger);">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
 
-            <!-- Informações Atuais -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">{% trans "Dados Atuais" %}</h5>
+            <div class="form-actions">
+                <button type="submit" class="btn-action btn-action-primary">
+                    <i class="fa-solid fa-save"></i>
+                    {% trans "Salvar Alterações" %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Configuração de Seções -->
+    {% if site.theme %}
+    <div class="config-card">
+        <div class="config-card-header">
+            <h2>{% trans "Configurar Seções do Tema" %}</h2>
+            <div class="config-actions">
+                <a href="{% url 'landings:dashboard_theme_sections' %}" class="btn-action btn-action-primary">
+                    <i class="fa-solid fa-sliders"></i>
+                    {% trans "Configurar Seções" %}
+                </a>
+            </div>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">
+            {% trans "Configure quais seções aparecerão no seu site e personalize o conteúdo de cada uma." %}
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Seleção de Tema -->
+    <div class="config-card">
+        <div class="config-card-header">
+            <h2>{% trans "Temas Disponíveis" %}</h2>
+        </div>
+
+        {% if themes %}
+        <div class="themes-grid">
+            {% for theme in themes %}
+            {% comment %}Verifica se o tema está disponível: deve estar ativo OU ser o tema atual{% endcomment %}
+            <div class="theme-card {% if not theme.is_active and site.theme.id != theme.id %}disabled{% endif %} {% if site.theme.id == theme.id %}active{% endif %}">
+                {% if theme.screenshot %}
+                <img src="{{ theme.screenshot.url }}" alt="{{ theme.name }}" class="theme-card-image">
+                {% else %}
+                <div class="theme-card-placeholder">
+                    <i class="fa-solid fa-palette"></i>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>{% trans "Nome do Negócio:" %}</strong> {{ landing_page.business_name }}</p>
-                            <p><strong>{% trans "E-mail:" %}</strong> {{ landing_page.email }}</p>
-                            <p><strong>{% trans "Telefone:" %}</strong> {{ landing_page.phone|default:"-" }}</p>
-                            <p><strong>{% trans "WhatsApp:" %}</strong> {{ landing_page.whatsapp|default:"-" }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>{% trans "Subdomínio:" %}</strong> {{ landing_page.get_full_subdomain }}</p>
-                            <p><strong>{% trans "Domínio Personalizado:" %}</strong> {{ landing_page.custom_domain|default:"-" }}</p>
-                            <p><strong>{% trans "Tema:" %}</strong> {{ landing_page.theme.name|default:"Padrão" }}</p>
-                            <p>
-                                <strong>{% trans "Status:" %}</strong>
-                                {% if landing_page.is_published %}
-                                <span class="badge bg-success">{% trans "Publicada" %}</span>
-                                {% else %}
-                                <span class="badge bg-warning">{% trans "Rascunho" %}</span>
-                                {% endif %}
-                            </p>
+                {% endif %}
+
+                <div class="theme-card-body">
+                    <div class="theme-card-header">
+                        <h3 class="theme-card-title">{{ theme.name }}</h3>
+                        <div class="theme-card-badges">
+                            {% if site.theme.id == theme.id %}
+                            <span class="theme-badge current">{% trans "Atual" %}</span>
+                            {% endif %}
+                            {% if theme.is_premium %}
+                            <span class="theme-badge premium">Premium</span>
+                            {% endif %}
                         </div>
                     </div>
 
-                    <div class="mt-3">
-                        <a href="/admin/landings/landingpage/{{ landing_page.id }}/change/" class="btn btn-primary" target="_blank">
-                            <i class="bi bi-pencil"></i> {% trans "Editar no Admin" %}
-                        </a>
+                    <p class="theme-card-description">{{ theme.description|default:"—" }}</p>
 
-                        {% if landing_page.is_published %}
-                        <a href="{{ landing_page.get_primary_url }}" class="btn btn-success" target="_blank">
-                            <i class="bi bi-box-arrow-up-right"></i> {% trans "Ver Landing Page" %}
+                    <div class="theme-card-meta">
+                        <strong>{% trans "Categoria:" %}</strong> {{ theme.get_category_display }}
+                    </div>
+
+                    <div class="theme-card-footer">
+                        {% if theme.is_active or site.theme.id == theme.id %}
+                        <form method="post" style="width: 100%; margin-bottom: 0.5rem;">
+                            {% csrf_token %}
+                            <input type="hidden" name="apply_theme" value="1">
+                            <input type="hidden" name="theme_id" value="{{ theme.id }}">
+                            <button type="submit" class="btn-theme btn-theme-apply" style="width: 100%;">
+                                <i class="fa-solid fa-check"></i>
+                                {% trans "Aplicar Tema" %}
+                            </button>
+                        </form>
+                        <a href="{% url 'landings:theme_preview' theme.slug %}" class="btn-theme btn-theme-preview" target="_blank" style="width: 100%;">
+                            <i class="fa-solid fa-eye"></i>
+                            {% trans "Preview" %}
                         </a>
+                        {% else %}
+                        <button type="button" class="btn-theme btn-theme-soon" style="width: 100%;" disabled>
+                            {% trans "Em breve" %}
+                        </button>
                         {% endif %}
                     </div>
                 </div>
             </div>
-
-            <!-- Seleção de Tema -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">{% trans "Temas Disponíveis" %}</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-4">
-                        {% for theme in themes %}
-                        <div class="col-md-4">
-                            <div class="card h-100 {% if landing_page.theme.id == theme.id %}border-primary{% endif %}">
-                                {% if theme.screenshot %}
-                                <img src="{{ theme.screenshot.url }}" class="card-img-top" alt="{{ theme.name }}">
-                                {% else %}
-                                <div class="bg-secondary text-white text-center p-5">
-                                    <i class="bi bi-brush fs-1"></i>
-                                </div>
-                                {% endif %}
-
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        {{ theme.name }}
-                                        {% if landing_page.theme.id == theme.id %}
-                                        <span class="badge bg-primary">{% trans "Atual" %}</span>
-                                        {% endif %}
-                                        {% if theme.is_premium %}
-                                        <span class="badge bg-warning">Premium</span>
-                                        {% endif %}
-                                    </h5>
-                                    <p class="card-text small">{{ theme.description }}</p>
-                                    <p class="small text-muted">
-                                        <strong>{% trans "Categoria:" %}</strong> {{ theme.get_category_display }}
-                                    </p>
-                                </div>
-
-                                <div class="card-footer">
-                                    <a href="{% url 'landings:theme_preview' theme.slug %}"
-                                       class="btn btn-sm btn-outline-primary w-100"
-                                       target="_blank">
-                                        <i class="bi bi-eye"></i> {% trans "Preview" %}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <div class="col-12">
-                            <p class="text-muted">{% trans "Nenhum tema disponível. Execute: python manage.py install_themes" %}</p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
+        {% else %}
+        <div class="empty-themes">
+            <div class="empty-themes-icon">
+                <i class="fa-solid fa-palette"></i>
+            </div>
+            <p>{% trans "Nenhum tema disponível. Execute: python manage.py install_themes" %}</p>
+        </div>
+        {% endif %}
     </div>
+    {% endif %}
 </div>
 {% endblock %}
-
-
-

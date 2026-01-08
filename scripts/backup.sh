@@ -58,3 +58,14 @@ echo "   Banco: gunzip < $BACKUP_DIR/db_$DATE.sql.gz | docker exec -i propzy-db 
 echo "   Mídia: tar -xzf $BACKUP_DIR/media_$DATE.tar.gz -C /"
 echo ""
 
+
+
+
+
+
+
+
+
+
+
+

@@ -16,7 +16,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Hero Section */
 .hero-classic {
     background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)),
-                url('{% if landing_page.hero_image %}{{ landing_page.hero_image.url }}{% else %}https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920{% endif %}');
+                url('{% if site.hero_image %}{{ site.hero_image.url }}{% else %}https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920{% endif %}');
     background-size: cover;
     background-position: center;
     min-height: 500px;
@@ -172,10 +172,10 @@ h1, h2, h3, h4, h5, h6 {
 <nav class="navbar navbar-expand-lg navbar-classic sticky-top">
     <div class="container">
         <a class="navbar-brand" href="#">
-            {% if landing_page.logo %}
-            <img src="{{ landing_page.logo.url }}" alt="{{ landing_page.business_name }}" style="max-height: 50px;">
+            {% if site.logo %}
+            <img src="{{ site.logo.url }}" alt="{{ site.business_name }}" style="max-height: 50px;">
             {% else %}
-            {{ landing_page.business_name }}
+            {{ site.business_name }}
             {% endif %}
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -203,14 +203,14 @@ h1, h2, h3, h4, h5, h6 {
 <!-- Hero Section -->
 <section id="home" class="hero-classic">
     <div class="container">
-        <h1>{{ landing_page.business_name }}</h1>
-        <p>{{ landing_page.business_description|default:"Excelência em Imóveis" }}</p>
+        <h1>{{ site.business_name }}</h1>
+        <p>{{ site.business_description|default:"Excelência em Imóveis" }}</p>
         <div class="mt-4">
             <a href="#imoveis" class="btn btn-classic btn-lg me-3">
                 <i class="bi bi-house-fill"></i> {% trans "Ver Imóveis" %}
             </a>
-            {% if landing_page.whatsapp %}
-            <a href="https://wa.me/{{ landing_page.whatsapp }}" class="btn btn-success btn-lg" target="_blank">
+            {% if site.whatsapp %}
+            <a href="https://wa.me/{{ site.whatsapp }}" class="btn btn-success btn-lg" target="_blank">
                 <i class="bi bi-whatsapp"></i> {% trans "Contato" %}
             </a>
             {% endif %}
@@ -242,9 +242,9 @@ h1, h2, h3, h4, h5, h6 {
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
-                {% if landing_page.logo %}
-                <img src="{{ landing_page.logo.url }}"
-                     alt="{{ landing_page.business_name }}"
+                {% if site.logo %}
+                <img src="{{ site.logo.url }}"
+                     alt="{{ site.business_name }}"
                      class="img-fluid rounded shadow-lg">
                 {% else %}
                 <div class="bg-secondary rounded p-5 text-center text-white">
@@ -254,17 +254,17 @@ h1, h2, h3, h4, h5, h6 {
             </div>
             <div class="col-lg-6">
                 <h2 class="mb-4" style="font-size: 2.5rem;">{% trans "Sobre Nós" %}</h2>
-                <p class="lead">{{ landing_page.business_description }}</p>
+                <p class="lead">{{ site.business_description }}</p>
 
                 <div class="mt-4">
-                    {% if landing_page.email %}
-                    <p><i class="bi bi-envelope-fill text-primary me-2"></i> {{ landing_page.email }}</p>
+                    {% if site.email %}
+                    <p><i class="bi bi-envelope-fill text-primary me-2"></i> {{ site.email }}</p>
                     {% endif %}
-                    {% if landing_page.phone %}
-                    <p><i class="bi bi-telephone-fill text-primary me-2"></i> {{ landing_page.phone }}</p>
+                    {% if site.phone %}
+                    <p><i class="bi bi-telephone-fill text-primary me-2"></i> {{ site.phone }}</p>
                     {% endif %}
-                    {% if landing_page.address %}
-                    <p><i class="bi bi-geo-alt-fill text-primary me-2"></i> {{ landing_page.address }}, {{ landing_page.city }}/{{ landing_page.state }}</p>
+                    {% if site.address %}
+                    <p><i class="bi bi-geo-alt-fill text-primary me-2"></i> {{ site.address }}, {{ site.city }}/{{ site.state }}</p>
                     {% endif %}
                 </div>
             </div>
@@ -299,13 +299,13 @@ h1, h2, h3, h4, h5, h6 {
     <div class="container">
         <h2 class="mb-4">{% trans "Pronto para Encontrar Seu Imóvel?" %}</h2>
         <p class="lead mb-4">{% trans "Entre em contato e agende uma visita" %}</p>
-        {% if landing_page.whatsapp %}
-        <a href="https://wa.me/{{ landing_page.whatsapp }}" class="btn btn-classic btn-lg" target="_blank">
+        {% if site.whatsapp %}
+        <a href="https://wa.me/{{ site.whatsapp }}" class="btn btn-classic btn-lg" target="_blank">
             <i class="bi bi-whatsapp"></i> {% trans "Falar no WhatsApp" %}
         </a>
         {% endif %}
-        {% if landing_page.phone %}
-        <a href="tel:{{ landing_page.phone }}" class="btn btn-outline-light btn-lg ms-3">
+        {% if site.phone %}
+        <a href="tel:{{ site.phone }}" class="btn btn-outline-light btn-lg ms-3">
             <i class="bi bi-telephone"></i> {% trans "Ligar Agora" %}
         </a>
         {% endif %}
@@ -313,8 +313,8 @@ h1, h2, h3, h4, h5, h6 {
 </section>
 
 <!-- WhatsApp Float Button -->
-{% if landing_page.whatsapp %}
-<a href="https://wa.me/{{ landing_page.whatsapp }}"
+{% if site.whatsapp %}
+<a href="https://wa.me/{{ site.whatsapp }}"
    class="whatsapp-float"
    target="_blank"
    title="{% trans 'Fale conosco no WhatsApp' %}">
@@ -350,6 +350,17 @@ window.addEventListener('scroll', function() {
 });
 </script>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

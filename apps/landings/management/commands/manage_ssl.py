@@ -166,3 +166,14 @@ class Command(BaseCommand):
 
             if lp.ssl_error:
                 self.stdout.write(self.style.ERROR(f"   └─ Erro: {lp.ssl_error[:100]}..."))
+
+
+
+
+
+
+
+
+
+
+
