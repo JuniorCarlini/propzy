@@ -15,7 +15,8 @@ def onboarding_progress(request: Any) -> dict[str, Any]:
     Returns:
         Dict com informações de onboarding (vazio se usuário não estiver autenticado)
     """
-    if not request.user.is_authenticated:
+    # Verificar se request.user existe (pode não existir antes do middleware de autenticação)
+    if not hasattr(request, 'user') or not request.user.is_authenticated:
         return {"onboarding_progress": None}
 
     try:
@@ -27,7 +28,8 @@ def onboarding_progress(request: Any) -> dict[str, Any]:
         # Adicionar site ao contexto se disponível
         site = None
         try:
-            site = request.user.site
+            if hasattr(request.user, 'site'):
+                site = request.user.site
         except Exception:
             pass
 
@@ -44,5 +46,6 @@ def onboarding_progress(request: Any) -> dict[str, Any]:
             "onboarding_status": onboarding_status,
         }
     except Exception:
+        # Em caso de qualquer erro, retornar valores padrão seguros
         return {"onboarding_progress": None, "site": None, "onboarding_status": None}
 
