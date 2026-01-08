@@ -24,14 +24,15 @@ urlpatterns += i18n_patterns(
 # Sites públicos (DEVE SER ANTES DO CATCH-ALL!)
 # Não tem prefixo de idioma para funcionar com domínios/subdomínios personalizados
 # O middleware TenantMiddleware detecta se é um site válido
-from apps.landings.views import properties_list, property_detail, site_view
+from apps.core.views import root_view
+from apps.landings.views import properties_list, property_detail
 
 urlpatterns += [
     # Páginas públicas do site (acessadas diretamente no domínio do site)
     path("imoveis/", properties_list, name="landings_properties_list"),
     path("imovel/<int:pk>/", property_detail, name="landings_property_detail"),
-    # Site público (catch-all - DEVE SER A ÚLTIMA!)
-    path("", site_view, name="site_public"),
+    # View raiz que decide: mostra site se válido, senão mostra página inicial
+    path("", root_view, name="root"),
 ]
 
 # Servir arquivos de mídia em desenvolvimento

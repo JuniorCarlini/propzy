@@ -16,6 +16,30 @@ from .forms import UserPasswordChangeForm, UserProfileForm
 from .models import OnboardingStatus
 
 
+def home(request: HttpRequest) -> HttpResponse:
+    """
+    Página inicial simples na raiz do projeto.
+    Só é exibida quando não há um site válido detectado pelo middleware.
+    """
+    return render(request, "core/home.html")
+
+
+def root_view(request: HttpRequest) -> HttpResponse:
+    """
+    View intermediária que decide qual página mostrar:
+    - Se for um site válido (request.is_site = True), mostra o site
+    - Caso contrário, mostra a página inicial
+    """
+    # Se for um site válido, redireciona para a view do site
+    if getattr(request, "is_site", False) and getattr(request, "tenant", None):
+        from apps.landings.views import site_view
+
+        return site_view(request)
+
+    # Caso contrário, mostra a página inicial
+    return home(request)
+
+
 @login_required
 def toggle_theme(request: HttpRequest) -> HttpResponse:
     """
