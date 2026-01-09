@@ -1,9 +1,10 @@
 """
 Comando para configurar o Site do Django (necessário para allauth)
 """
+
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.management.base import BaseCommand
-from django.conf import settings
 
 
 class Command(BaseCommand):
@@ -19,30 +20,11 @@ class Command(BaseCommand):
                 site.domain = base_domain
                 site.name = "Propzy"
                 site.save()
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"✅ Site atualizado: {site.domain} ({site.name})"
-                    )
-                )
+                self.stdout.write(self.style.SUCCESS(f"✅ Site atualizado: {site.domain} ({site.name})"))
             else:
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"✅ Site já está configurado corretamente: {site.domain}"
-                    )
-                )
+                self.stdout.write(self.style.SUCCESS(f"✅ Site já está configurado corretamente: {site.domain}"))
         except Site.DoesNotExist:
             # Criar site se não existir
             base_domain = getattr(settings, "BASE_DOMAIN", "propzy.com.br")
-            site = Site.objects.create(
-                id=settings.SITE_ID,
-                domain=base_domain,
-                name="Propzy"
-            )
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"✅ Site criado: {site.domain} ({site.name})"
-                )
-            )
-
-
-
+            site = Site.objects.create(id=settings.SITE_ID, domain=base_domain, name="Propzy")
+            self.stdout.write(self.style.SUCCESS(f"✅ Site criado: {site.domain} ({site.name})"))

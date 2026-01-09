@@ -5,7 +5,6 @@ Gera certificados SSL automaticamente quando domínio personalizado é adicionad
 
 import logging
 
-from django.conf import settings
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
@@ -51,7 +50,7 @@ def generate_ssl_for_custom_domain(sender, instance, created, **kwargs):
     """
     # Atualizar subdomain se business_name mudou
     if getattr(instance, "_business_name_changed", False):
-        logger.info(f"🔄 Atualizando subdomain devido a mudança no business_name")
+        logger.info("🔄 Atualizando subdomain devido a mudança no business_name")
         try:
             instance.update_subdomain_from_business_name()
             # Salvar apenas o subdomain para evitar loop infinito (post_save chamaria novamente)
@@ -68,7 +67,7 @@ def generate_ssl_for_custom_domain(sender, instance, created, **kwargs):
 
         # Importar aqui para evitar circular import
         # ATUALIZADO: Tasks movidas para apps.infrastructure
-        from apps.infrastructure.tasks import check_custom_domain_dns, generate_ssl_certificate
+        from apps.infrastructure.tasks import check_custom_domain_dns
 
         try:
             # Verificar DNS após 5 minutos (dar tempo inicial para propagação)

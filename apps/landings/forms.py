@@ -37,11 +37,13 @@ class SiteBasicForm(forms.ModelForm):
                 widget = self.fields[field_name].widget
                 # Campos de SEO sempre como textarea
                 if field_name in ["meta_title", "meta_description"]:
-                    widget = forms.Textarea(attrs={
-                        "class": "form-control",
-                        "style": "width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.875rem; min-height: 80px; resize: vertical;",
-                        "rows": "3",
-                    })
+                    widget = forms.Textarea(
+                        attrs={
+                            "class": "form-control",
+                            "style": "width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.875rem; min-height: 80px; resize: vertical;",
+                            "rows": "3",
+                        }
+                    )
                     self.fields[field_name].widget = widget
                 elif isinstance(widget, forms.Textarea):
                     widget.attrs.update(
@@ -74,13 +76,19 @@ class SiteBasicForm(forms.ModelForm):
         self.fields["business_name"].help_text = ""
         self.fields["email"].help_text = _("E-mail onde os visitantes do site podem entrar em contato com você.")
         self.fields["phone"].help_text = _("Telefone fixo ou celular para contato (opcional).")
-        self.fields["whatsapp"].help_text = _("Número do WhatsApp com DDD (ex: 11987654321). Será usado no botão de contato do site.")
+        self.fields["whatsapp"].help_text = _(
+            "Número do WhatsApp com DDD (ex: 11987654321). Será usado no botão de contato do site."
+        )
         self.fields["address"].help_text = _("Endereço completo do seu negócio (rua, número, complemento).")
         self.fields["city"].help_text = _("Cidade onde seu negócio está localizado.")
         self.fields["state"].help_text = _("Estado onde seu negócio está localizado (ex: SP, RJ, MG).")
         # Help texts dos campos de SEO
-        self.fields["meta_title"].help_text = _("Título que aparece nos resultados de busca do Google. Seja objetivo e use palavras-chave importantes. Máximo 60 caracteres.")
-        self.fields["meta_description"].help_text = _("Descrição curta que aparece abaixo do título nos resultados de busca. Explique brevemente o que seu negócio oferece. Máximo 160 caracteres.")
+        self.fields["meta_title"].help_text = _(
+            "Título que aparece nos resultados de busca do Google. Seja objetivo e use palavras-chave importantes. Máximo 60 caracteres."
+        )
+        self.fields["meta_description"].help_text = _(
+            "Descrição curta que aparece abaixo do título nos resultados de busca. Explique brevemente o que seu negócio oferece. Máximo 160 caracteres."
+        )
 
         # Validações para SEO
         self.fields["meta_title"].max_length = 60
@@ -99,6 +107,7 @@ class SiteBasicForm(forms.ModelForm):
             # Formatar valor inicial se existir (vindo do banco sem formatação)
             if self.instance and self.instance.pk and self.instance.phone:
                 import re
+
                 phone_digits = re.sub(r"\D", "", self.instance.phone)
                 if phone_digits:
                     if len(phone_digits) <= 2:
@@ -123,6 +132,7 @@ class SiteBasicForm(forms.ModelForm):
             # Formatar valor inicial se existir (vindo do banco sem formatação)
             if self.instance and self.instance.pk and self.instance.whatsapp:
                 import re
+
                 whatsapp_digits = re.sub(r"\D", "", self.instance.whatsapp)
                 if whatsapp_digits:
                     if len(whatsapp_digits) <= 2:
@@ -140,6 +150,7 @@ class SiteBasicForm(forms.ModelForm):
         Remove formatação dos campos de telefone antes de salvar no banco.
         """
         import re
+
         cleaned_data = super().clean()
 
         # Remover formatação de phone e whatsapp (deixar apenas números)
@@ -177,7 +188,9 @@ class SiteAdvancedForm(forms.ModelForm):
         self.fields["custom_domain"].label = _("Domínio Personalizado")
 
         # Help texts
-        self.fields["custom_domain"].help_text = _("Domínio personalizado (ex: meusite.com.br). Configure o DNS apontando para nosso servidor.")
+        self.fields["custom_domain"].help_text = _(
+            "Domínio personalizado (ex: meusite.com.br). Configure o DNS apontando para nosso servidor."
+        )
 
 
 class SiteDesignForm(forms.ModelForm):
@@ -262,6 +275,7 @@ class SiteDesignForm(forms.ModelForm):
     def clean(self):
         """Valida que todas as cores estão no formato hexadecimal."""
         import re
+
         cleaned_data = super().clean()
 
         hex_pattern = re.compile(r"^#[0-9A-Fa-f]{6}$")
@@ -269,8 +283,7 @@ class SiteDesignForm(forms.ModelForm):
         for field_name, value in cleaned_data.items():
             if value and not hex_pattern.match(value):
                 self.add_error(
-                    field_name,
-                    forms.ValidationError(_("A cor deve estar no formato hexadecimal (ex: #007bff)"))
+                    field_name, forms.ValidationError(_("A cor deve estar no formato hexadecimal (ex: #007bff)"))
                 )
 
         return cleaned_data

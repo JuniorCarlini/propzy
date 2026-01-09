@@ -211,11 +211,11 @@ def dashboard_config_basic(request):
         form = SiteBasicForm(request.POST, instance=site)
         if form.is_valid():
             # Salva os valores ANTES de salvar para comparar depois
-            old_business_name = site.business_name.strip() if site.business_name else ''
+            old_business_name = site.business_name.strip() if site.business_name else ""
             old_subdomain = site.subdomain
 
             # Pega o novo valor do formulário ANTES de salvar para comparar
-            new_business_name = form.cleaned_data.get('business_name', '').strip()
+            new_business_name = form.cleaned_data.get("business_name", "").strip()
 
             # Salva o formulário - isso atualiza form.instance com os dados salvos
             saved_site = form.save()
@@ -721,6 +721,7 @@ def dashboard_section_config_form(request, section_key):
         image_path = section_config.get("image")
         if image_path:
             from django.core.files.storage import default_storage
+
             if default_storage.exists(image_path):
                 section_image_url = default_storage.url(image_path)
     except (ThemeSectionConfig.DoesNotExist, AttributeError):
