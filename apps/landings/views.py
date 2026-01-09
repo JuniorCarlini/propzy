@@ -203,9 +203,6 @@ def dashboard_config_basic(request):
 
     if created:
         messages.success(request, _("Site criado com sucesso! Configure os dados abaixo."))
-    else:
-        # Sempre recarrega do banco para garantir dados atualizados
-        site.refresh_from_db()
 
     # Processar formulário
     if request.method == "POST":
@@ -213,21 +210,20 @@ def dashboard_config_basic(request):
 
         form = SiteBasicForm(request.POST, instance=site)
         if form.is_valid():
-            # Verificar se o nome do negócio mudou para atualizar o subdomínio
+            # Salva os valores ANTES de salvar para comparar depois
             old_business_name = site.business_name
             old_subdomain = site.subdomain
-            form.save()
 
-            # Recarrega o objeto do banco para garantir que tem os dados atualizados
-            site.refresh_from_db()
+            # Salva o formulário - isso atualiza form.instance com os dados salvos
+            saved_site = form.save()
+
+            # Usa a instância salva do formulário (já tem os dados atualizados)
+            site = saved_site
 
             # Se o nome do negócio mudou, atualizar o subdomínio
             if old_business_name != site.business_name:
                 site.update_subdomain_from_business_name()
                 site.save(update_fields=["subdomain"])
-
-                # Recarrega novamente após atualizar subdomínio
-                site.refresh_from_db()
 
                 # Informar se a URL mudou
                 if old_subdomain != site.subdomain:
@@ -243,12 +239,11 @@ def dashboard_config_basic(request):
             else:
                 messages.success(request, _("Dados básicos salvos com sucesso."))
 
-            # Recarrega o site do banco antes de redirecionar para garantir dados atualizados
-            site.refresh_from_db()
             return redirect("landings:dashboard_config_basic")
 
-    # Formulário GET - recarrega o site do banco para garantir dados atualizados
-    site.refresh_from_db()
+    # Formulário GET - busca o site novamente do banco para garantir dados atualizados
+    # Usa get() em vez de refresh para garantir que pega os dados mais recentes
+    site = Site.objects.get(pk=site.pk)
     from .forms import SiteBasicForm
 
     form = SiteBasicForm(instance=site)
