@@ -138,7 +138,7 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 
 # Redirecionamentos após login/logout
-LOGIN_REDIRECT_URL = "administration:dashboard"  # ATUALIZADO: redireciona para novo dashboard
+LOGIN_REDIRECT_URL = "administration_panel:dashboard"  # ATUALIZADO: redireciona para novo dashboard
 LOGOUT_REDIRECT_URL = "account_login"
 LOGIN_URL = "account_login"
 
