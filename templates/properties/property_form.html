@@ -772,21 +772,30 @@
             <div class="form-fields-grid">
                 {% for field in form %}
                     {% if field.name == 'is_active' %}
-                        {# Campo is_active será tratado como hidden e controlado pelos botões de ativar/desativar #}
-                        {% if object %}
-                            <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{% if field.value %}1{% else %}0{% endif %}">
-                        {% else %}
-                            <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}" value="1">
-                        {% endif %}
-                        {% if field.errors %}
-                        <ul class="errorlist">
-                            {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
+                        {# Campo is_active visível como toggle switch #}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}" class="toggle-wrapper">
+                                <span class="toggle-label">
+                                    <label class="toggle-switch">
+                                        {{ field }}
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="toggle-label-text">{{ field.label }}</span>
+                                </span>
+                            </label>
+                            {% if field.help_text %}
+                            <div class="help-text">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
                     {% elif field.name == 'main_image' %}
-                        {# Campo main_image será escondido - imagem principal será definida via estrela nas imagens #}
+                        {# Campo main_image removido - imagem principal será definida apenas via estrela nas imagens adicionais #}
                         <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{% if field.value %}{{ field.value }}{% endif %}">
                         {% if field.errors %}
                         <ul class="errorlist">
@@ -916,15 +925,28 @@
                         {% endif %}
                     </div>
                     {% elif field.name == 'is_featured' %}
-                        {# Campo is_featured será escondido - removido do formulário #}
-                        <input type="hidden" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{% if field.value %}1{% else %}0{% endif %}">
-                        {% if field.errors %}
-                        <ul class="errorlist">
-                            {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
+                        {# Campo is_featured visível como toggle switch #}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}" class="toggle-wrapper">
+                                <span class="toggle-label">
+                                    <label class="toggle-switch">
+                                        {{ field }}
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span class="toggle-label-text">{{ field.label }}</span>
+                                </span>
+                            </label>
+                            {% if field.help_text %}
+                            <div class="help-text">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
                     {% else %}
                         {% if field.name != 'description' %}
                         <div class="form-group">
@@ -950,13 +972,12 @@
             </div>
 
             <!-- Seção de Upload de Imagens Adicionais -->
-            {% if object %}
             <div class="form-group full-width" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
                 <label style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem;">
                     {% trans "Imagens Adicionais" %}
                 </label>
                 <p class="help-text" style="margin-bottom: 1rem;">
-                    {% trans "Adicione múltiplas imagens do imóvel. Arraste e solte ou clique para selecionar." %}
+                    {% trans "Adicione múltiplas imagens do imóvel. Arraste e solte ou clique para selecionar. Clique na estrela para definir qual imagem será a principal." %}
                 </p>
                 <div id="property-images-upload-wrapper">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -964,7 +985,6 @@
                 </div>
                 <div id="property-images-preview" class="property-images-preview"></div>
             </div>
-            {% endif %}
 
             <div class="form-actions">
                 {% if object %}
@@ -988,10 +1008,10 @@
         {% trans "Excluir Imóvel" as modal_title_delete %}
         {% trans "Tem certeza que deseja excluir este imóvel? Esta ação não pode ser desfeita." as modal_message_delete %}
         {% include "includes/modal_delete.html" with modal_title=modal_title_delete modal_message=modal_message_delete %}
-
-        <!-- Modal de confirmação para excluir imagem -->
-        {% include "includes/modal_delete_image.html" %}
     {% endif %}
+
+    <!-- Modal de confirmação para excluir imagem (sempre incluído para funcionar na criação também) -->
+    {% include "includes/modal_delete_image.html" %}
 </div>
 {% endblock %}
 
@@ -1009,7 +1029,6 @@
     <!-- FilePond Image Preview Plugin -->
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
 
-    {% if object %}
     <script>
         // Configuração do FilePond para upload de imagens
         document.addEventListener('DOMContentLoaded', function() {
@@ -1018,46 +1037,186 @@
 
             // Obtém o CSRF token
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            {% if object %}
             const propertyId = {{ object.pk }};
-
-            // Configura o FilePond
             const uploadUrl = '{% url "properties:property_image_upload" object.pk %}';
+            const imagesListUrl = '{% url "properties:property_images_list" object.pk %}';
+            const setMainImageUrl = '{% url "properties:property_set_main_image" object.pk 0 %}';
+            const deleteImageUrl = '{% url "properties:property_image_delete" object.pk 0 %}';
+            const isCreating = false;
+            {% else %}
+            const propertyId = null;
+            const uploadUrl = null; // Será definido após salvar o imóvel
+            const imagesListUrl = null;
+            const setMainImageUrl = null;
+            const deleteImageUrl = null;
+            const isCreating = true;
+            let savedPropertyId = null;
+            {% endif %}
+            // Função para salvar o imóvel antes de fazer upload (apenas na criação)
+            async function savePropertyBeforeUpload() {
+                if (!isCreating || savedPropertyId) {
+                    return Promise.resolve(savedPropertyId || propertyId);
+                }
+
+                const form = document.querySelector('form');
+                const formData = new FormData(form);
+
+                // Remove campos de imagem do formulário principal
+                formData.delete('main_image');
+
+                // Valida campos obrigatórios antes de salvar
+                const requiredFields = form.querySelectorAll('[required]');
+                let isValid = true;
+                const missingFields = [];
+
+                requiredFields.forEach(field => {
+                    if (!field.value || (field.type === 'file' && !field.files.length)) {
+                        isValid = false;
+                        missingFields.push(field.name);
+                    }
+                });
+
+                if (!isValid) {
+                    throw new Error('Preencha todos os campos obrigatórios antes de adicionar imagens.');
+                }
+
+                return fetch(form.action || window.location.pathname, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        // Se redirecionou, extrai o ID da URL
+                        const match = response.url.match(/\/imoveis\/(\d+)\//);
+                        if (match) {
+                            savedPropertyId = parseInt(match[1]);
+                            return savedPropertyId;
+                        }
+                        throw new Error('Não foi possível obter o ID do imóvel');
+                    }
+                    return response.json().then(data => {
+                        if (data.success && data.property_id) {
+                            savedPropertyId = data.property_id;
+                            return savedPropertyId;
+                        }
+                        throw new Error(data.error || data.message || 'Erro ao salvar imóvel');
+                    });
+                });
+            }
+
+            // Função para obter a URL de upload (cria dinamicamente se necessário)
+            function getUploadUrl() {
+                if (isCreating && savedPropertyId) {
+                    return `/properties/imoveis/${savedPropertyId}/imagens/upload/`;
+                }
+                return uploadUrl;
+            }
+
+            // Função para obter a URL de listagem de imagens
+            function getImagesListUrl() {
+                if (isCreating && savedPropertyId) {
+                    return `/properties/imoveis/${savedPropertyId}/imagens/`;
+                }
+                return imagesListUrl;
+            }
+
+            // Função para obter a URL de definir imagem principal
+            function getSetMainImageUrl(imageId) {
+                if (isCreating && savedPropertyId) {
+                    return `/properties/imoveis/${savedPropertyId}/imagens/${imageId}/principal/`;
+                }
+                return setMainImageUrl.replace('0', imageId);
+            }
+
+            // Função para obter a URL de deletar imagem
+            function getDeleteImageUrl(imageId) {
+                if (isCreating && savedPropertyId) {
+                    return `/properties/imoveis/${savedPropertyId}/imagens/${imageId}/deletar/`;
+                }
+                return deleteImageUrl.replace('0', imageId);
+            }
+
             const pond = FilePond.create(document.querySelector('#property-images-upload'), {
                 name: 'file', // Nome do campo que será enviado
                 credits: false, // Remove o crédito "Powered by PQINA"
                 server: {
                     process: {
-                        url: uploadUrl,
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': csrfToken
-                        },
-                        withCredentials: false,
-                        onload: (response) => {
-                            try {
-                                const data = JSON.parse(response);
-                                if (data.success) {
-                                    loadExistingImages();
-                                    return data.id;
-                                }
-                                throw new Error(data.error || 'Erro ao fazer upload');
-                            } catch (e) {
-                                throw new Error('Erro ao processar resposta do servidor');
-                            }
-                        },
-                        onerror: (response) => {
-                            try {
-                                const data = JSON.parse(response);
-                                return data.error || 'Erro ao fazer upload';
-                            } catch (e) {
-                                return 'Erro ao fazer upload';
-                            }
+                        url: (fieldName, metadata, load, error, progress, abort) => {
+                            // Se estiver criando, salva o imóvel primeiro
+                            savePropertyBeforeUpload()
+                                .then(propId => {
+                                    const uploadUrlFinal = getUploadUrl();
+                                    if (!uploadUrlFinal) {
+                                        error('Erro: Imóvel não foi salvo. Preencha os campos obrigatórios primeiro.');
+                                        return;
+                                    }
+
+                                    const formData = new FormData();
+                                    formData.append('file', metadata.file);
+
+                                    const xhr = new XMLHttpRequest();
+                                    xhr.open('POST', uploadUrlFinal);
+                                    xhr.setRequestHeader('X-CSRFToken', csrfToken);
+
+                                    xhr.upload.onprogress = (e) => {
+                                        progress(e.lengthComputable, e.loaded, e.total);
+                                    };
+
+                                    xhr.onload = function() {
+                                        if (xhr.status >= 200 && xhr.status < 300) {
+                                            try {
+                                                const data = JSON.parse(xhr.responseText);
+                                                if (data.success) {
+                                                    loadExistingImages();
+                                                    load(data.id);
+                                                } else {
+                                                    error(data.error || 'Erro ao fazer upload');
+                                                }
+                                            } catch (e) {
+                                                error('Erro ao processar resposta do servidor');
+                                            }
+                                        } else {
+                                            try {
+                                                const data = JSON.parse(xhr.responseText);
+                                                error(data.error || 'Erro ao fazer upload');
+                                            } catch (e) {
+                                                error('Erro ao fazer upload');
+                                            }
+                                        }
+                                    };
+
+                                    xhr.onerror = function() {
+                                        error('Erro de conexão');
+                                    };
+
+                                    xhr.send(formData);
+
+                                    return {
+                                        abort: () => {
+                                            xhr.abort();
+                                            abort();
+                                        }
+                                    };
+                                })
+                                .catch(err => {
+                                    error(err.message || 'Erro ao salvar imóvel');
+                                });
                         }
                     },
                     revert: (uniqueFileId, load, error) => {
                         // Remove a imagem do servidor quando o usuário remove do FilePond
-                        const deleteUrl = `{% url "properties:property_image_delete" object.pk 0 %}`.replace('0', uniqueFileId);
-                        fetch(deleteUrl, {
+                        const deleteUrlFinal = getDeleteImageUrl(uniqueFileId);
+                        if (!deleteUrlFinal) {
+                            error('Erro: Imóvel não encontrado');
+                            return;
+                        }
+
+                        fetch(deleteUrlFinal, {
                             method: 'POST',
                             headers: {
                                 'X-CSRFToken': csrfToken,
@@ -1111,7 +1270,12 @@
 
             // Função para carregar imagens existentes
             function loadExistingImages() {
-                fetch('{% url "properties:property_images_list" object.pk %}', {
+                const imagesListUrlFinal = getImagesListUrl();
+                if (!imagesListUrlFinal) {
+                    return; // Ainda não há imóvel salvo
+                }
+
+                fetch(imagesListUrlFinal, {
                     headers: {
                         'X-CSRFToken': csrfToken
                     }
@@ -1151,7 +1315,13 @@
 
             // Função para definir imagem principal
             window.setMainImage = function(imageId) {
-                fetch(`{% url "properties:property_set_main_image" object.pk 0 %}`.replace('0', imageId), {
+                const setMainImageUrlFinal = getSetMainImageUrl(imageId);
+                if (!setMainImageUrlFinal) {
+                    alert('{% trans "Erro: Imóvel não encontrado" %}');
+                    return;
+                }
+
+                fetch(setMainImageUrlFinal, {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': csrfToken,
@@ -1192,7 +1362,13 @@
                         const imageId = currentImageIdToDelete;
                         deleteImageModal.classList.remove('active');
 
-                        fetch(`{% url "properties:property_image_delete" object.pk 0 %}`.replace('0', imageId), {
+                        const deleteImageUrlFinal = getDeleteImageUrl(imageId);
+                        if (!deleteImageUrlFinal) {
+                            alert('{% trans "Erro: Imóvel não encontrado" %}');
+                            return;
+                        }
+
+                        fetch(deleteImageUrlFinal, {
                             method: 'POST',
                             headers: {
                                 'X-CSRFToken': csrfToken,
@@ -1244,11 +1420,12 @@
                 deleteImageModal.classList.add('active');
             };
 
-            // Carrega imagens existentes ao carregar a página
-            loadExistingImages();
+            // Carrega imagens existentes ao carregar a página (apenas se já houver imóvel)
+            if (!isCreating) {
+                loadExistingImages();
+            }
         });
     </script>
-    {% endif %}
     {% if object %}
     <script>
         document.addEventListener('DOMContentLoaded', () => {

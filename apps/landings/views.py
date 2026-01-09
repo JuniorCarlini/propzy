@@ -212,6 +212,7 @@ def dashboard_config_basic(request):
         if form.is_valid():
             # Verificar se o nome do negócio mudou para atualizar o subdomínio
             old_business_name = site.business_name
+            old_subdomain = site.subdomain
             form.save()
 
             # Se o nome do negócio mudou, atualizar o subdomínio
@@ -219,7 +220,19 @@ def dashboard_config_basic(request):
                 form.instance.update_subdomain_from_business_name()
                 form.instance.save(update_fields=["subdomain"])
 
-            messages.success(request, _("Dados básicos salvos com sucesso."))
+                # Informar se a URL mudou
+                if old_subdomain != form.instance.subdomain:
+                    new_url = form.instance.get_primary_url()
+                    messages.success(
+                        request,
+                        _("Dados básicos salvos com sucesso. A URL do seu site foi atualizada para: {url}").format(
+                            url=new_url
+                        ),
+                    )
+                else:
+                    messages.success(request, _("Dados básicos salvos com sucesso."))
+            else:
+                messages.success(request, _("Dados básicos salvos com sucesso."))
             return redirect("landings:dashboard_config_basic")
 
     # Formulário

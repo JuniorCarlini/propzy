@@ -31,7 +31,7 @@ class PropertyForm(forms.ModelForm):
             "city",
             "state",
             "zipcode",
-            "main_image",
+            # main_image removido - será definido automaticamente via estrela nas imagens adicionais
             "is_featured",
             "is_active",
         )
@@ -69,14 +69,6 @@ class PropertyForm(forms.ModelForm):
                     }
                 )
 
-        if "main_image" in self.fields:
-            self.fields["main_image"].widget.attrs.update(
-                {
-                    "class": "form-control",
-                    "accept": "image/*",
-                }
-            )
-
         # Labels traduzidos
         self.fields["title"].label = _("Título")
         self.fields["description"].label = _("Descrição")
@@ -94,7 +86,7 @@ class PropertyForm(forms.ModelForm):
         self.fields["city"].label = _("Cidade")
         self.fields["state"].label = _("Estado")
         self.fields["zipcode"].label = _("CEP")
-        self.fields["main_image"].label = _("Imagem Principal")
+        # main_image removido - será definido automaticamente via estrela nas imagens adicionais
         self.fields["is_featured"].label = _("Destaque")
         self.fields["is_active"].label = _("Ativo")
 

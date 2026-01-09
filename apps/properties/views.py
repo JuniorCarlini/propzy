@@ -94,14 +94,25 @@ def property_create(request):
             property_obj = form.save(commit=False)
             property_obj.site = site
             property_obj.save()
-            messages.success(request, _("Imóvel criado com sucesso."))
-            return redirect("properties:property_list")
+
+            # Se for requisição AJAX (para upload de imagens), retorna JSON
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json':
+                return JsonResponse({
+                    "success": True,
+                    "property_id": property_obj.pk,
+                    "message": _("Imóvel criado com sucesso.")
+                })
+
+            messages.success(request, _("Imóvel criado com sucesso. Adicione imagens abaixo."))
+            # Redireciona para a página de edição para permitir adicionar imagens imediatamente
+            return redirect("properties:property_update", pk=property_obj.pk)
     else:
         form = PropertyForm(user=request.user)
 
     context: dict[str, Any] = {
         "form": form,
         "title": _("Criar Imóvel"),
+        # Não passa object na criação, mas o template já trata isso
     }
 
     return render(request, "properties/property_form.html", context)
@@ -258,6 +269,16 @@ def property_image_upload(request, pk):
             order=last_order + 1,
         )
 
+        # Se não houver imagem principal definida, define esta como principal
+        is_main = False
+        if not property_obj.main_image:
+            property_obj.main_image = property_image.image
+            property_obj.save(update_fields=["main_image"])
+            is_main = True
+        else:
+            # Verifica se esta imagem já é a principal
+            is_main = property_obj.main_image.name == property_image.image.name
+
         return JsonResponse(
             {
                 "success": True,
@@ -265,6 +286,7 @@ def property_image_upload(request, pk):
                 "url": property_image.image.url,
                 "thumbnail": property_image.image.url,
                 "order": property_image.order,
+                "is_main": is_main,
             },
             status=201,
         )
@@ -286,10 +308,25 @@ def property_image_delete(request, pk, image_id):
     property_image = get_object_or_404(PropertyImage, pk=image_id, property=property_obj)
 
     try:
+        # Verifica se é a imagem principal antes de deletar
+        is_main = property_obj.main_image and property_obj.main_image.name == property_image.image.name
+
         # Deleta o arquivo físico antes de deletar do banco
         if property_image.image:
             property_image.image.delete(save=False)
         property_image.delete()
+
+        # Se a imagem deletada era a principal, define a primeira imagem restante como principal
+        if is_main:
+            first_image = property_obj.images.first()
+            if first_image:
+                property_obj.main_image = first_image.image
+                property_obj.save(update_fields=["main_image"])
+            else:
+                # Se não há mais imagens, remove a referência da imagem principal
+                property_obj.main_image = None
+                property_obj.save(update_fields=["main_image"])
+
         return JsonResponse({"success": True}, status=200)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
@@ -309,9 +346,8 @@ def property_images_list(request, pk):
 
     images = property_obj.images.all().order_by("order", "created_at")
 
-    # Verifica qual imagem é a principal comparando URLs ou nomes dos arquivos
-    main_image_url = property_obj.main_image.url if property_obj.main_image else None
-    main_image_name = property_obj.main_image.name if property_obj.main_image else None
+    # Verifica qual imagem é a principal comparando o objeto da imagem
+    main_image = property_obj.main_image
 
     images_data = [
         {
@@ -320,8 +356,7 @@ def property_images_list(request, pk):
             "thumbnail": img.image.url,
             "caption": img.caption,
             "order": img.order,
-            "is_main": (main_image_url and img.image.url == main_image_url)
-            or (main_image_name and img.image.name == main_image_name),
+            "is_main": main_image and img.image.name == main_image.name,
         }
         for img in images
     ]

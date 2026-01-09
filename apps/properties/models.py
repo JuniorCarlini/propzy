@@ -73,7 +73,8 @@ class Property(models.Model):
     zipcode = models.CharField(_("CEP"), max_length=10, blank=True)
 
     # Imagens (primeira é a principal)
-    main_image = models.ImageField(_("Imagem Principal"), upload_to="properties/")
+    # main_image é definido automaticamente quando uma imagem adicional é marcada como principal
+    main_image = models.ImageField(_("Imagem Principal"), upload_to="properties/", null=True, blank=True)
 
     # Status
     is_featured = models.BooleanField(_("Destaque"), default=False)

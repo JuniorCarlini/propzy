@@ -10,7 +10,7 @@ SEGURANÇA: Domínios não registrados no sistema retornam 404, mesmo com ALLOWE
 import logging
 
 from django.conf import settings
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.utils.deprecation import MiddlewareMixin
 
 from .models import Site
@@ -181,12 +181,18 @@ class TenantMiddleware(MiddlewareMixin):
                 logger.info(f"Tenant encontrado: {subdomain}.{base_domain} -> Site ID {site.id}")
                 return
             except Site.DoesNotExist:
-                pass
+                # Subdomínio não encontrado - redireciona para o site principal
+                logger.info(f"Subdomínio não encontrado: {subdomain}.{base_domain} - redirecionando para {base_domain}")
+                scheme = 'https' if request.is_secure() else 'http'
+                redirect_url = f"{scheme}://{base_domain}{request.path}"
+                return HttpResponseRedirect(redirect_url)
             except Site.MultipleObjectsReturned:
                 logger.error(f"Múltiplos sites encontrados para subdomínio: {subdomain}")
                 raise Http404("Configuração inválida")
 
         # SEGURANÇA: Se chegou aqui, é um domínio não registrado
-        # Loga a tentativa e retorna 404
-        logger.warning(f"Acesso negado a domínio não registrado: {host} (IP: {request.META.get('REMOTE_ADDR')})")
-        raise Http404(f"Domínio '{host}' não registrado no sistema.")
+        # Redireciona para o site principal em vez de retornar 404
+        logger.info(f"Domínio não registrado: {host} - redirecionando para {base_domain}")
+        scheme = 'https' if request.is_secure() else 'http'
+        redirect_url = f"{scheme}://{base_domain}{request.path}"
+        return HttpResponseRedirect(redirect_url)
