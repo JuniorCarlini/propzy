@@ -211,23 +211,29 @@ def dashboard_config_basic(request):
         form = SiteBasicForm(request.POST, instance=site)
         if form.is_valid():
             # Salva os valores ANTES de salvar para comparar depois
-            old_business_name = site.business_name
+            old_business_name = site.business_name.strip() if site.business_name else ''
             old_subdomain = site.subdomain
+
+            # Pega o novo valor do formulário ANTES de salvar para comparar
+            new_business_name = form.cleaned_data.get('business_name', '').strip()
 
             # Salva o formulário - isso atualiza form.instance com os dados salvos
             saved_site = form.save()
 
-            # Usa a instância salva do formulário (já tem os dados atualizados)
-            site = saved_site
+            # SEMPRE atualiza o subdomínio quando o business_name mudar
+            # Compara o valor ANTIGO do banco com o NOVO valor do formulário (normalizado)
+            business_name_changed = old_business_name != new_business_name
 
-            # Se o nome do negócio mudou, atualizar o subdomínio
-            if old_business_name != site.business_name:
-                site.update_subdomain_from_business_name()
-                site.save(update_fields=["subdomain"])
+            if business_name_changed:
+                # Atualiza o subdomínio baseado no novo nome
+                # O saved_site já tem o business_name atualizado do form.save()
+                saved_site.update_subdomain_from_business_name()
+                # Salva o subdomínio atualizado
+                saved_site.save(update_fields=["subdomain"])
 
                 # Informar se a URL mudou
-                if old_subdomain != site.subdomain:
-                    new_url = site.get_primary_url()
+                if old_subdomain != saved_site.subdomain:
+                    new_url = saved_site.get_primary_url()
                     messages.success(
                         request,
                         _("Dados básicos salvos com sucesso. A URL do seu site foi atualizada para: {url}").format(
@@ -241,9 +247,9 @@ def dashboard_config_basic(request):
 
             return redirect("landings:dashboard_config_basic")
 
-    # Formulário GET - busca o site novamente do banco para garantir dados atualizados
-    # Usa get() em vez de refresh para garantir que pega os dados mais recentes
-    site = Site.objects.get(pk=site.pk)
+    # Formulário GET - busca o site novamente do banco usando owner para garantir dados atualizados
+    # Busca pelo owner em vez de pk para evitar problemas de cache
+    site = Site.objects.select_related("owner", "theme").get(owner=request.user)
     from .forms import SiteBasicForm
 
     form = SiteBasicForm(instance=site)
@@ -262,9 +268,9 @@ def dashboard_config_domain(request):
     """
     Configurações de domínio personalizado do site.
     """
-    # Busca o site do usuário
+    # Busca o site do usuário - sempre busca do banco para garantir dados atualizados
     try:
-        site = Site.objects.get(owner=request.user)
+        site = Site.objects.select_related("owner", "theme").get(owner=request.user)
     except Site.DoesNotExist:
         messages.warning(request, _("Crie seu site primeiro."))
         return redirect("landings:dashboard_config_basic")
@@ -329,7 +335,10 @@ def dashboard_config_domain(request):
                 messages.success(request, _("Configurações de domínio salvas com sucesso."))
             return redirect("landings:dashboard_config_domain")
 
-    # Formulário
+    # Formulário GET - sempre busca o site novamente do banco para garantir dados atualizados
+    # Busca pelo owner em vez de usar a variável site para evitar cache
+    site = Site.objects.select_related("owner", "theme").get(owner=request.user)
+
     from django.conf import settings
 
     from .forms import SiteAdvancedForm
@@ -352,12 +361,12 @@ def dashboard_config_theme(request):
     """
     Configurações de temas e layout do site.
     """
-    # Busca o site do usuário
+    # Busca o site do usuário - sempre busca do banco para garantir dados atualizados
     try:
-        site = Site.objects.get(owner=request.user)
+        site = Site.objects.select_related("owner", "theme").get(owner=request.user)
     except Site.DoesNotExist:
         messages.warning(request, _("Crie seu site primeiro."))
-        return redirect("landings:dashboard_config_domain")
+        return redirect("landings:dashboard_config_basic")
 
     # Processar formulário
     if request.method == "POST":
@@ -504,41 +513,43 @@ def dashboard_config_theme(request):
 
     if site.theme:
         theme_config = site.theme.get_theme_config()
-        available_sections = theme_config.get(
-            "sections",
-            [
-                {
-                    "key": "hero",
-                    "name": _("Banner Principal"),
-                    "icon": "fa-image",
-                    "description": _("Banner principal do site"),
-                },
-                {
-                    "key": "about",
-                    "name": _("Sobre"),
-                    "icon": "fa-user",
-                    "description": _("Seção sobre você/empresa"),
-                },
-                {
-                    "key": "services",
-                    "name": _("Serviços"),
-                    "icon": "fa-briefcase",
-                    "description": _("Lista de serviços oferecidos"),
-                },
-                {
-                    "key": "properties",
-                    "name": _("Imóveis"),
-                    "icon": "fa-home",
-                    "description": _("Galeria de imóveis"),
-                },
-                {
-                    "key": "contact",
-                    "name": _("Contato"),
-                    "icon": "fa-envelope",
-                    "description": _("Formulário e informações de contato"),
-                },
-            ],
-        )
+        # Seções padrão que sempre devem estar disponíveis
+        default_sections = [
+            {
+                "key": "hero",
+                "name": _("Banner Principal"),
+                "icon": "fa-image",
+                "description": _("Banner principal do site"),
+            },
+            {
+                "key": "about",
+                "name": _("Sobre"),
+                "icon": "fa-user",
+                "description": _("Seção sobre você/empresa"),
+            },
+            {
+                "key": "services",
+                "name": _("Serviços"),
+                "icon": "fa-briefcase",
+                "description": _("Lista de serviços oferecidos"),
+            },
+            {
+                "key": "properties",
+                "name": _("Imóveis"),
+                "icon": "fa-home",
+                "description": _("Galeria de imóveis"),
+            },
+            {
+                "key": "contact",
+                "name": _("Contato"),
+                "icon": "fa-envelope",
+                "description": _("Formulário e informações de contato"),
+            },
+        ]
+        # Buscar seções do theme.json, se existirem
+        theme_sections = theme_config.get("sections", [])
+        # Se o theme.json não tem seções ou retornou lista vazia, usar as padrão
+        available_sections = theme_sections if theme_sections else default_sections
 
         # Buscar configurações existentes
         try:

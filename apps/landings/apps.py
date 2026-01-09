@@ -12,3 +12,4 @@ class LandingsConfig(AppConfig):
 
     def ready(self):
         """Importa signals quando o app estiver pronto"""
+        import apps.landings.signals  # noqa: F401

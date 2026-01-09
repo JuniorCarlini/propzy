@@ -33,6 +33,12 @@ def detect_custom_domain_change(sender, instance, **kwargs):
                 else:
                     logger.info("Domínio personalizado removido")
                     instance._custom_domain_changed = False
+
+            # Verificar se business_name mudou para atualizar subdomain automaticamente
+            if old_instance.business_name != instance.business_name:
+                logger.info(f"Business name mudou de '{old_instance.business_name}' para '{instance.business_name}'")
+                # Flag para atualizar subdomain no post_save
+                instance._business_name_changed = True
         except Site.DoesNotExist:
             pass
 
@@ -41,7 +47,19 @@ def detect_custom_domain_change(sender, instance, **kwargs):
 def generate_ssl_for_custom_domain(sender, instance, created, **kwargs):
     """
     Gera certificado SSL automaticamente quando domínio personalizado é adicionado
+    E atualiza subdomain quando business_name muda
     """
+    # Atualizar subdomain se business_name mudou
+    if getattr(instance, "_business_name_changed", False):
+        logger.info(f"🔄 Atualizando subdomain devido a mudança no business_name")
+        try:
+            instance.update_subdomain_from_business_name()
+            # Salvar apenas o subdomain para evitar loop infinito (post_save chamaria novamente)
+            Site.objects.filter(pk=instance.pk).update(subdomain=instance.subdomain)
+            logger.info(f"✅ Subdomain atualizado para: {instance.subdomain}")
+        except Exception as e:
+            logger.error(f"❌ Erro ao atualizar subdomain: {str(e)}")
+
     # Verificar se é novo com custom_domain ou se custom_domain mudou
     should_generate = (created and instance.custom_domain) or getattr(instance, "_custom_domain_changed", False)
 
