@@ -105,3 +105,5 @@ python manage.py collectstatic --noinput
 
 **O erro 500 deve estar resolvido agora!** 🎉
 
+
+

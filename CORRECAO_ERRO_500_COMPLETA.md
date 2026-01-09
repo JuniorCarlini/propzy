@@ -95,3 +95,5 @@ Acesse: `http://propzy.com.br/accounts/login/`
 - Após reset do banco, sempre execute `python manage.py setup_site`
 - O comando `setup_site` usa `BASE_DOMAIN` do settings ou padrão `propzy.com.br`
 
+
+
