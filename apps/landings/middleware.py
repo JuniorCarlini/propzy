@@ -140,25 +140,7 @@ class TenantMiddleware(MiddlewareMixin):
         if host in system_hosts:
             return
 
-        # BLOQUEIO: URLs administrativas e de autenticação não devem ser acessíveis em subdomínios
-        # Verifica se a requisição é para uma URL administrativa ou de autenticação antes de detectar o tenant
-        path = request.path.lower()
-        blocked_paths = [
-            "/admin-panel/",
-            "/landings/dashboard/",
-            "/properties/",
-            "/accounts/",  # Bloqueia login em subdomínios - deve ser feito no domínio principal
-        ]
-
-        # Se for uma URL bloqueada e não for um host do sistema, bloqueia acesso
-        if any(path.startswith(blocked_path) for blocked_path in blocked_paths):
-            # Redireciona para o domínio principal
-            scheme = 'https' if request.is_secure() else 'http'
-            redirect_url = f"{scheme}://{base_domain}{request.path}"
-            logger.info(f"Bloqueando acesso administrativo/autenticação em subdomínio: {host}{path} -> redirecionando para {redirect_url}")
-            return HttpResponseRedirect(redirect_url)
-
-        # Tenta encontrar por domínio personalizado primeiro
+        # PRIMEIRO: Tenta encontrar por domínio personalizado
         # SEGURANÇA: Django ORM usa prepared statements, protegido contra SQL injection
         try:
             site = Site.objects.select_related("owner", "theme").get(
@@ -168,6 +150,24 @@ class TenantMiddleware(MiddlewareMixin):
             request.tenant = site
             request.is_site = True
             logger.info(f"Tenant encontrado: {host} -> Site ID {site.id}")
+
+            # DEPOIS de detectar o tenant, verifica se é URL administrativa
+            path = request.path.lower()
+            blocked_paths = [
+                "/admin-panel/",
+                "/landings/dashboard/",
+                "/properties/",
+                "/accounts/",  # Bloqueia login em subdomínios - deve ser feito no domínio principal
+            ]
+
+            # Se for uma URL bloqueada em um site válido, redireciona para o domínio principal
+            if any(path.startswith(blocked_path) for blocked_path in blocked_paths):
+                scheme = 'https' if request.is_secure() else 'http'
+                redirect_url = f"{scheme}://{base_domain}{request.path}"
+                logger.info(f"Bloqueando acesso administrativo/autenticação em site: {host}{path} -> redirecionando para {redirect_url}")
+                return HttpResponseRedirect(redirect_url)
+
+            # Se não for URL administrativa, permite acesso (é página pública do site)
             return
         except Site.DoesNotExist:
             pass
@@ -176,7 +176,7 @@ class TenantMiddleware(MiddlewareMixin):
             logger.error(f"Múltiplos sites encontrados para: {host}")
             raise Http404("Configuração inválida")
 
-        # Tenta encontrar por subdomínio
+        # SEGUNDO: Tenta encontrar por subdomínio
         if host.endswith(f".{base_domain}"):
             subdomain = host.replace(f".{base_domain}", "")
 
@@ -197,6 +197,24 @@ class TenantMiddleware(MiddlewareMixin):
                 request.tenant = site
                 request.is_site = True
                 logger.info(f"Tenant encontrado: {subdomain}.{base_domain} -> Site ID {site.id}")
+
+                # DEPOIS de detectar o tenant, verifica se é URL administrativa
+                path = request.path.lower()
+                blocked_paths = [
+                    "/admin-panel/",
+                    "/landings/dashboard/",
+                    "/properties/",
+                    "/accounts/",  # Bloqueia login em subdomínios - deve ser feito no domínio principal
+                ]
+
+                # Se for uma URL bloqueada em um site válido, redireciona para o domínio principal
+                if any(path.startswith(blocked_path) for blocked_path in blocked_paths):
+                    scheme = 'https' if request.is_secure() else 'http'
+                    redirect_url = f"{scheme}://{base_domain}{request.path}"
+                    logger.info(f"Bloqueando acesso administrativo/autenticação em subdomínio: {host}{path} -> redirecionando para {redirect_url}")
+                    return HttpResponseRedirect(redirect_url)
+
+                # Se não for URL administrativa, permite acesso (é página pública do site)
                 return
             except Site.DoesNotExist:
                 # Subdomínio não encontrado - redireciona para o site principal
