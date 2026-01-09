@@ -203,6 +203,9 @@ def dashboard_config_basic(request):
 
     if created:
         messages.success(request, _("Site criado com sucesso! Configure os dados abaixo."))
+    else:
+        # Sempre recarrega do banco para garantir dados atualizados
+        site.refresh_from_db()
 
     # Processar formulário
     if request.method == "POST":
@@ -215,14 +218,20 @@ def dashboard_config_basic(request):
             old_subdomain = site.subdomain
             form.save()
 
+            # Recarrega o objeto do banco para garantir que tem os dados atualizados
+            site.refresh_from_db()
+
             # Se o nome do negócio mudou, atualizar o subdomínio
-            if old_business_name != form.instance.business_name:
-                form.instance.update_subdomain_from_business_name()
-                form.instance.save(update_fields=["subdomain"])
+            if old_business_name != site.business_name:
+                site.update_subdomain_from_business_name()
+                site.save(update_fields=["subdomain"])
+
+                # Recarrega novamente após atualizar subdomínio
+                site.refresh_from_db()
 
                 # Informar se a URL mudou
-                if old_subdomain != form.instance.subdomain:
-                    new_url = form.instance.get_primary_url()
+                if old_subdomain != site.subdomain:
+                    new_url = site.get_primary_url()
                     messages.success(
                         request,
                         _("Dados básicos salvos com sucesso. A URL do seu site foi atualizada para: {url}").format(
@@ -233,9 +242,13 @@ def dashboard_config_basic(request):
                     messages.success(request, _("Dados básicos salvos com sucesso."))
             else:
                 messages.success(request, _("Dados básicos salvos com sucesso."))
+
+            # Recarrega o site do banco antes de redirecionar para garantir dados atualizados
+            site.refresh_from_db()
             return redirect("landings:dashboard_config_basic")
 
-    # Formulário
+    # Formulário GET - recarrega o site do banco para garantir dados atualizados
+    site.refresh_from_db()
     from .forms import SiteBasicForm
 
     form = SiteBasicForm(instance=site)
